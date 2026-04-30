@@ -100,7 +100,8 @@ app.post('/login', async (req, res) => {
 
         res.json({ 
             token, 
-            nome: usuario.nome 
+            nome: usuario.nome,
+            id: usuario.id_usuario
         });
 
     } catch (error) {
