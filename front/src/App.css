@@ -1,4 +1,4 @@
-/* RESET */
+/* RESET & GLOBAL */
 * {
   margin: 0;
   padding: 0;
@@ -8,8 +8,22 @@
 
 body {
   background-color: #15213F;
-  font-family: sans-serif;
   color: #333;
+  min-height: 100vh;
+}
+
+/* COMPONENTES REUTILIZÁVEIS (Cores e Botões) */
+.btn-primary, .navbar .actions button, .login-box button, .card button, .form-container button {
+  background-color: #ff8c42;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-primary:hover, .login-box button:hover, .card button:hover, .form-container button:hover {
+  opacity: 0.8;
 }
 
 /* NAVBAR */
@@ -34,33 +48,41 @@ body {
   border: none;
 }
 
-.navbar .actions button {
-  background: #ff8c42;
+.header-desenrola {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 50px;
+  background-color: transparent;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-buttons button {
+  background-color: #ff8c00;
   color: white;
   border: none;
-  padding: 10px;
-  border-radius: 20px;
+  padding: 10px 20px;
+  border-radius: 25px;
   cursor: pointer;
-  transition: 0.3s;
+  font-weight: bold;
+  font-size: 14px;
+  transition: background 0.3s ease;
 }
 
-.btn-primary {
-  background-color: #ff8c42;
-  color: white;
+.nav-buttons button:hover {
+  background-color: #e07b00;
 }
 
-.btn-secondary {
-  background-color: white;
-  color: #0f2747;
-}
-
-/* LOGIN */
+/* LOGIN & CADASTRO */
 .login-container {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: static;
 }
 
 .login-box {
@@ -71,41 +93,12 @@ body {
   text-align: center;
 }
 
-.login-box h2 {
-  margin-bottom: 20px;
-}
-
 .login-box input {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
   border-radius: 20px;
   border: none;
-}
-
-.login-box button {
-  width: 100%;
-  padding: 10px;
-  background: #ff8c42;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-.login-box button:hover {
-  opacity: 0.8;
-}
-
-.logo-topo {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  right: auto;
-  bottom: auto;
-  width: 120px;
-  z-index: 9999;
 }
 
 .btn-cadastro {
@@ -121,20 +114,25 @@ body {
   transition: 0.3s;
 }
 
-.btn-cadastro:hover {
-  background: #15213F; 
+.logo-topo {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 120px;
+  z-index: 9999;
 }
 
-/* CONTAINER PRINCIPAL */
-.container {
-   min-height: 100vh;
+/* CONTAINERS */
+.container, .perfil-container, .header-desenrola + div {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 40px;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 20px;
 }
 
-/* LISTA DE CARDS */
+/* CARDS */
 .cards {
   background: #d9d9d9;
   padding: 20px;
@@ -145,56 +143,39 @@ body {
   box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
 }
 
-/* CARD */
-.card {
+.card, .perfil-card, .card-branco {
   background: white;
-  width: 220px;
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.card h3 {
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-.card p {
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-/* BOTÕES CARD */
-.card .actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-
-.card button {
-  background: #ff8c42;
-  color: white;
-  border: none;
-  padding: 10px;
+.card-branco, .perfil-card {
+  padding: 40px;
   border-radius: 20px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.card button:hover {
-  opacity: 0.8;
-}
-
-.btn-delete {
-  background: red;
-  color: white;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
 }
 
-.btn-edit {
-  background: #0f2747;
-  color: white;
+.perfil-card:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease;
 }
 
-/* FORM (CRIAR / EDITAR) */
+/* INFO & FORM */
+.info-grupo {
+    margin-bottom: 15px;
+    text-align: left;
+    font-size: 16px;
+    color: #555;
+}
+
+.info-grupo strong {
+    color: #ff8c00;
+}
+
 .form-container {
   background: white;
   padding: 20px;
@@ -203,8 +184,7 @@ body {
   margin-bottom: 20px;
 }
 
-.form-container input,
-.form-container textarea {
+.form-container input {
   width: 100%;
   padding: 10px;
   margin: 8px 0;
@@ -212,83 +192,23 @@ body {
   border: 1px solid #ccc;
 }
 
-.form-container button {
-  width: 100%;
-  padding: 10px;
-  background: #ff8c42;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: 0.3s;
+/* BOTÃO EDITAR PERFIL (ESPECÍFICO) */
+.btn-editar-perfil {
+    background-color: #ff8c00;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 15px;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    width: 100%;
 }
 
-.form-container button:hover {
-  opacity: 0.8;
-}
-
-/* Container principal para centralizar tudo na tela */
-.perfil-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-  padding: 20px;
-}
-
-/* O card de perfil */
-.perfil-card {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  transition: transform 0.3s ease;
-}
-
-.perfil-card:hover {
-  transform: translateY(-5px);
-}
-
-.perfil-card h2 {
-  color: #333;
-  margin-bottom: 25px;
-  font-weight: 700;
-}
-
-.perfil-info {
-  margin-bottom: 15px;
-  font-size: 1.1rem;
-  color: #555;
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 10px;
-}
-
-.header-desenrola {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 50px;
-  color: #ff8c00; /* Cor laranja do Desenrola */
-}
-
-.nav-buttons {
-  display: flex;
-  gap: 15px;
-}
-
-.nav-buttons button {
-  background-color: #ff8c00;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.nav-buttons button:hover {
-  background-color: #e07b00;
+.btn-editar-perfil:hover {
+    background-color: #e07b00;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 140, 0, 0.4);
 }

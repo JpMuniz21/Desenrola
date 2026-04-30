@@ -78,14 +78,14 @@ export default function Home() {
     <>
       <Navbar />
       <div className="container">
-        
         {/* CREATE */}
         <div className="form-container">
           <input
             value={titulo}
             onChange={(e) => setTitulo(e.target.value)}
-            placeholder="O que você quer alugar?"
+            placeholder="O que você quer anunciar?"
           />
+          {/* Resto do código (preço, select, etc) */}
           <input
             type="number"
             value={preco}
@@ -101,7 +101,7 @@ export default function Home() {
 
         {/* READ + UPDATE + DELETE */}
         {itens.length === 0 ? (
-          <p style={{ textAlign: 'center', color: '#888', marginTop: '40px' }}>
+          <p style={{ textAlign: "center", color: "#888", marginTop: "40px" }}>
             Nenhum item anunciado em Fortaleza ainda.
           </p>
         ) : (
@@ -109,7 +109,9 @@ export default function Home() {
             {itens.map((item) => (
               <div className="card" key={item.id}>
                 <h3>{item.titulo}</h3>
-                <p>R$ {item.preco} / {item.periodo || 'dia'}</p>
+                <p>
+                  R$ {item.preco} / {item.periodo || "dia"}
+                </p>
 
                 {editandoId === item.id ? (
                   <div className="edit-box">
@@ -122,21 +124,30 @@ export default function Home() {
                       value={novoPreco}
                       onChange={(e) => setNovoPreco(e.target.value)}
                     />
-                    <select value={novoPeriodo} onChange={(e) => setNovoPeriodo(e.target.value)}>
+                    <select
+                      value={novoPeriodo}
+                      onChange={(e) => setNovoPeriodo(e.target.value)}
+                    >
                       <option value="dia">por dia</option>
                       <option value="mês">por mês</option>
                     </select>
                     <button onClick={() => editarItem(item.id)}>Salvar</button>
-                    <button onClick={() => setEditandoId(null)}>Cancelar</button>
+                    <button onClick={() => setEditandoId(null)}>
+                      Cancelar
+                    </button>
                   </div>
                 ) : (
                   <div className="actions">
-                    <button onClick={() => {
-                      setEditandoId(item.id);
-                      setNovoTitulo(item.titulo);
-                      setNovoPreco(item.preco);
-                      setNovoPeriodo(item.periodo || "dia");
-                    }}>Editar</button>
+                    <button
+                      onClick={() => {
+                        setEditandoId(item.id);
+                        setNovoTitulo(item.titulo);
+                        setNovoPreco(item.preco);
+                        setNovoPeriodo(item.periodo || "dia");
+                      }}
+                    >
+                      Editar
+                    </button>
                     <button onClick={() => deletar(item.id)}>Excluir</button>
                   </div>
                 )}
