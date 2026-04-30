@@ -33,14 +33,7 @@ async function conectarBanco() {
 
 conectarBanco();
 
-// ==========================================================
-// [MOCKS] BANCO DE DADOS EM MEMÓRIA
-// (mantido apenas para itens por enquanto)
-// ==========================================================
-let anuncios = [ 
-    { id: 1, titulo: "Camera Cybershot", preco: 30.00, categoria: "Fotografia", status: "disponivel", trustScore: 4.8 },
-    { id: 2, titulo: "Kindle 16gb", preco: 20.00, categoria: "Leitura", status: "alugado", trustScore: 5.0 }
-];
+let anuncios = [];
 
 // ==========================================================
 // SEÇÃO 01: CRUD DE USUÁRIOS (Segurança e Acesso)
