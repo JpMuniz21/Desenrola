@@ -46,6 +46,8 @@ node index.js
 - Pagina de Chat
 
 ### 2. Front
+```bash
 cd front
 npm install
 npm start
+```
