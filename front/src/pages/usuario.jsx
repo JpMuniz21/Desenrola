@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import logo from "../imagem/logo.png";
+import Navbar from "../components/Navbar";
 
 export default function Usuario() {
   const [perfil, setPerfil] = useState(null);
   const userId = localStorage.getItem("userId");
-  const navigate = useNavigate();
 
   useEffect(() => {
     async function carregarPerfil() {
@@ -25,28 +23,7 @@ export default function Usuario() {
   return (
     <>
       {/* --- Cabeçalho de Navegação --- */}
-      <header className="header-desenrola">
-        <img
-          src={logo}
-          alt="Logo Desenrola"
-          onClick={() => navigate("/home")}
-          style={{ cursor: "pointer", height: "50px", width: "auto" }}
-        />
-
-        <div className="nav-buttons">
-          <button onClick={() => navigate("/home")}>Home</button>
-          <button onClick={() => navigate("/usuario")}>Perfil</button>
-          <button
-            onClick={() => {
-              localStorage.removeItem("userId");
-              localStorage.removeItem("logado");
-              navigate("/");
-            }}
-          >
-            Sair
-          </button>
-        </div>
-      </header>
+      <Navbar/> 
 
       {/* --- Card de Perfil (Extreme Makeover) --- */}
       <div className="perfil-container">

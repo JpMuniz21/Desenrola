@@ -47,7 +47,7 @@ export default function Cadastro() {
 
   return (
     <div className="login-container">
-      <img src={logo} alt="logo" className="logo-topo" />
+      <img src={logo} alt="logo" className="logo-grande" />
 
       <div className="login-box">
         <h2>Cadastro</h2>
@@ -72,7 +72,7 @@ export default function Cadastro() {
           onChange={(e) => setSenha(e.target.value)}
         />
 
-        <button onClick={handleCadastro}>Cadastrar</button>
+        <button className="btn-cadastro" onClick={handleCadastro}>Cadastrar</button>
       </div>
     </div>
   );

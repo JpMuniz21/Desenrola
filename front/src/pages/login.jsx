@@ -8,8 +8,8 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  async function handleLogin() {
-    // 🔒 validação básica
+async function handleLogin() {
+    // validação básica
     if (!email || !senha) {
       alert("Preencha todos os campos");
       return;
@@ -28,20 +28,21 @@ export default function Login() {
       });
 
       const data = await res.json();
-      localStorage.setItem("userId", data.id);
 
       if (!res.ok) {
-        // 🔥 erro vindo do backend
+        // erro vindo do backend
         throw new Error(data.mensagem || "Erro no login");
       }
 
-      // 💾 salva dados do usuário
+      // salva dados do usuário apenas SE o login der certo
+      localStorage.setItem("userId", data.id);
       localStorage.setItem("token", data.token);
       localStorage.setItem("nome", data.nome);
+      localStorage.setItem("logado", "true"); // Essa é a chave que segura o usuário na Home
 
       alert("Login realizado com sucesso!");
 
-      // 🚀 redireciona
+      // redireciona
       navigate("/home");
 
     } catch (error) {
@@ -52,7 +53,7 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <img src={logo} alt="logo" className="logo-topo" />
+      <img src={logo} alt="logo" className="logo-grande" />
 
       <div className="login-box">
         <h2>Login</h2>
@@ -70,7 +71,7 @@ export default function Login() {
           onChange={(e) => setSenha(e.target.value)}
         />
 
-        <button onClick={handleLogin}>Entrar</button>
+        <button className="btn-cadastro" onClick={handleLogin}>Entrar</button>
 
         <button
     className="btn-cadastro"

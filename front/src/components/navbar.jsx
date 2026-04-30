@@ -17,7 +17,6 @@ export default function Navbar() {
       </div>
 
       <div className="nav-buttons">
-        <button onClick={() => navigate("/home")}>Home</button>
         <button onClick={() => navigate("/usuario")}>Perfil</button>
         <button onClick={logout}>Sair</button>
       </div>

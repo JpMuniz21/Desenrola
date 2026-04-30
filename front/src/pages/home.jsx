@@ -96,7 +96,7 @@ export default function Home() {
             <option value="dia">por dia</option>
             <option value="mês">por mês</option>
           </select>
-          <button onClick={adicionar}>Adicionar</button>
+          <button className="btn-cadastro" onClick={adicionar}>Adicionar</button>
         </div>
 
         {/* READ + UPDATE + DELETE */}
