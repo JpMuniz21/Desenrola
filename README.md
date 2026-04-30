@@ -10,7 +10,7 @@ A aplicação foi desenvolvida utilizando React para front, JS para back e mySQL
 - **Henrique de Carvalho**
 - **Lucas Porto** 
 - **Lorena Brilhante** 
-tt
+
 ## 🛠️ Tecnologias & Segurança (RF06)
 - **Front-end:** React.js
 - **Back-end:** Node.js + Express
