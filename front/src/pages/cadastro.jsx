@@ -2,26 +2,27 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../imagem/logo.png";
 
-export default function Login() {
+export default function Cadastro() {
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
   const navigate = useNavigate();
 
-  async function handleLogin() {
-    // 🔒 validação básica
-    if (!email || !senha) {
+  async function handleCadastro() {
+    if (!nome || !email || !senha) {
       alert("Preencha todos os campos");
       return;
     }
 
     try {
-      const res = await fetch("http://localhost:3000/login", {
+      const res = await fetch("http://localhost:3000/usuarios", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          nome,
           email,
           senha,
         }),
@@ -30,22 +31,17 @@ export default function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        // 🔥 erro vindo do backend
-        throw new Error(data.mensagem || "Erro no login");
+        throw new Error(data.erro || "Erro ao cadastrar");
       }
 
-      // 💾 salva dados do usuário
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("nome", data.nome);
+      alert("Cadastro realizado com sucesso!");
 
-      alert("Login realizado com sucesso!");
-
-      // 🚀 redireciona
-      navigate("/home");
+      // volta pro login
+      navigate("/");
 
     } catch (error) {
-      console.error("Erro login:", error);
-      alert(error.message || "Erro ao conectar com servidor");
+      console.error(error);
+      alert(error.message);
     }
   }
 
@@ -54,9 +50,16 @@ export default function Login() {
       <img src={logo} alt="logo" className="logo-topo" />
 
       <div className="login-box">
-        <h2>Login</h2>
+        <h2>Cadastro</h2>
 
         <input
+          placeholder="Nome"
+          value={nome}
+          onChange={(e) => setNome(e.target.value)}
+        />
+
+        <input
+          type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -69,15 +72,7 @@ export default function Login() {
           onChange={(e) => setSenha(e.target.value)}
         />
 
-        <button onClick={handleLogin}>Entrar</button>
-
-        <button
-    className="btn-cadastro"
-    onClick={() => navigate("/cadastro")}
-  >
-    Criar uma conta
-  </button>
-
+        <button onClick={handleCadastro}>Cadastrar</button>
       </div>
     </div>
   );
