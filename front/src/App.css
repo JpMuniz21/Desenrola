@@ -8,12 +8,13 @@
 
 body {
   background-color: #15213F;
+  font-family: sans-serif;
   color: #333;
 }
 
 /* NAVBAR */
 .navbar {
-  background: #0f2747;
+  background: #15213F;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,11 +35,13 @@ body {
 }
 
 .navbar .actions button {
-  margin-left: 10px;
-  padding: 8px 15px;
-  border-radius: 20px;
+  background: #ff8c42;
+  color: white;
   border: none;
+  padding: 10px;
+  border-radius: 20px;
   cursor: pointer;
+  transition: 0.3s;
 }
 
 .btn-primary {
@@ -91,6 +94,10 @@ body {
   cursor: pointer;
 }
 
+.login-box button:hover {
+  opacity: 0.8;
+}
+
 .logo-topo {
   position: fixed;
   top: 20px;
@@ -102,14 +109,22 @@ body {
 }
 /* CONTAINER PRINCIPAL */
 .container {
-  padding: 20px;
+   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 40px;
 }
 
 /* LISTA DE CARDS */
 .cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  background: #d9d9d9;
+  padding: 20px;
+  border-radius: 12px;
+  width: 300px;
+  color: #000;
+  margin: 10px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
 }
 
 /* CARD */
@@ -139,10 +154,16 @@ body {
 }
 
 .card button {
+  background: #ff8c42;
+  color: white;
   border: none;
-  padding: 5px 10px;
-  border-radius: 10px;
+  padding: 10px;
+  border-radius: 20px;
   cursor: pointer;
+  transition: 0.3s;
+}
+.card button:hover {
+  opacity: 0.8;
 }
 
 .btn-delete {
@@ -181,5 +202,10 @@ body {
   border: none;
   border-radius: 20px;
   cursor: pointer;
+  transition: 0.3s;
+}
+
+.form-container button:hover {
+  opacity: 0.8;
 }
 
