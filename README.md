@@ -1,4 +1,4 @@
-# 🚀 Desenrola
+# 🪢 Desenrola
 **Plataforma Full Stack de economia colaborativa para aluguel de itens de nicho em Fortaleza/CE.**
 *Economize pagando somente pelo oque usar ou ganhe alugando aquilo que não usa*
 
@@ -43,3 +43,9 @@ node index.js
 - Pagina de Criação de produto
 - Pagina de Usuario
 - Pagina de Chat`
+
+### 2. Front-end
+```bash
+cd front
+npm install
+npm start
