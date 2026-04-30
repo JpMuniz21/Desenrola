@@ -1,10 +1,13 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const app = express();
-const SECRET_KEY = "desenrola_unifor_2026"; // Necessário para UC05
+const SECRET_KEY = process.env.JWT_SECRET; // Necessário para UC05
+const PORT =  
 
 // --- Middlewares ---
 app.use(cors());
