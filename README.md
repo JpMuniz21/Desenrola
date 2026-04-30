@@ -25,6 +25,7 @@ cd back
 npm install
 # Crie seu .env baseado no .env.example
 node index.js
+```
 
 ## Progresso:
 ### Back-end:
@@ -42,10 +43,9 @@ node index.js
 - Pagina Produto
 - Pagina de Criação de produto
 - Pagina de Usuario
-- Pagina de Chat`
+- Pagina de Chat
 
-### 2. Front-end
-```bash
+### 2. Front
 cd front
 npm install
 npm start
