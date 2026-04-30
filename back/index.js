@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 
 const app = express();
 const SECRET_KEY = process.env.JWT_SECRET; // Necessário para UC05
-const PORT =  
+const PORT = process.env.PORT || 3001;
 
 // --- Middlewares ---
 app.use(cors());
@@ -165,7 +165,6 @@ app.get('/simular-caucao/:id', (req, res) => {
 });
 
 // --- Inicialização do Servidor ---
-const PORT = 3001;
 app.listen(PORT, () => {
     console.log(`API DESENROLA ATIVA: http://localhost:${PORT}`);
 });
