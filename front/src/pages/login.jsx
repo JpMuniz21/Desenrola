@@ -28,6 +28,7 @@ export default function Login() {
       });
 
       const data = await res.json();
+      localStorage.setItem("userId", data.id);
 
       if (!res.ok) {
         // 🔥 erro vindo do backend
