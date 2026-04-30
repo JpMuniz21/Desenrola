@@ -26,6 +26,12 @@ npm install
 # Crie seu .env baseado no .env.example
 node index.js
 ```
+### 2. Front-end
+```bash
+cd front
+npm install
+npm start
+```
 
 ## Progresso:
 ### Back-end:
@@ -44,10 +50,3 @@ node index.js
 - Pagina de Criação de produto
 - Pagina de Usuario
 - Pagina de Chat
-
-### 2. Front
-```bash
-cd front
-npm install
-npm start
-```
