@@ -1,5 +1,6 @@
 # 🪢 Desenrola
 **Plataforma Full Stack de economia colaborativa para aluguel de itens de nicho em Fortaleza/CE.**
+
 *Economize pagando somente pelo oque usar ou ganhe alugando aquilo que não usa*
 
 A aplicação foi desenvolvida utilizando React para front, JS para back e mySQL para DB
