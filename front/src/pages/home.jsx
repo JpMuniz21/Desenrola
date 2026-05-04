@@ -13,15 +13,21 @@ export default function Home() {
   const [titulo, setTitulo] = useState("");
   const [preco, setPreco] = useState("");
   const [periodo, setPeriodo] = useState("dia");
+  const [imagem, setImagem] = useState(null);
 
-  // --- EFEITOS ---
-  useEffect(() => {
+  // --- desativei temporariamente ---
+ {/* useEffect(() => {
     const logado = localStorage.getItem("logado");
     if (!logado) {
       window.location.href = "/";
     }
     carregarItens();
-  }, []);
+  }, []);*/}
+
+  // quando o de cima voltar,apagar o useEffect abaixo
+    useEffect(() => {
+  carregarItens();
+}, []);
 
   // --- FUNÇÕES DE LÓGICA ---
   async function carregarItens() {
@@ -35,21 +41,27 @@ export default function Home() {
   }
 
   async function adicionar() {
+    const formData = new FormData();
+    formData.append("titulo", titulo);
+    formData.append("preco", Number(preco) || 10);
+    formData.append("periodo", periodo);
+    formData.append("categoria", "geral");
+    formData.append("status", "disponivel");
+    formData.append("avaliacao", 5);
+
+    if(imagem) {
+      formData.append("imagem", imagem);
+    }
     await fetch(API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        titulo,
-        preco: Number(preco) || 10,
-        periodo,
-        categoria: "geral",
-        status: "disponivel",
-        avaliacao: 5,
+      body: formData
       }),
-    });
+
     setTitulo("");
     setPreco("");
     setPeriodo("dia");
+    setImagem(null);
     carregarItens();
   }
 
@@ -85,6 +97,11 @@ export default function Home() {
             onChange={(e) => setTitulo(e.target.value)}
             placeholder="O que você quer anunciar?"
           />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImagem(e.target.files[0])}
+          />
           {/* Resto do código (preço, select, etc) */}
           <input
             type="number"
@@ -106,6 +123,13 @@ export default function Home() {
           </p>
         ) : (
           <div className="cards">
+            {item.imagem && (
+              <img
+                src={`http://localhost:3001/uploads/${item.imagem}`}
+                alt={item.titulo}
+                style={{ width: "100%", borderRadius: "10px" }}
+              />
+            )}
             {itens.map((item) => (
               <div className="card" key={item.id}>
                 <h3>{item.titulo}</h3>

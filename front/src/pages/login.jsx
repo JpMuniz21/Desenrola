@@ -71,7 +71,7 @@ async function handleLogin() {
           onChange={(e) => setSenha(e.target.value)}
         />
 
-        <button className="btn-cadastro" onClick={handleLogin}>Entrar</button>
+        <button className="btn-cadastro" onClick={() => navigate("/home")}>{/*handleLogin*/}Entrar</button>{/*desabilitei temporariamente o login*/}
 
         <button
     className="btn-cadastro"
