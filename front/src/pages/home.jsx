@@ -13,15 +13,21 @@ export default function Home() {
   const [titulo, setTitulo] = useState("");
   const [preco, setPreco] = useState("");
   const [periodo, setPeriodo] = useState("dia");
+  const [imagem, setImagem] = useState(null);
 
-  // --- EFEITOS ---
-  useEffect(() => {
+  // --- desativei temporariamente ---
+ {/* useEffect(() => {
     const logado = localStorage.getItem("logado");
     if (!logado) {
       window.location.href = "/";
     }
     carregarItens();
-  }, []);
+  }, []);*/}
+
+  // quando o de cima voltar,apagar o useEffect abaixo
+    useEffect(() => {
+  carregarItens();
+}, []);
 
   // --- FUNÇÕES DE LÓGICA ---
   async function carregarItens() {
@@ -35,21 +41,27 @@ export default function Home() {
   }
 
   async function adicionar() {
+    const formData = new FormData();
+    formData.append("titulo", titulo);
+    formData.append("preco", Number(preco) || 10);
+    formData.append("periodo", periodo);
+    formData.append("categoria", "geral");
+    formData.append("status", "disponivel");
+    formData.append("avaliacao", 5);
+
+    if(imagem) {
+      formData.append("imagem", imagem);
+    }
     await fetch(API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        titulo,
-        preco: Number(preco) || 10,
-        periodo,
-        categoria: "geral",
-        status: "disponivel",
-        avaliacao: 5,
+      body: formData
       }),
-    });
+
     setTitulo("");
     setPreco("");
     setPeriodo("dia");
+    setImagem(null);
     carregarItens();
   }
 
@@ -80,24 +92,60 @@ export default function Home() {
       <div className="container">
         {/* CREATE */}
         <div className="form-container">
-          <input
-            value={titulo}
-            onChange={(e) => setTitulo(e.target.value)}
-            placeholder="O que você quer anunciar?"
-          />
-          {/* Resto do código (preço, select, etc) */}
-          <input
-            type="number"
-            value={preco}
-            onChange={(e) => setPreco(e.target.value)}
-            placeholder="Preço"
-          />
-          <select value={periodo} onChange={(e) => setPeriodo(e.target.value)}>
-            <option value="dia">por dia</option>
-            <option value="mês">por mês</option>
-          </select>
-          <button className="btn-cadastro" onClick={adicionar}>Adicionar</button>
-        </div>
+
+          <div className="form-container">
+
+  {/* ESQUERDA */}
+  <div className="left">
+    <input
+      value={titulo}
+      onChange={(e) => setTitulo(e.target.value)}
+      placeholder="Nome do produto"
+    />
+
+    <input
+      type="number"
+      value={preco}
+      onChange={(e) => setPreco(e.target.value)}
+      placeholder="Preço"
+    />
+    {/*<input
+      value={descricao}
+      onChange={(e) => setDescricao(e.target.value)}
+      placeholder="Descrição"
+    />}*/}
+
+    <select value={periodo} onChange={(e) => setPeriodo(e.target.value)}>
+      <option value="dia">por dia</option>
+      <option value="mês">por mês</option>
+    </select>
+
+    <button className="btn-cadastro" onClick={adicionar}>
+      Adicionar
+    </button>
+  </div>
+
+  {/* DIREITA */}
+  <div className="right">
+    <div className="upload">
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => setImagem(e.target.files[0])}
+      />
+
+      {imagem && (
+    <img
+      src={URL.createObjectURL(imagem)}
+      alt="preview"
+      className="preview-img"
+    />
+  )}
+    </div>
+  </div>
+
+</div>
+          </div>
 
         {/* READ + UPDATE + DELETE */}
         {itens.length === 0 ? (

@@ -109,7 +109,7 @@ async function handleLogin() {
           </button>
         </div>
 
-        <button className="btn-cadastro" onClick={handleLogin}>Entrar</button>
+        <button className="btn-cadastro" onClick={() => navigate("/home")}>{/*handleLogin*/}Entrar</button>{/*desabilitei temporariamente o login*/}
 
         <button className="btn-cadastro"onClick={() => navigate("/cadastro")}>Criar uma conta</button>
 
