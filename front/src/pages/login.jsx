@@ -51,12 +51,15 @@ async function handleLogin() {
     }
   }
 
+
   return (
     <div className="login-container">
       <img src={logo} alt="logo" className="logo-grande" />
 
       <div className="login-box">
-        <h2>Login</h2>
+        <h2>Entre e comece a Desenrolar!</h2>
+
+        <div className="linha"><hr/></div>
 
         <input
           placeholder="Email"
@@ -71,7 +74,7 @@ async function handleLogin() {
           onChange={(e) => setSenha(e.target.value)}
         />
 
-        <button className="btn-cadastro" onClick={() => navigate("/home")}>{/*handleLogin*/}Entrar</button>{/*desabilitei temporariamente o login*/}
+        <button className="btn-cadastro" onClick={handleLogin}>Entrar</button>
 
         <button
     className="btn-cadastro"
@@ -80,7 +83,18 @@ async function handleLogin() {
     Criar uma conta
   </button>
 
+      {/* Botão de login com Facebook */}
+        <button className="facebook-btn">
+          <svg viewBox="0 0 24 24">
+            <path fill="white" d="M22 12a10 10 0 1 0-11.5 9.87v-6.99h-2.2v-2.88h2.2V9.41c0-2.17 1.29-3.37 3.26-3.37.94 0 1.92.17 1.92.17v2.11h-1.08c-1.06 0-1.39.66-1.39 1.34v1.61h2.37l-.38 2.88h-1.99v6.99A10 10 0 0 0 22 12z"/>
+          </svg>
+          </button>
+        </div>
+
+        <button className="btn-cadastro" onClick={() => navigate("/home")}>{/*handleLogin*/}Entrar</button>{/*desabilitei temporariamente o login*/}
+
+        <button className="btn-cadastro"onClick={() => navigate("/cadastro")}>Criar uma conta</button>
+
       </div>
-    </div>
   );
 }

@@ -1,0 +1,63 @@
+.feed {
+  flex: 1;
+  padding: 30px;
+}
+
+.feed-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(250px, 1fr));
+
+  gap: 24px;
+}
+
+.card {
+  background: white;
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  width: 100%;
+  height: 220px;
+
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 18px;
+}
+
+.price {
+  color: #ff7a00;
+
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.card button {
+  width: 100%;
+
+  margin-top: 14px;
+
+  padding: 14px;
+
+  background: #ff7a00;
+  color: white;
+
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+}
