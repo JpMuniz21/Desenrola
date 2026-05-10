@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 import ProductCard from "../components/ProductCard";
+import Feed from "../components/Feed";
+
+import "../styles/home.css";
 
 const API = "http://localhost:3001/itens";
 
@@ -88,59 +92,13 @@ export default function Home() {
   }
 
   return (
-    <>
+    <div className="home">
       <Navbar />
-      <div className="container">
-        {/* CREATE */}
-        <div className="form-container">
- 
-  {/* DIREITA */}
-  <div className="right">
-    <div className="upload">
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => setImagem(e.target.files[0])}
-      />
 
-      {imagem && (
-    <img
-      src={URL.createObjectURL(imagem)}
-      alt="preview"
-      className="preview-img"
-    />
-  )}
+      <div className="content">
+        <Sidebar />
+        <Feed />
+      </div>
     </div>
-  </div>
-
-</div>
-          </div>
-
-        {/* READ + UPDATE + DELETE */}
-        {itens.length === 0 ? (
-          <p style={{ textAlign: "center", color: "#888", marginTop: "40px" }}>
-            Nenhum item anunciado em Fortaleza ainda.
-          </p>
-        ) : (
-          <div className="cards">
-             {itens.map((item) => (
-                <ProductCard
-                  key={item.id}
-                  item={item}
-                  editandoId={editandoId}
-                  setEditandoId={setEditandoId}
-                  novoTitulo={novoTitulo}
-                  setNovoTitulo={setNovoTitulo}
-                  novoPreco={novoPreco}
-                  setNovoPreco={setNovoPreco}
-                  novoPeriodo={novoPeriodo}
-                  setNovoPeriodo={setNovoPeriodo}
-                  editarItem={editarItem}
-                  deletar={deletar}
-                />
-              ))}
-          </div>
-        )}
-    </>
   );
 }
