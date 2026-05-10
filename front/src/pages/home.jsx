@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import ProductCard from "../components/ProductCard";
 
 const API = "http://localhost:3001/itens";
 
@@ -92,39 +93,7 @@ export default function Home() {
       <div className="container">
         {/* CREATE */}
         <div className="form-container">
-
-          <div className="form-container">
-
-  {/* ESQUERDA */}
-  <div className="left">
-    <input
-      value={titulo}
-      onChange={(e) => setTitulo(e.target.value)}
-      placeholder="Nome do produto"
-    />
-
-    <input
-      type="number"
-      value={preco}
-      onChange={(e) => setPreco(e.target.value)}
-      placeholder="Preço"
-    />
-    {/*<input
-      value={descricao}
-      onChange={(e) => setDescricao(e.target.value)}
-      placeholder="Descrição"
-    />}*/}
-
-    <select value={periodo} onChange={(e) => setPeriodo(e.target.value)}>
-      <option value="dia">por dia</option>
-      <option value="mês">por mês</option>
-    </select>
-
-    <button className="btn-cadastro" onClick={adicionar}>
-      Adicionar
-    </button>
-  </div>
-
+ 
   {/* DIREITA */}
   <div className="right">
     <div className="upload">
@@ -154,56 +123,24 @@ export default function Home() {
           </p>
         ) : (
           <div className="cards">
-            {itens.map((item) => (
-              <div className="card" key={item.id}>
-                <h3>{item.titulo}</h3>
-                <p>
-                  R$ {item.preco} / {item.periodo || "dia"}
-                </p>
-
-                {editandoId === item.id ? (
-                  <div className="edit-box">
-                    <input
-                      value={novoTitulo}
-                      onChange={(e) => setNovoTitulo(e.target.value)}
-                    />
-                    <input
-                      type="number"
-                      value={novoPreco}
-                      onChange={(e) => setNovoPreco(e.target.value)}
-                    />
-                    <select
-                      value={novoPeriodo}
-                      onChange={(e) => setNovoPeriodo(e.target.value)}
-                    >
-                      <option value="dia">por dia</option>
-                      <option value="mês">por mês</option>
-                    </select>
-                    <button onClick={() => editarItem(item.id)}>Salvar</button>
-                    <button onClick={() => setEditandoId(null)}>
-                      Cancelar
-                    </button>
-                  </div>
-                ) : (
-                  <div className="actions">
-                    <button
-                      onClick={() => {
-                        setEditandoId(item.id);
-                        setNovoTitulo(item.titulo);
-                        setNovoPreco(item.preco);
-                        setNovoPeriodo(item.periodo || "dia");
-                      }}
-                    >
-                      Editar
-                    </button>
-                    <button onClick={() => deletar(item.id)}>Excluir</button>
-                  </div>
-                )}
-              </div>
-            ))}
+             {itens.map((item) => (
+                <ProductCard
+                  key={item.id}
+                  item={item}
+                  editandoId={editandoId}
+                  setEditandoId={setEditandoId}
+                  novoTitulo={novoTitulo}
+                  setNovoTitulo={setNovoTitulo}
+                  novoPreco={novoPreco}
+                  setNovoPreco={setNovoPreco}
+                  novoPeriodo={novoPeriodo}
+                  setNovoPeriodo={setNovoPeriodo}
+                  editarItem={editarItem}
+                  deletar={deletar}
+                />
+              ))}
           </div>
         )}
-      </div>
     </>
   );
 }
