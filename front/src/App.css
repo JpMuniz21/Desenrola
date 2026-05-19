@@ -188,7 +188,6 @@ body {
 }
 
 
-/* BOTÃO EDITAR PERFIL (ESPECÍFICO) */
 .btn-editar-perfil {
     background-color: #ff8c00;
     color: white;
@@ -207,4 +206,27 @@ body {
     background-color: #e07b00;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(255, 140, 0, 0.4);
+}
+
+.btn-profile-logout {
+  background-color: transparent;
+  border: 2px solid #D9534F; 
+  color: #D9534F;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out; 
+}
+
+.btn-profile-logout:hover {
+  background-color: #D9534F;
+  color: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(217, 83, 79, 0.2);
+}
+
+.btn-profile-logout:active {
+  transform: translateY(0);
 }

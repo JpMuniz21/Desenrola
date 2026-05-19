@@ -1,0 +1,293 @@
+/* Centralizar tudo na tela */
+.login-page-wrapper {
+  min-height: 100vh;
+  background-color: #f8f9fa; /* Fundo claro como você preferiu */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.login-content-container {
+  display: grid;
+  grid-template-columns: 1fr 300px 420px;
+  gap: 40px;
+  max-width: 1400px;
+  width: 95%;
+  align-items: center;
+}
+
+
+.login-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 450px;
+}
+
+.login-left h1 {
+  font-size: 2.8rem;
+  color: #15213f;
+  white-space: nowrap;
+  line-height: 1.1;
+  margin-top: 0;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.login-hero-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 280px; 
+}
+
+.hero-img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;  
+  opacity: 0.95;
+  filter: drop-shadow(0 8px 15px rgba(0,0,0,0.05));
+}
+
+.hero-camera-wrapper {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+
+.hero-camera-img {
+  max-width: 110%;
+  width: auto;
+  height: auto;
+  position: relative;
+  left: -40px;
+  object-fit: contain;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.hero-features {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.hero-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 16px;
+  color: #333;
+}
+
+.hero-icon-box {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-icon-box.orange { background-color: #fff1eb; }
+.hero-icon-box.light-orange { background-color: #fff7ed; }
+
+.hero-icon-box img { width: 24px; }
+
+/* Card de Segurança Cinza */
+.hero-secure-card {
+  background-color: #f1f3f5;
+  padding: 20px;
+  border-radius: 16px;
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  margin-top: 20px;
+  max-width: 400px;
+}
+
+.hero-secure-card strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.hero-secure-card span {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.shield-img { width: 28px; margin-top: 5px; }
+
+/* AJUSTE NA DIREITA PARA O CARD */
+.login-right {
+  display: flex;
+  justify-content: flex-end; 
+}
+
+.login-card {
+  background: white;
+  padding: 40px;
+  border-radius: 28px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.login-card h2 {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  text-align: center;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+/* Inputs e Labels */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.input-group input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  width: 100%;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.toggle-password img {
+  width: 20px !important; 
+  height: auto;
+}
+
+/* Botão Entrar */
+.btn-primary {
+  width: 100%;
+  background-color: #ffa44f;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* Estilização do link de recuperar senha */
+.forgot-password {
+  color: #ffa44f;
+  text-decoration: none; 
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.forgot-password:hover {
+  color: #ffa44f; 
+  text-decoration: underline; 
+}
+
+
+.input-group label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Redes Sociais - Domando os ícones gigantes */
+.divider {
+  text-align: center;
+  margin: 25px 0;
+  color: #999;
+  font-size: 12px;
+  position: relative;
+}
+
+.social-login {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.social-btn {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+}
+
+.social-btn img {
+  width: 24px !important;
+  height: 24px !important;
+  object-fit: contain;
+}
+
+.signup-link {
+  text-align: center;
+  font-size: 13px;
+}
+
+.signup-link a {
+  color: #ffa44f;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+@media (max-width: 1200px) {
+  .login-content-container {
+    grid-template-columns: 1.2fr 1fr; 
+    gap: 50px;
+  }
+  .login-hero-center {
+    display: none; 
+  }
+}

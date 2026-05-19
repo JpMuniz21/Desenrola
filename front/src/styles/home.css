@@ -7,3 +7,46 @@ body {
 .content {
   display: flex;
 }
+
+.sidebar button, 
+.filtros-container button {
+    background-color: #fda34f; 
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 300;
+    transition: all 0.2s ease-in-out;
+}
+
+.sidebar button:hover,
+.filtros-container button:hover {
+    background-color: #fda34f; 
+    filter: brightness(1.1);
+    transform: translateY(-1px); 
+}
+
+.sidebar button:active,
+.filtros-container button:active {
+    transform: translateY(0);
+    filter: brightness(0.9);
+}
+
+.sidebar select {
+    cursor: pointer;
+    background-color: white; 
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    width: 100%;
+    transition: border-color 0.2s ease;
+}
+
+.sidebar select:hover {
+    border-color: #fda34f; 
+}
+
+.sidebar select option {
+    cursor: pointer;
+}
