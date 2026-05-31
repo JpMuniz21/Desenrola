@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Usuario from "./pages/Usuario";
 import Recuperar from "./components/Recuperar";
 import Anuncio from "./components/Anuncio";
+import Chat from "./components/chat";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/usuario" element={<Usuario />} />
         <Route path="/recuperar" element={<Recuperar />} />
         <Route path="/anunciar" element={<Anuncio />} />
+        <Route path="/chat" element={<Chat />} />
       </Routes>
     </BrowserRouter>
   );
