@@ -1,11 +1,22 @@
 require('dotenv').config();
 
+const http = require('http');
+const { Server } = require('socket.io');
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const app = express();
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+    cors: {
+        origin: "*"
+    }
+});
+
 const SECRET_KEY = process.env.JWT_SECRET; // Necessário para UC05
 const PORT = process.env.PORT || 3001;
 
@@ -20,17 +31,15 @@ app.use(express.json());
 const { Pool } = require('pg');
 
 const connection = new Pool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT || 5432,
+    connectionString: process.env.DATABASE_URL,
     ssl: {
         rejectUnauthorized: false
     }
 });
 
-console.log('🔥 Conectado ao Supabase/PostgreSQL');
+connection.query('SELECT NOW()')
+  .then(() => console.log('✅ Banco conectado'))
+  .catch(err => console.error('❌ Erro banco:', err));
 
 
 let anuncios = [];
@@ -60,8 +69,6 @@ res.status(201).json({
     mensagem: "Usuário cadastrado!",
     id: result.rows[0].id_usuario
 });
-
-        res.status(201).json({ mensagem: "Usuário cadastrado!", id: result.insertId });
 
     } catch (error) {
         console.error(error);
@@ -115,10 +122,12 @@ const rows = result.rows;
  */
 app.get('/usuarios/:id', async (req, res) => {
     try {
-        const [rows] = await connection.query(
-            'SELECT id_usuario, nome, email FROM usuario WHERE id_usuario = ?',
-            [req.params.id]
-        );
+        const result = await connection.query(
+    'SELECT id_usuario, nome, email FROM usuario WHERE id_usuario = $1',
+    [req.params.id]
+);
+
+const rows = result.rows;
 
         if (rows.length === 0) {
             return res.status(404).json({ mensagem: "Usuário não encontrado" });
@@ -137,9 +146,9 @@ app.put('/usuarios/:id', async (req, res) => {
         const { nome, email } = req.body;
 
         await connection.query(
-            'UPDATE usuario SET nome = ?, email = ? WHERE id_usuario = ?',
-            [nome, email, req.params.id]
-        );
+    'UPDATE usuario SET nome = $1, email = $2 WHERE id_usuario = $3',
+    [nome, email, req.params.id]
+);
 
         res.json({ mensagem: "Perfil atualizado!" });
 
@@ -148,6 +157,38 @@ app.put('/usuarios/:id', async (req, res) => {
         res.status(500).json({ mensagem: "Erro ao atualizar perfil" });
     }
 });
+
+// ==========================================================
+// SEÇÃO CHAT / MENSAGENS
+// ==========================================================
+
+app.get('/mensagens/:id1/:id2', async (req, res) => {
+
+    const { id1, id2 } = req.params;
+
+    try {
+
+        const result = await connection.query(
+            `
+            SELECT *
+            FROM mensagem
+            WHERE
+            (id_remetente = $1 AND id_destinatario = $2)
+            OR
+            (id_remetente = $2 AND id_destinatario = $1)
+            ORDER BY data_envio
+            `,
+            [id1, id2]
+        );
+
+        res.json(result.rows);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ erro: 'Erro ao buscar mensagens' });
+    }
+});
+
 
 // ==========================================================
 // SEÇÃO 02: CRUD DE ITENS (Gerenciamento de Ofertas)
@@ -222,7 +263,35 @@ app.get('/simular-caucao/:id', (req, res) => {
     });
 });
 
+io.on('connection', (socket) => {
+    console.log('🟢 Usuário conectado');
+
+    socket.on('mensagem', async (msg) => {
+        try {
+            await connection.query(
+                `INSERT INTO mensagem
+                (id_remetente, id_destinatario, conteudo)
+                VALUES ($1, $2, $3)`,
+                [
+                    msg.id_remetente,
+                    msg.id_destinatario,
+                    msg.conteudo
+                ]
+            );
+
+            io.emit('mensagem', msg);
+
+        } catch (error) {
+            console.error('Erro ao salvar mensagem:', error);
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('🔴 Usuário desconectado');
+    });
+});
+
 // --- Inicialização do Servidor ---
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`🚀 API DESENROLA ATIVA: http://localhost:${PORT}`);
 });
