@@ -1,7 +1,5 @@
 require('dotenv').config();
 
-const mysql = require('mysql2/promise');
-
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
@@ -18,20 +16,22 @@ app.use(express.json());
 // ==========================================================
 // 🔌 CONEXÃO COM BANCO DE DADOS (MYSQL)
 // ==========================================================
-let connection;
 
-async function conectarBanco() {
-    connection = await mysql.createConnection({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME
-    });
+const { Pool } = require('pg');
 
-    console.log('🔥 Conectado ao MySQL');
-}
+const connection = new Pool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT || 5432,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
 
-conectarBanco();
+console.log('🔥 Conectado ao Supabase/PostgreSQL');
+
 
 let anuncios = [];
 
@@ -51,10 +51,15 @@ app.post('/usuarios', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const senhaHash = await bcrypt.hash(senha, salt);
 
-        const [result] = await connection.query(
-            'INSERT INTO usuario (nome, email, senha) VALUES (?, ?, ?)',
-            [nome, email, senhaHash]
-        );
+        const result = await connection.query(
+    'INSERT INTO usuario (nome, email, senha) VALUES ($1, $2, $3) RETURNING id_usuario',
+    [nome, email, senhaHash]
+);
+
+res.status(201).json({
+    mensagem: "Usuário cadastrado!",
+    id: result.rows[0].id_usuario
+});
 
         res.status(201).json({ mensagem: "Usuário cadastrado!", id: result.insertId });
 
@@ -72,10 +77,12 @@ app.post('/login', async (req, res) => {
     const { email, senha } = req.body;
 
     try {
-        const [rows] = await connection.query(
-            'SELECT * FROM usuario WHERE email = ?',
-            [email]
-        );
+        const result = await connection.query(
+    'SELECT * FROM usuario WHERE email = $1',
+    [email]
+);
+
+const rows = result.rows;
 
         if (rows.length === 0) {
             return res.status(404).json({ mensagem: "E-mail não cadastrado" });
