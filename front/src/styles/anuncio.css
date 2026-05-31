@@ -1,0 +1,235 @@
+/* src/styles/anuncio.css */
+
+.anuncio-page-bg {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+}
+
+.anuncio-main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.anuncio-card-container {
+  background-color: #F8F9FA;
+  width: 100%;
+  max-width: 950px;
+  border-radius: 24px;
+  display: flex;
+  padding: 35px;
+  gap: 35px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.anuncio-upload-side {
+  flex: 1.1;
+  background-color: #E9ECEF;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 480px;
+  border: 2px dashed #CED4DA;
+  transition: all 0.2s ease;
+}
+
+.anuncio-upload-side:hover {
+  background-color: #DEE2E6;
+  border-color: #FF9F45;
+}
+
+.anuncio-upload-box {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.anuncio-plus-circle {
+  width: 60px;
+  height: 60px;
+  border: 3px solid #6C757D;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 35px;
+  font-weight: bold;
+  color: #6C757D;
+  transition: all 0.2s ease;
+}
+
+.anuncio-upload-side:hover .anuncio-plus-circle {
+  color: #FF9F45;
+  border-color: #FF9F45;
+  transform: scale(1.05);
+}
+
+.anuncio-form-side {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.anuncio-field {
+  width: 100%;
+  background-color: #FFFFFF;
+  border: 2px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 16px 20px;
+  font-size: 16px;
+  color: #1A202C;
+  outline: none;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.anuncio-field:focus {
+  border-color: #FF9F45;
+  box-shadow: 0 0 0 3px rgba(255, 159, 69, 0.15);
+}
+
+.anuncio-field::placeholder {
+  color: #A0AEC0;
+}
+
+.price-center {
+  text-align: center;
+  font-weight: 600;
+  color: #2D3748;
+}
+
+.anuncio-textarea {
+  flex: 1;
+  min-height: 180px;
+  border-radius: 16px;
+  resize: none;
+}
+
+.anuncio-btn-submit {
+  background-color: #FF9F45;
+  border: none;
+  border-radius: 16px;
+  padding: 16px;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(255, 159, 69, 0.3);
+}
+
+.anuncio-btn-submit:hover {
+  background-color: #E68A34;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 159, 69, 0.4);
+}
+
+.anuncio-btn-submit:active {
+  transform: translateY(0);
+}
+
+.anuncio-btn-icon {
+  width: 26px;
+  height: 26px;
+  border: 2px solid #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.anuncio-image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  border-radius: 16px;
+}
+
+.anuncio-upload-box {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.preview-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-remove-image {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: rgba(217, 83, 79, 0.9);
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-remove-image:hover {
+  background-color: #d9534f;
+  transform: scale(1.1);
+}
+
+.anuncio-price-group {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+}
+
+.price-field {
+  flex: 2;
+  text-align: left; 
+}
+
+.select-field {
+  flex: 1;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236C757D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 16px;
+  appearance: none; 
+  padding-right: 40px; 
+  color: #4A525A;
+  font-weight: 500;
+}
+
+.select-field:focus {
+  border-color: #FF9F45; 
+  box-shadow: 0 0 0 3px rgba(255, 159, 69, 0.15);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FF9F45' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+}

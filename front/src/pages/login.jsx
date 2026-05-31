@@ -1,100 +1,147 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import logo from "../imagem/logo.png";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; 
+import '../styles/login.css';
+import Navbar from '../components/navbar';
 
-export default function Login() {
+// Imports de ícones
+import googleIcon from '../assets/google.svg';
+import appleIcon from '../assets/apple.svg';
+import facebookIcon from '../assets/facebook.svg';
+import avatarIcon from '../assets/avatar.svg';
+import groupsIcon from '../assets/groups.svg'; 
+import eyeIcon from '../assets/eye.svg'; 
+import eyeOffIcon from '../assets/eye-off.svg'; 
+import shieldIcon from '../assets/shield.svg';
+import heroCameraImage from '../assets/camera.png';
+
+export default function LoginCard() {
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
-  const navigate = useNavigate();
-
-async function handleLogin() {
-    // validação básica
-    if (!email || !senha) {
-      alert("Preencha todos os campos");
-      return;
-    }
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    console.log("🚀 O BOTÃO FOI CLICADO!");
 
     try {
-      const res = await fetch("http://localhost:3001/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          senha,
-        }),
-      });
+      const response = await axios.post("http://localhost:3001/login", { email, senha });
 
-      const data = await res.json();
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("nome", response.data.nome);
+      localStorage.setItem("userId", response.data.id);
+      localStorage.setItem("logado", "true");
 
-      if (!res.ok) {
-        // erro vindo do backend
-        throw new Error(data.mensagem || "Erro no login");
-      }
-
-      // salva dados do usuário apenas SE o login der certo
-      localStorage.setItem("userId", data.id);
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("nome", data.nome);
-      localStorage.setItem("logado", "true"); // Essa é a chave que segura o usuário na Home
-
-      alert("Login realizado com sucesso!");
-
-      // redireciona
-      navigate("/home");
-
+      alert(`Bem-vindo, ${response.data.nome}!`);
+      navigate("/"); 
     } catch (error) {
-      console.error("Erro login:", error);
-      alert(error.message || "Erro ao conectar com servidor");
+      const mensagemErro = error.response?.data?.mensagem || "Erro ao conectar com o servidor";
+      alert(mensagemErro);
     }
-  }
-
+  };
 
   return (
-    <div className="login-container">
-      <img src={logo} alt="logo" className="logo-grande" />
+    <> {/* <--- Abre o envelope aqui */}
+      <Navbar isLogin={true} />
 
-      <div className="login-box">
-        <h2>Entre e comece a Desenrolar!</h2>
+      <div className="login-page-wrapper">
+        <div className="login-content-container">
+          
+          <div className="login-left">
+            <h1>Alugue itens <br /> de nicho.</h1>
+            <p className="hero-subtitle">Para usar. Para criar. Para compartilhar.</p>
 
-        <div className="linha"><hr/></div>
+            <div className="hero-features">
+              <div className="hero-feature-item">
+                <div className="hero-icon-box orange">
+                   <img src={groupsIcon} alt="Comunidade" />
+                </div>
+                <p>Alugue itens incríveis de outras pessoas.</p>
+              </div>
 
-        <input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+              <div className="hero-feature-item">
+                <div className="hero-icon-box light-orange">
+                   <img src={avatarIcon} alt="Usuários" />
+                </div>
+                <p>Anuncie seus itens e tenha uma renda extra.</p>
+              </div>
 
-        <input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-        />
+              <div className="hero-secure-card">
+                <img src={shieldIcon} alt="Escudo" className="shield-img" />
+                <div>
+                  <strong>Seguro, prático e confiável.</strong>
+                  <span>Comunicação segura, pagamentos protegidos e suporte sempre que precisar.</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <button className="btn-cadastro" onClick={handleLogin}>Entrar</button>
+          <div className="hero-camera-wrapper">
+            <img src={heroCameraImage} alt="Hero Camera" className="hero-img" />
+          </div>
 
-        <button
-    className="btn-cadastro"
-    onClick={() => navigate("/cadastro")}
-  >
-    Criar uma conta
-  </button>
+          <div className="login-right">
+            <div className="login-card">
+              <h2>Bem-vindo(a) ao Desenrola!</h2>
+              <p className="subtitle">Entre para alugar ou anunciar itens de nicho.</p>
 
-      {/* Botão de login com Facebook */}
-        <button className="facebook-btn">
-          <svg viewBox="0 0 24 24">
-            <path fill="white" d="M22 12a10 10 0 1 0-11.5 9.87v-6.99h-2.2v-2.88h2.2V9.41c0-2.17 1.29-3.37 3.26-3.37.94 0 1.92.17 1.92.17v2.11h-1.08c-1.06 0-1.39.66-1.39 1.34v1.61h2.37l-.38 2.88h-1.99v6.99A10 10 0 0 0 22 12z"/>
-          </svg>
-          </button>
+              <form className="login-form" onSubmit={handleLogin}>
+                <div className="input-group">
+                  <label>E-mail</label>
+                  <input 
+                    type="email" 
+                    placeholder="Insira seu e-mail" 
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+
+                <div className="input-group">
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <label>Senha</label>
+                    <a href="/recuperar" className="forgot-password">Esqueceu a senha?</a>
+                  </div>
+                  <div className="password-wrapper">
+                    <input 
+                      type={showPassword ? "text" : "password"} 
+                      placeholder="Insira sua senha" 
+                      required
+                      value={senha}
+                      onChange={(e) => setSenha(e.target.value)}
+                    />
+                    <button 
+                      type="button" 
+                      className="toggle-password"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      <img src={showPassword ? eyeOffIcon : eyeIcon} alt="Ver senha" />
+                    </button>
+                  </div>
+                </div>
+
+                <button type="submit" className="btn-primary">Entrar</button>
+              </form>
+
+              <div className="divider">
+                <span>ou continue com</span>
+              </div>
+
+              <div className="social-login">
+                <button className="social-btn"><img src={googleIcon} alt="Google" /></button>
+                <button className="social-btn"><img src={appleIcon} alt="Apple" /></button>
+                <button className="social-btn"><img src={facebookIcon} alt="Facebook" /></button>
+              </div>
+
+              <p className="signup-link">
+                Não tem conta? <a href="/cadastro">Cadastre-se</a>
+              </p>
+            </div>
+          </div>
+
         </div>
-
-        <button className="btn-cadastro" onClick={() => navigate("/home")}>{/*handleLogin*/}Entrar</button>{/*desabilitei temporariamente o login*/}
-
-        <button className="btn-cadastro"onClick={() => navigate("/cadastro")}>Criar uma conta</button>
-
       </div>
+    </> 
   );
 }
