@@ -1,0 +1,554 @@
+/* ===== ESTILO GLOBAL DA PÁGINA DE USUÁRIO ===== */
+.perfil-page {
+  min-height: 100vh;
+  background-color: #f5f7fa; /* Fundo cinza claro idêntico ao resto do Desenrola */
+}
+
+.perfil-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* CONTAINER PRINCIPAL BRANCO (O CARD QUE SUMIU) */
+.perfil-wrapper-card {
+  background: #ffffff !important; /* Força o fundo branco aparecer */
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* ===== CAPA E AVATAR ===== */
+.perfil-header-banner {
+  position: relative;
+  margin-bottom: 60px; /* Dá espaço para o avatar flutuar */
+}
+
+.perfil-capa-placeholder {
+  height: 160px;
+  background-color: #ede6dd; /* Tom pastel bege do protótipo */
+  width: 100%;
+}
+
+.perfil-avatar-container {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.perfil-avatar-big {
+  width: 110px;
+  height: 110px;
+  background-color: #f0e6df;
+  border: 5px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #655850;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+/* ===== GRID LAYOUT EM DUAS COLUNAS ===== */
+.perfil-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr; 
+  gap: 32px;
+  padding: 0 40px 40px;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.perfil-col-left {
+  min-width: 0;
+}
+
+.perfil-col-right {
+  min-width: 0;
+}
+
+/* ===== COLUNA ESQUERDA (DADOS PESSOAIS) ===== */
+.perfil-nome-titulo {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a2e !important; /* Força a cor escura no título */
+  margin: 0 0 16px 0;
+}
+
+.perfil-info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 1px solid #edf2f7;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+
+.perfil-info-group p {
+  margin: 0;
+  font-size: 15px;
+  color: #4a5568 !important; /* Cor cinza escura visível */
+}
+
+.perfil-info-group strong {
+  color: #1a1a2e !important;
+}
+
+.perfil-meta-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.meta-item-badge span {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a2e !important;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.meta-badge-text {
+  background-color: #edf2f7;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #4a5568 !important;
+  display: inline-block;
+}
+
+.meta-badge-text.bio-text {
+  border-radius: 12px;
+  display: block;
+  line-height: 1.5;
+}
+
+.perfil-action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-perfil-editar, .btn-perfil-sair {
+  flex: 1;
+  padding: 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: center;
+  background: white;
+}
+
+.btn-perfil-editar {
+  border: 1px solid #b8a69a;
+  color: #7c695c;
+}
+
+.btn-perfil-editar:hover {
+  background-color: #f7f5f3;
+}
+
+.btn-perfil-sair {
+  border: 1px solid #c0392b;
+  color: #c0392b;
+}
+
+.btn-perfil-sair:hover {
+  background-color: #fdf2f2;
+}
+
+/* ===== COLUNA DIREITA (ESTATÍSTICAS E ABAS) ===== */
+.perfil-estatisticas-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.estatistica-box {
+  flex: 1;
+  background-color: #f7fafc;
+  border-radius: 14px;
+  padding: 14px 12px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+}
+
+.estatistica-box h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e !important;
+}
+
+.estatistica-box p {
+  margin: 0;
+  font-size: 11px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #718096 !important;
+  font-weight: 600;
+}
+
+/* ABAS NAV */
+.perfil-tabs-nav {
+  display: flex;
+  border-bottom: 2px solid #edf2f7;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 10px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #718096;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.tab-btn:hover {
+  color: #1a1a2e;
+}
+
+.tab-ativa {
+  color: #1a1a2e;
+}
+
+.tab-ativa::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #1a1a2e;
+}
+
+.tab-vazia-text {
+  color: #718096;
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* SEÇÃO ANÚNCIOS INTERNOS */
+.section-interna-titulo {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a2e !important;
+  margin: 0 0 16px 0;
+}
+
+.perfil-anuncio-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.perfil-anuncio-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.perfil-anuncio-info {
+  flex: 1;
+}
+
+.perfil-anuncio-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e !important;
+}
+
+.perfil-anuncio-info p {
+  margin: 0;
+  font-size: 13px;
+  color: #ffa44f !important;
+  font-weight: 700;
+}
+
+.perfil-anuncio-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-anuncio-editar, .btn-anuncio-excluir {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-anuncio-editar {
+  background-color: #edf2f7;
+  color: #4a5568;
+}
+
+.btn-anuncio-excluir {
+  background-color: #fff5f5;
+  color: #e53e3e;
+}
+
+.btn-anuncio-editar svg, .btn-anuncio-excluir svg {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-anuncio-editar:hover svg {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+.btn-anuncio-excluir:hover svg {
+  transform: scale(1.15) rotate(8deg);
+}
+
+
+@media (max-width: 900px) {
+  .perfil-content-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 0 24px 24px;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(26, 26, 46, 0.5) !important; 
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-perfil-card {
+  background: #ffffff !important; 
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: modalSurgir 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalSurgir {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-perfil-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #edf2f7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-perfil-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a2e !important;
+}
+
+.btn-modal-fechar {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #a0aec0;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.btn-modal-fechar:hover {
+  color: #4a5568;
+}
+
+/* FORMULÁRIO */
+.modal-perfil-form {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #ffffff !important;
+}
+
+.form-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left; 
+}
+
+.form-item label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a5568 !important;
+}
+
+.form-item input,
+.form-item textarea {
+  padding: 11px 14px;
+  border: 1px solid #cbd5e0;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #2d3748 !important;
+  outline: none;
+  transition: all 0.2s;
+  background: #fafafa;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-item input:focus,
+.form-item textarea:focus {
+  border-color: #ffa44f;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 164, 79, 0.1);
+}
+
+/* LINHA DA CIDADE E UF LADO A LADO */
+.form-row-duplo {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.form-row-duplo .form-item {
+  flex: 1;
+}
+
+.form-row-duplo .input-estado {
+  flex: 0.3; 
+}
+
+/* FOOTER DO MODAL (BOTÕES) */
+.modal-perfil-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn-cancelar-modal,
+.btn-salvar-modal {
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-cancelar-modal {
+  background: none;
+  border: 1px solid #e2e8f0;
+  color: #718096;
+}
+
+.btn-cancelar-modal:hover {
+  background-color: #f7fafc;
+}
+
+.btn-salvar-modal {
+  background-color: #ffa44f;
+  color: white;
+  border: none;
+}
+
+.btn-salvar-modal:hover {
+  background-color: #e8913d;
+}
+
+
+.perfil-capa-imagem {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+.perfil-avatar-imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.btn-editar-foto {
+  position: absolute;
+  background: #ffffff;
+  color: #4a5568;
+  border: 1px solid #cbd5e0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 10;
+}
+
+.btn-editar-foto:hover {
+  transform: scale(1.15);
+  color: #ffa44f;
+  border-color: #ffa44f;
+}
+
+.btn-editar-capa {
+  bottom: 12px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+}
+
+.btn-editar-avatar {
+  bottom: 2px;
+  right: 2px;
+  width: 28px;
+  height: 28px;
+  background: #ffa44f;
+  color: white;
+  border: 2px solid white;
+}
+
+.btn-editar-avatar:hover {
+  background: #e8913d;
+  color: white;
+  border-color: white;
+}
