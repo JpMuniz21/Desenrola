@@ -6,9 +6,9 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { Pool } = require('pg');
 
 const app = express();
-
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -17,7 +17,7 @@ const io = new Server(server, {
     }
 });
 
-const SECRET_KEY = process.env.JWT_SECRET; // Necessário para UC05
+const SECRET_KEY = process.env.JWT_SECRET; 
 const PORT = process.env.PORT || 3001;
 
 // --- Middlewares ---
@@ -25,16 +25,13 @@ app.use(cors());
 app.use(express.json());
 
 // ==========================================================
-// ASPECT - Middleware de autenticação JWT
+// 🛡️ MIDDLEWARE DE AUTENTICAÇÃO JWT
 // ==========================================================
-
 function autenticarToken(req, res, next) {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
-        return res.status(401).json({
-            mensagem: 'Token não fornecido'
-        });
+        return res.status(401).json({ mensagem: 'Token não fornecido' });
     }
 
     const token = authHeader.split(' ')[1];
@@ -44,18 +41,13 @@ function autenticarToken(req, res, next) {
         req.usuario = usuario;
         next();
     } catch (error) {
-        return res.status(403).json({
-            mensagem: 'Token inválido'
-        });
+        return res.status(403).json({ mensagem: 'Token inválido' });
     }
 }
 
 // ==========================================================
-// 🔌 CONEXÃO COM BANCO DE DADOS (MYSQL)
+// 🔌 CONEXÃO COM BANCO DE DADOS (POSTGRESQL)
 // ==========================================================
-
-const { Pool } = require('pg');
-
 const connection = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
@@ -64,14 +56,14 @@ const connection = new Pool({
 });
 
 connection.query('SELECT NOW()')
-  .then(() => console.log('✅ Banco conectado'))
-  .catch(err => console.error('❌ Erro banco:', err));
+    .then(() => console.log('✅ Banco PostgreSQL conectado'))
+    .catch(err => console.error('❌ Erro no banco:', err));
 
-
+// TODO: Migrar esta array para uma tabela 'item' no PostgreSQL para persistência real
 let anuncios = [];
 
 // ==========================================================
-// SEÇÃO 01: CRUD DE USUÁRIOS (Segurança e Acesso)
+// 👤 SEÇÃO 01: CRUD DE USUÁRIOS (Segurança e Acesso)
 // ==========================================================
 
 /**
@@ -82,20 +74,18 @@ app.post('/usuarios', async (req, res) => {
     const { nome, email, senha } = req.body;
 
     try {
-        // Proteção de dados sensíveis (RF06)
         const salt = await bcrypt.genSalt(10);
         const senhaHash = await bcrypt.hash(senha, salt);
 
         const result = await connection.query(
-    'INSERT INTO usuario (nome, email, senha) VALUES ($1, $2, $3) RETURNING id_usuario',
-    [nome, email, senhaHash]
-);
+            'INSERT INTO usuario (nome, email, senha) VALUES ($1, $2, $3) RETURNING id_usuario',
+            [nome, email, senhaHash]
+        );
 
-res.status(201).json({
-    mensagem: "Usuário cadastrado!",
-    id: result.rows[0].id_usuario
-});
-
+        res.status(201).json({
+            mensagem: "Usuário cadastrado!",
+            id: result.rows[0].id_usuario
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ erro: 'Erro ao cadastrar usuário' });
@@ -104,31 +94,28 @@ res.status(201).json({
 
 /**
  * [READ] - Login e Autenticação JWT (UC05)
- * Valida credenciais e gera token de acesso.
  */
 app.post('/login', async (req, res) => {
     const { email, senha } = req.body;
 
     try {
         const result = await connection.query(
-    'SELECT * FROM usuario WHERE email = $1',
-    [email]
-);
-
-const rows = result.rows;
+            'SELECT * FROM usuario WHERE email = $1',
+            [email]
+        );
+        const rows = result.rows;
 
         if (rows.length === 0) {
             return res.status(404).json({ mensagem: "E-mail não cadastrado" });
         }
 
         const usuario = rows[0];
-
         const senhaValida = await bcrypt.compare(senha, usuario.senha);
+        
         if (!senhaValida) {
             return res.status(401).json({ mensagem: "Senha inválida" });
         }
 
-        // Geração do token para sessões seguras
         const token = jwt.sign({ id: usuario.id_usuario }, SECRET_KEY, { expiresIn: '2h' });
 
         res.json({ 
@@ -136,7 +123,6 @@ const rows = result.rows;
             nome: usuario.nome,
             id: usuario.id_usuario
         });
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ erro: 'Erro no login' });
@@ -144,40 +130,40 @@ const rows = result.rows;
 });
 
 /**
- * [READ/UPDATE/DELETE] - Gerenciar Perfil (UC04)
+ * [READ] - Gerenciar Perfil (UC04)
  */
-app.get('/usuarios/:id',autenticarToken, async (req, res) => {
+app.get('/usuarios/:id', autenticarToken, async (req, res) => {
     try {
         const result = await connection.query(
-    'SELECT id_usuario, nome, email FROM usuario WHERE id_usuario = $1',
-    [req.params.id]
-);
-
-const rows = result.rows;
+            'SELECT id_usuario, nome, email FROM usuario WHERE id_usuario = $1',
+            [req.params.id]
+        );
+        const rows = result.rows;
 
         if (rows.length === 0) {
             return res.status(404).json({ mensagem: "Usuário não encontrado" });
         }
 
         res.json(rows[0]);
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ erro: 'Erro ao buscar usuário' });
     }
 });
 
-app.put('/usuarios/:id',autenticarToken, async (req, res) => {
+/**
+ * [UPDATE] - Atualizar Perfil (UC04)
+ */
+app.put('/usuarios/:id', autenticarToken, async (req, res) => {
     try {
         const { nome, email } = req.body;
 
         await connection.query(
-    'UPDATE usuario SET nome = $1, email = $2 WHERE id_usuario = $3',
-    [nome, email, req.params.id]
-);
+            'UPDATE usuario SET nome = $1, email = $2 WHERE id_usuario = $3',
+            [nome, email, req.params.id]
+        );
 
-        res.json({ mensagem: "Perfil atualizado!" });
-
+        res.json({ mensagem: "Perfil updated!" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ mensagem: "Erro ao atualizar perfil" });
@@ -185,39 +171,29 @@ app.put('/usuarios/:id',autenticarToken, async (req, res) => {
 });
 
 // ==========================================================
-// SEÇÃO CHAT / MENSAGENS
+// 💬 SEÇÃO 02: CHAT / MENSAGENS (Real-time)
 // ==========================================================
 
-app.get('/mensagens/:id1/:id2',autenticarToken, async (req, res) => {
-
+app.get('/mensagens/:id1/:id2', autenticarToken, async (req, res) => {
     const { id1, id2 } = req.params;
 
     try {
-
         const result = await connection.query(
-            `
-            SELECT *
-            FROM mensagem
-            WHERE
-            (id_remetente = $1 AND id_destinatario = $2)
-            OR
-            (id_remetente = $2 AND id_destinatario = $1)
-            ORDER BY data_envio
-            `,
+            `SELECT * FROM mensagem 
+             WHERE (id_remetente = $1 AND id_destinatario = $2)
+             OR (id_remetente = $2 AND id_destinatario = $1)
+             ORDER BY data_envio`,
             [id1, id2]
         );
-
         res.json(result.rows);
-
     } catch (error) {
         console.error(error);
         res.status(500).json({ erro: 'Erro ao buscar mensagens' });
     }
 });
 
-
 // ==========================================================
-// SEÇÃO 02: CRUD DE ITENS (Gerenciamento de Ofertas)
+// 📦 SEÇÃO 03: CRUD DE ITENS (Gerenciamento de Ofertas)
 // ==========================================================
 
 /**
@@ -230,7 +206,7 @@ app.get('/itens', (req, res) => {
 /**
  * [CREATE] - Cadastrar Item (RF02 / UC03)
  */
-app.post('/itens',autenticarToken, (req, res) => {
+app.post('/itens', autenticarToken, (req, res) => {
     const novoItem = {
         id: anuncios.length + 1,
         status: "disponivel",
@@ -243,7 +219,7 @@ app.post('/itens',autenticarToken, (req, res) => {
 /**
  * [UPDATE] - Editar ou Alterar Status (RF04)
  */
-app.put('/itens/:id',autenticarToken, (req, res) => {
+app.put('/itens/:id', autenticarToken, (req, res) => {
     const { id } = req.params;
     const index = anuncios.findIndex(a => a.id == id);
 
@@ -258,7 +234,7 @@ app.put('/itens/:id',autenticarToken, (req, res) => {
 /**
  * [DELETE] - Remover Item
  */
-app.delete('/itens/:id',autenticarToken, (req, res) => {
+    app.delete('/itens/:id', autenticarToken, (req, res) => {
     const index = anuncios.findIndex(a => a.id == req.params.id);
 
     if (index !== -1) {
@@ -270,7 +246,7 @@ app.delete('/itens/:id',autenticarToken, (req, res) => {
 });
 
 // ==========================================================
-// SEÇÃO 03: REGRAS DE NEGÓCIO (Fluxo de Aluguel)
+// 🧠 SEÇÃO 04: REGRAS DE NEGÓCIO (Fluxo de Aluguel)
 // ==========================================================
 
 /**
@@ -289,31 +265,28 @@ app.get('/simular-caucao/:id', (req, res) => {
     });
 });
 
+// ==========================================================
+// 🔌 SOCKET.IO (Eventos em tempo real)
+// ==========================================================
 io.on('connection', (socket) => {
-    console.log('🟢 Usuário conectado');
+    console.log('🟢 Usuário conectado via Socket');
 
     socket.on('mensagem', async (msg) => {
         try {
             await connection.query(
-                `INSERT INTO mensagem
-                (id_remetente, id_destinatario, conteudo)
-                VALUES ($1, $2, $3)`,
-                [
-                    msg.id_remetente,
-                    msg.id_destinatario,
-                    msg.conteudo
-                ]
+                `INSERT INTO mensagem (id_remetente, id_destinatario, conteudo)
+                 VALUES ($1, $2, $3)`,
+                [msg.id_remetente, msg.id_destinatario, msg.conteudo]
             );
 
             io.emit('mensagem', msg);
-
         } catch (error) {
-            console.error('Erro ao salvar mensagem:', error);
+            console.error('Erro ao salvar mensagem via socket:', error);
         }
     });
 
     socket.on('disconnect', () => {
-        console.log('🔴 Usuário desconectado');
+        console.log('🔴 Usuário desconectado do Socket');
     });
 });
 
