@@ -5,7 +5,9 @@ import Login from "./pages/Login";
 import Usuario from "./pages/Usuario";
 import Recuperar from "./components/Recuperar";
 import Anuncio from "./components/Anuncio";
-import ProdutoDetalhes from "./components/ProdutoDetalhes"; // Apontando exatamente para o arquivo com 's'
+import ProdutoDetalhes from "./components/ProdutoDetalhes"; 
+import Aluguel from "./pages/Aluguel";
+import ConfirmarAluguel from "./pages/confirmar_aluguel";
 
 export default function App() {
   return (
@@ -17,6 +19,8 @@ export default function App() {
         <Route path="/recuperar" element={<Recuperar />} />
         <Route path="/anunciar" element={<Anuncio />} />
         <Route path="/produto/:id" element={<ProdutoDetalhes />} />
+        <Route path="/aluguel/:id" element={<Aluguel />} />
+        <Route path="/confirmar-aluguel" element={<ConfirmarAluguel />} />
       </Routes>
     </Router>
   );
