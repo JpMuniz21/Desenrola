@@ -1,0 +1,281 @@
+.aluguel-page {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.aluguel-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+/* ===== COLUNA ESQUERDA ===== */
+.aluguel-left {
+  flex: 1.4;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.aluguel-produto-card {
+  background: white;
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+}
+
+.aluguel-produto-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.aluguel-produto-nome {
+  font-weight: 600;
+  font-size: 15px;
+  color: #1a1a2e;
+  margin: 0 0 4px;
+}
+
+.aluguel-produto-preco {
+  color: #ffa44f;
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0;
+}
+
+/* ===== CALENDÁRIO ===== */
+.aluguel-calendario {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+}
+
+.cal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-weight: 700;
+  font-size: 17px;
+  color: #1a1a2e;
+}
+
+.cal-nav {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #555;
+  padding: 0 8px;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  text-align: center;
+}
+
+.cal-semana {
+  font-size: 13px;
+  font-weight: 600;
+  color: #888;
+  padding-bottom: 8px;
+}
+
+.cal-dia {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 auto;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.cal-dia.disponivel {
+  color: #2e7d32;
+}
+
+.cal-dia.disponivel:hover {
+  background: #e6f4ea;
+}
+
+.cal-dia.indisponivel {
+  color: #c62828;
+  background: #fdecea;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.cal-dia.selecionado-inicio,
+.cal-dia.selecionado-fim {
+  background: #ffa44f;
+  color: white;
+  font-weight: 700;
+}
+
+.cal-dia.no-range {
+  background: #fff3e6;
+  color: #e65100;
+  border-radius: 50%;
+}
+
+.cal-legenda {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #555;
+}
+
+.legenda-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot.green { background: #4caf50; }
+.dot.red { background: #f44336; }
+
+/* ===== RESUMO ===== */
+.aluguel-resumo-card {
+  flex: 1;
+  background: white;
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+  position: sticky;
+  top: 20px;
+}
+
+.resumo-titulo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 20px;
+}
+
+.resumo-datas {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.resumo-data-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.resumo-data-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #aaa;
+  letter-spacing: 0.5px;
+}
+
+.resumo-data-valor {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.resumo-seta {
+  font-size: 20px;
+  color: #aaa;
+}
+
+.resumo-linha {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  color: #444;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.resumo-gratis {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.resumo-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a2e;
+  padding: 16px 0;
+}
+
+.resumo-caucao {
+  background: #fff8f0;
+  border: 1px solid #ffe0b2;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.resumo-caucao span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+}
+
+.resumo-caucao strong {
+  color: #ffa44f;
+}
+
+.resumo-btn {
+  width: 100%;
+  padding: 16px;
+  background: #ffa44f;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-top: 4px;
+}
+
+.resumo-btn:hover:not(:disabled) {
+  background: #e8913d;
+}
+
+.resumo-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

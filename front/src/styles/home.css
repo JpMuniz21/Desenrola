@@ -4,6 +4,10 @@ body {
   font-family: Arial, sans-serif;
 }
 
+.feed {
+  background: #f5f7fa;
+}
+
 .content {
   display: flex;
 }
