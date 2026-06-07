@@ -122,6 +122,7 @@ export default function Home() {
           {itens.map((item) => (
             <ProductCard
               key={item.id}
+              id={item.id}
               titulo={item.titulo}
               preco={item.preco}
               periodo={item.periodo}
