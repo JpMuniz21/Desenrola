@@ -8,7 +8,11 @@ import Home from "./pages/Home";
 import Usuario from "./pages/Usuario";
 import Recuperar from "./components/Recuperar";
 import Anuncio from "./components/Anuncio";
+<<<<<<< HEAD
 import Chat from "./components/chat";
+=======
+import Chat from "./components/Chat";
+>>>>>>> c91dc8f12427b4733b3823bd597710e3792456d9
 
 export default function App() {
   return (
