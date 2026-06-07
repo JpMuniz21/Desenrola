@@ -1,12 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const connection = require('../config/database');
-const autenticarToken = require('../middlewares/auth');
+const SecurityAspect = require('../aspects/securityAspect'); // POA Ativo aqui
 
 
-//[READ] - Buscar Histórico de Mensagens entre dois usuários
-
-router.get('/:id1/:id2', autenticarToken, async (req, res) => {
+// Handler: Buscar Histórico de Mensagens entre dois usuários
+const buscarHistoricoHandler = async (req, res) => {
     const { id1, id2 } = req.params;
 
     try {
@@ -24,6 +23,9 @@ router.get('/:id1/:id2', autenticarToken, async (req, res) => {
         console.error('Erro ao buscar histórico de mensagens:', error);
         res.status(500).json({ erro: 'Erro ao buscar mensagens no banco de dados' });
     }
-});
+};
+
+// O SecurityAspect intercepta a requisição antes de entregar para o Handler
+router.get('/:id1/:id2', SecurityAspect.proteger(buscarHistoricoHandler));
 
 module.exports = router;
