@@ -25,6 +25,32 @@ app.use(cors());
 app.use(express.json());
 
 // ==========================================================
+// ASPECT - Middleware de autenticação JWT
+// ==========================================================
+
+function autenticarToken(req, res, next) {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader) {
+        return res.status(401).json({
+            mensagem: 'Token não fornecido'
+        });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    try {
+        const usuario = jwt.verify(token, SECRET_KEY);
+        req.usuario = usuario;
+        next();
+    } catch (error) {
+        return res.status(403).json({
+            mensagem: 'Token inválido'
+        });
+    }
+}
+
+// ==========================================================
 // 🔌 CONEXÃO COM BANCO DE DADOS (MYSQL)
 // ==========================================================
 
@@ -120,7 +146,7 @@ const rows = result.rows;
 /**
  * [READ/UPDATE/DELETE] - Gerenciar Perfil (UC04)
  */
-app.get('/usuarios/:id', async (req, res) => {
+app.get('/usuarios/:id',autenticarToken, async (req, res) => {
     try {
         const result = await connection.query(
     'SELECT id_usuario, nome, email FROM usuario WHERE id_usuario = $1',
@@ -141,7 +167,7 @@ const rows = result.rows;
     }
 });
 
-app.put('/usuarios/:id', async (req, res) => {
+app.put('/usuarios/:id',autenticarToken, async (req, res) => {
     try {
         const { nome, email } = req.body;
 
@@ -162,7 +188,7 @@ app.put('/usuarios/:id', async (req, res) => {
 // SEÇÃO CHAT / MENSAGENS
 // ==========================================================
 
-app.get('/mensagens/:id1/:id2', async (req, res) => {
+app.get('/mensagens/:id1/:id2',autenticarToken, async (req, res) => {
 
     const { id1, id2 } = req.params;
 
@@ -204,7 +230,7 @@ app.get('/itens', (req, res) => {
 /**
  * [CREATE] - Cadastrar Item (RF02 / UC03)
  */
-app.post('/itens', (req, res) => {
+app.post('/itens',autenticarToken, (req, res) => {
     const novoItem = {
         id: anuncios.length + 1,
         status: "disponivel",
@@ -217,7 +243,7 @@ app.post('/itens', (req, res) => {
 /**
  * [UPDATE] - Editar ou Alterar Status (RF04)
  */
-app.put('/itens/:id', (req, res) => {
+app.put('/itens/:id',autenticarToken, (req, res) => {
     const { id } = req.params;
     const index = anuncios.findIndex(a => a.id == id);
 
@@ -232,7 +258,7 @@ app.put('/itens/:id', (req, res) => {
 /**
  * [DELETE] - Remover Item
  */
-app.delete('/itens/:id', (req, res) => {
+app.delete('/itens/:id',autenticarToken, (req, res) => {
     const index = anuncios.findIndex(a => a.id == req.params.id);
 
     if (index !== -1) {
