@@ -87,7 +87,7 @@ export default function ConfirmarAluguel() {
 
             {/* BOTÃO CONTINUAR */}
             <div className="confirmar-footer">
-              <button className="btn-continuar" onClick={() => alert("Aluguel finalizado!")}>
+              <button className="btn-continuar"onClick={() => navigate("/pagamento", {state: { produto, dias, total, caucao }})}>
                 Continuar
               </button>
             </div>

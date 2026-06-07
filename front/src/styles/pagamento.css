@@ -1,0 +1,275 @@
+.pagamento-page {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.pagamento-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.pagamento-titulo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffa44f;
+  margin-bottom: 24px;
+}
+
+.pagamento-content {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+/* ===== COLUNA ESQUERDA ===== */
+.pagamento-left {
+  flex: 1.8;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pagamento-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+}
+
+.pagamento-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.pagamento-card-titulo {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagamento-gratis {
+  color: #2e7d32;
+  font-weight: 700;
+}
+
+/* ===== MÉTODOS ===== */
+.metodos-lista {
+  display: flex;
+  flex-direction: column;
+}
+
+.metodo-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 8px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+
+.metodo-item:last-child {
+  border-bottom: none;
+}
+
+.metodo-item:hover {
+  background: #fafafa;
+}
+
+.metodo-selecionado {
+  background: #fff8f0 !important;
+}
+
+.metodo-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.metodo-icon.visa {
+  background: #1a1f71;
+  color: white;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.metodo-icon.nubank {
+  background: #8a05be;
+  color: white;
+  font-size: 16px;
+}
+
+.metodo-icon.pix {
+  background: #e0f5f2;
+}
+
+.metodo-label {
+  flex: 1;
+  font-size: 15px;
+  color: #1a1a2e;
+  font-weight: 500;
+}
+
+.metodo-radio {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  flex-shrink: 0;
+  transition: 0.2s;
+}
+
+.radio-ativo {
+  border-color: #ffa44f;
+  background: #ffa44f;
+  box-shadow: inset 0 0 0 4px white;
+}
+
+/* ===== FOOTER ===== */
+.pagamento-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-continuar {
+  background: #ffa44f;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 48px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-continuar:hover:not(:disabled) {
+  background: #e8913d;
+}
+
+.btn-continuar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== COLUNA DIREITA ===== */
+.pagamento-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 20px;
+}
+
+.pagamento-resumo-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+}
+
+.resumo-titulo {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+}
+
+.resumo-linha {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #444;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.resumo-gratis {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.resumo-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a2e;
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.pagamento-caucao-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+}
+
+.caucao-titulo {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.caucao-texto {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.btn-continuar svg {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.btn-continuar:hover svg {
+  transform: scale(1.15) rotate(-5deg);
+}
+
+.btn-chat-vendedor {
+  background-color: #ffa44f;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s; 
+}
+
+.btn-chat-vendedor svg {
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: inline-block;
+}
+
+.btn-chat-vendedor:hover {
+  background-color: #e8913d; 
+}
+
+.btn-chat-vendedor:hover svg {
+  transform: scale(1.2) rotate(-8deg);
+}
