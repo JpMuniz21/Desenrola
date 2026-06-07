@@ -1,5 +1,3 @@
-import { socket } from "../socket";
-import { useState, useEffect } from "react";
 import { useState, useEffect } from "react";
 import { socket } from "../socket";
 
@@ -8,14 +6,20 @@ function Chat() {
   const [texto, setTexto] = useState("");
 
   useEffect(() => {
-    socket.on("mensagem", (msg) => {
-      setMensagens((prev) => [...prev, msg]);
-    });
+  socket.on("mensagem", (msg) => {
+    setMensagens((prev) => [...prev, msg]);
+  });
 
-    return () => {
-      socket.off("mensagem");
-    };
-  }, []);
+  socket.on("notificacao", (dados) => {
+    alert("Você recebeu uma nova mensagem!");
+    console.log(dados);
+  });
+
+  return () => {
+    socket.off("mensagem");
+    socket.off("notificacao");
+  };
+}, []);
 
   const enviarMensagem = () => {
     if (!texto.trim()) return;

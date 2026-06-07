@@ -71,6 +71,47 @@ connection.query('SELECT NOW()')
 let anuncios = [];
 
 // ==========================================================
+//  CONEXÃO COM RABBITMQ
+// ==========================================================
+
+const amqp = require('amqplib');
+
+let canalRabbit;
+
+async function conectarRabbitMQ() {
+    try {
+        const conexao = await amqp.connect('amqp://localhost');
+
+        canalRabbit = await conexao.createChannel();
+
+        await canalRabbit.assertQueue('notificacoes');
+
+        console.log('🐰 RabbitMQ conectado');
+
+          canalRabbit.consume('notificacoes', (msg) => {
+
+            const notificacao = JSON.parse(
+                msg.content.toString()
+            );
+
+            console.log(
+                '🔔 Nova notificação:',
+                notificacao
+            );
+
+            io.emit('notificacao', notificacao);
+
+            canalRabbit.ack(msg);
+
+        });
+    } catch (error) {
+        console.error('Erro RabbitMQ:', error);
+    }
+}
+
+conectarRabbitMQ();
+
+// ==========================================================
 // SEÇÃO 01: CRUD DE USUÁRIOS (Segurança e Acesso)
 // ==========================================================
 
@@ -304,6 +345,19 @@ io.on('connection', (socket) => {
                     msg.conteudo
                 ]
             );
+            if (canalRabbit) {
+    canalRabbit.sendToQueue(
+        'notificacoes',
+        Buffer.from(
+            JSON.stringify({
+                tipo: 'nova_mensagem',
+                remetente: msg.id_remetente,
+                destinatario: msg.id_destinatario,
+                texto: msg.conteudo
+            })
+        )
+    );
+}
 
             io.emit('mensagem', msg);
 
