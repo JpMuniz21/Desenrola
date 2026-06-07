@@ -1,13 +1,22 @@
 require('dotenv').config();
 
-const mysql = require('mysql2/promise');
-
+const http = require('http');
+const { Server } = require('socket.io');
 const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const app = express();
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+    cors: {
+        origin: "*"
+    }
+});
+
 const SECRET_KEY = process.env.JWT_SECRET; // Necessário para UC05
 const PORT = process.env.PORT || 3001;
 
@@ -16,22 +25,48 @@ app.use(cors());
 app.use(express.json());
 
 // ==========================================================
-// 🔌 CONEXÃO COM BANCO DE DADOS (MYSQL)
+// ASPECT - Middleware de autenticação JWT
 // ==========================================================
-let connection;
 
-async function conectarBanco() {
-    connection = await mysql.createConnection({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME
-    });
+function autenticarToken(req, res, next) {
+    const authHeader = req.headers.authorization;
 
-    console.log('🔥 Conectado ao MySQL');
+    if (!authHeader) {
+        return res.status(401).json({
+            mensagem: 'Token não fornecido'
+        });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    try {
+        const usuario = jwt.verify(token, SECRET_KEY);
+        req.usuario = usuario;
+        next();
+    } catch (error) {
+        return res.status(403).json({
+            mensagem: 'Token inválido'
+        });
+    }
 }
 
-conectarBanco();
+// ==========================================================
+// 🔌 CONEXÃO COM BANCO DE DADOS (MYSQL)
+// ==========================================================
+
+const { Pool } = require('pg');
+
+const connection = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+
+connection.query('SELECT NOW()')
+  .then(() => console.log('✅ Banco conectado'))
+  .catch(err => console.error('❌ Erro banco:', err));
+
 
 let anuncios = [];
 
@@ -51,12 +86,15 @@ app.post('/usuarios', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const senhaHash = await bcrypt.hash(senha, salt);
 
-        const [result] = await connection.query(
-            'INSERT INTO usuario (nome, email, senha) VALUES (?, ?, ?)',
-            [nome, email, senhaHash]
-        );
+        const result = await connection.query(
+    'INSERT INTO usuario (nome, email, senha) VALUES ($1, $2, $3) RETURNING id_usuario',
+    [nome, email, senhaHash]
+);
 
-        res.status(201).json({ mensagem: "Usuário cadastrado!", id: result.insertId });
+res.status(201).json({
+    mensagem: "Usuário cadastrado!",
+    id: result.rows[0].id_usuario
+});
 
     } catch (error) {
         console.error(error);
@@ -72,10 +110,12 @@ app.post('/login', async (req, res) => {
     const { email, senha } = req.body;
 
     try {
-        const [rows] = await connection.query(
-            'SELECT * FROM usuario WHERE email = ?',
-            [email]
-        );
+        const result = await connection.query(
+    'SELECT * FROM usuario WHERE email = $1',
+    [email]
+);
+
+const rows = result.rows;
 
         if (rows.length === 0) {
             return res.status(404).json({ mensagem: "E-mail não cadastrado" });
@@ -106,12 +146,14 @@ app.post('/login', async (req, res) => {
 /**
  * [READ/UPDATE/DELETE] - Gerenciar Perfil (UC04)
  */
-app.get('/usuarios/:id', async (req, res) => {
+app.get('/usuarios/:id',autenticarToken, async (req, res) => {
     try {
-        const [rows] = await connection.query(
-            'SELECT id_usuario, nome, email FROM usuario WHERE id_usuario = ?',
-            [req.params.id]
-        );
+        const result = await connection.query(
+    'SELECT id_usuario, nome, email FROM usuario WHERE id_usuario = $1',
+    [req.params.id]
+);
+
+const rows = result.rows;
 
         if (rows.length === 0) {
             return res.status(404).json({ mensagem: "Usuário não encontrado" });
@@ -125,14 +167,14 @@ app.get('/usuarios/:id', async (req, res) => {
     }
 });
 
-app.put('/usuarios/:id', async (req, res) => {
+app.put('/usuarios/:id',autenticarToken, async (req, res) => {
     try {
         const { nome, email } = req.body;
 
         await connection.query(
-            'UPDATE usuario SET nome = ?, email = ? WHERE id_usuario = ?',
-            [nome, email, req.params.id]
-        );
+    'UPDATE usuario SET nome = $1, email = $2 WHERE id_usuario = $3',
+    [nome, email, req.params.id]
+);
 
         res.json({ mensagem: "Perfil atualizado!" });
 
@@ -141,6 +183,38 @@ app.put('/usuarios/:id', async (req, res) => {
         res.status(500).json({ mensagem: "Erro ao atualizar perfil" });
     }
 });
+
+// ==========================================================
+// SEÇÃO CHAT / MENSAGENS
+// ==========================================================
+
+app.get('/mensagens/:id1/:id2',autenticarToken, async (req, res) => {
+
+    const { id1, id2 } = req.params;
+
+    try {
+
+        const result = await connection.query(
+            `
+            SELECT *
+            FROM mensagem
+            WHERE
+            (id_remetente = $1 AND id_destinatario = $2)
+            OR
+            (id_remetente = $2 AND id_destinatario = $1)
+            ORDER BY data_envio
+            `,
+            [id1, id2]
+        );
+
+        res.json(result.rows);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ erro: 'Erro ao buscar mensagens' });
+    }
+});
+
 
 // ==========================================================
 // SEÇÃO 02: CRUD DE ITENS (Gerenciamento de Ofertas)
@@ -156,7 +230,7 @@ app.get('/itens', (req, res) => {
 /**
  * [CREATE] - Cadastrar Item (RF02 / UC03)
  */
-app.post('/itens', (req, res) => {
+app.post('/itens',autenticarToken, (req, res) => {
     const novoItem = {
         id: anuncios.length + 1,
         status: "disponivel",
@@ -169,7 +243,7 @@ app.post('/itens', (req, res) => {
 /**
  * [UPDATE] - Editar ou Alterar Status (RF04)
  */
-app.put('/itens/:id', (req, res) => {
+app.put('/itens/:id',autenticarToken, (req, res) => {
     const { id } = req.params;
     const index = anuncios.findIndex(a => a.id == id);
 
@@ -184,7 +258,7 @@ app.put('/itens/:id', (req, res) => {
 /**
  * [DELETE] - Remover Item
  */
-app.delete('/itens/:id', (req, res) => {
+app.delete('/itens/:id',autenticarToken, (req, res) => {
     const index = anuncios.findIndex(a => a.id == req.params.id);
 
     if (index !== -1) {
@@ -215,7 +289,35 @@ app.get('/simular-caucao/:id', (req, res) => {
     });
 });
 
+io.on('connection', (socket) => {
+    console.log('🟢 Usuário conectado');
+
+    socket.on('mensagem', async (msg) => {
+        try {
+            await connection.query(
+                `INSERT INTO mensagem
+                (id_remetente, id_destinatario, conteudo)
+                VALUES ($1, $2, $3)`,
+                [
+                    msg.id_remetente,
+                    msg.id_destinatario,
+                    msg.conteudo
+                ]
+            );
+
+            io.emit('mensagem', msg);
+
+        } catch (error) {
+            console.error('Erro ao salvar mensagem:', error);
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('🔴 Usuário desconectado');
+    });
+});
+
 // --- Inicialização do Servidor ---
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`🚀 API DESENROLA ATIVA: http://localhost:${PORT}`);
 });
