@@ -114,22 +114,8 @@ export default function Home() {
 
       <div className="content">
         <Sidebar />
-
-        <Feed />
-
-        {/* Exemplo mostrando os itens */}
-        <div className="produtos">
-          {itens.map((item) => (
-            <ProductCard
-              key={item.id}
-              id={item.id}
-              titulo={item.titulo}
-              preco={item.preco}
-              periodo={item.periodo}
-              imagem={item.imagem}
-            />
-          ))}
-        </div>
+        <Feed /> 
+        
       </div>
     </div>
   );
