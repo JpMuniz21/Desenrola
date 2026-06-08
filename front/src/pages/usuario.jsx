@@ -1,236 +1,383 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import React, { useState, useEffect } from "react";
+import Navbar from "../components/navbar";
+import "../styles/usuario.css";
 
 export default function Usuario() {
-  const [perfil, setPerfil] = useState(null);
+  const [abaAtiva, setAbaAtiva] = useState("dados");
+  const [isModalAberto, setIsModalAberto] = useState(false);
 
-  // INJETADO: O estado agora já nasce com o item do balão para teste imediato!
-  const [meusItens, setMeusItens] = useState([
-    {
-      id: "teste-balao-123",
-      nome: "Balão de Festa Laranja",
-      preco: "15.00",
-      tipoLocacao: "dia",
-      descricao: "Um balão decorativo perfeito para festas temáticas.",
-      imagem:
-        "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=500&auto=format&fit=crop&q=60", // Foto temporária online
-    },
-  ]);
+  // Estados para as imagens de Capa e Avatar (Mantidos!)
+  const [capa, setCapa] = useState(null);
+  const [avatar, setAvatar] = useState(null);
 
-  const userId = localStorage.getItem("userId");
-  const navigate = useNavigate();
+  // Estados para os dados dinâmicos da API
+  const [meusAnuncios, setMeusAnuncios] = useState([]);
+  const [meusFavoritos, setMeusFavoritos] = useState([]);
 
+  const [usuario, setUsuario] = useState({
+    nomeExibicao: "João Paulo Muniz",
+    nomeCompleto: "João Paulo",
+    email: "joao@unifor.br",
+    cidade: "Fortaleza",
+    estado: "CE",
+    biografia: "Estudante de ADS na UNIFOR desenvolvendo projetos e desenrolando soluções."
+  });
+
+  const [formDados, setFormDados] = useState({ ...usuario });
+
+  // Carrega os dados do Back-end assim que a página abre
   useEffect(() => {
-    async function carregarDados() {
-      try {
-        // Carrega dados do perfil
-        const resPerfil = await fetch(
-          `http://localhost:3001/usuarios/${userId}`,
-        );
-        const dataPerfil = await resPerfil.json();
-        setPerfil(dataPerfil);
+    carregarDadosDoUsuario();
+  }, []);
 
-        // Carrega os itens do banco e junta com o item de teste
-        const resItens = await fetch(
-          `http://localhost:3001/produtos/usuario/${userId}`,
-        );
-        if (resItens.ok) {
-          const dataItens = await resItens.json();
-          if (dataItens.length > 0) {
-            setMeusItens((prev) => [...prev, ...dataItens]); // Junta os dois
-          }
-        }
-      } catch (error) {
-        console.error(
-          "Erro ao carregar dados do banco, usando itens locais:",
-          error,
-        );
-        // Se o back cair, fingimos um perfil para você não travar a tela
-        if (!perfil) {
-          setPerfil({ nome: "João Paulo", email: "joao@unifor.br" });
-        }
-      }
+  async function carregarDadosDoUsuario() {
+    try {
+      // Busca os favoritos (simulando filtro pelo seu usuário)
+      const resFavoritos = await fetch("http://localhost:3001/favoritos?usuarioId=joao_muniz");
+      const dataFav = await resFavoritos.json();
+      setMeusFavoritos(dataFav);
+
+      // Busca os anúncios reais cadastrados na sua API
+      const resAnuncios = await fetch("http://localhost:3001/itens?usuarioId=joao_muniz");
+      const dataAnuncios = await resAnuncios.json();
+      setMeusAnuncios(dataAnuncios);
+    } catch (error) {
+      console.error("Erro ao carregar dados do servidor:", error);
     }
-    carregarDados();
-  }, [userId]);
+  }
 
-  // FUNÇÃO PARA DELETAR ITEM (Funciona localmente e no banco)
-  const handleExcluir = async (id) => {
-    if (window.confirm("Tem certeza que deseja excluir esse anúncio? 🗑️")) {
-      // Se for o item de teste, remove direto do estado do React
-      if (id === "teste-balao-123") {
-        setMeusItens(meusItens.filter((item) => item.id !== id));
-        alert("Item de teste removido com sucesso localmente!");
-        return;
-      }
+  // Remove o favorito do banco de dados ao clicar no coração laranja
+  async function handleRemoverFavorito(idFavorito) {
+    try {
+      await fetch(`http://localhost:3001/favoritos/${idFavorito}`, {
+        method: "DELETE",
+      });
+      // Atualiza a lista chamando o banco novamente
+      carregarDadosDoUsuario();
+    } catch (error) {
+      console.error("Erro ao remover favorito:", error);
+    }
+  }
 
-      // Se for item do banco, faz o processo real
-      try {
-        const res = await fetch(`http://localhost:3001/produtos/${id}`, {
-          method: "DELETE",
-        });
-        if (res.ok) {
-          alert("Item removido do banco de dados!");
-          setMeusItens(meusItens.filter((item) => item.id !== id));
-        }
-      } catch (error) {
-        alert("Erro ao excluir item no servidor, removendo localmente.");
-        setMeusItens(meusItens.filter((item) => item.id !== id));
-      }
+  // Funções de upload de arquivos locais (Mantidas!)
+  const handleCapaChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setCapa(URL.createObjectURL(e.target.files[0]));
     }
   };
 
-  function handleLogout() {
-    localStorage.clear();
-    navigate("/");
-  }
+  const handleAvatarChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setAvatar(URL.createObjectURL(e.target.files[0]));
+    }
+  };
 
-  if (!perfil)
-    return (
-      <p style={{ color: "white", textAlign: "center", marginTop: "50px" }}>
-        Carregando...
-      </p>
-    );
+  const handleAbrirModal = () => {
+    setFormDados({ ...usuario });
+    setIsModalAberto(true);
+  };
+
+  const handleFecharModal = () => setIsModalAberto(false);
+
+  const handleChangeInput = (e) => {
+    const { name, value } = e.target;
+    setFormDados((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSalvarPerfil = (e) => {
+    e.preventDefault();
+    setUsuario({ ...formDados });
+    setIsModalAberto(false);
+  };
 
   return (
-    <>
+    <div className="perfil-page">
       <Navbar />
-      <div className="perfil-container" style={{ paddingBottom: "50px" }}>
-        {/* CARD DE PERFIL */}
-        <div className="perfil-card">
-          <h2>Meu Perfil</h2>
-          <div className="info-grupo">
-            <strong>Nome:</strong> {perfil.nome}
-          </div>
-          <div className="info-grupo">
-            <strong>Email:</strong> {perfil.email}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
-              marginTop: "20px",
-            }}
-          >
-            <button className="btn-editar-perfil">Editar Perfil</button>
-            <button onClick={handleLogout} className="btn-profile-logout">
-              Sair da Conta
-            </button>
-          </div>
-        </div>
+      <main className="perfil-container">
+        <div className="perfil-wrapper-card">
+          
+          {/* SEÇÃO CAPA E AVATAR COM EDITORES */}
+          <div className="perfil-header-banner">
+            <input 
+              type="file" 
+              id="upload-capa" 
+              accept="image/*" 
+              onChange={handleCapaChange} 
+              style={{ display: "none" }} 
+            />
+            
+            {capa ? (
+              <img src={capa} alt="Capa de perfil" className="perfil-capa-imagem" />
+            ) : (
+              <div className="perfil-capa-placeholder"></div>
+            )}
+            
+            <label htmlFor="upload-capa" className="btn-editar-foto btn-editar-capa" title="Editar foto de capa">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            </label>
 
-        {/* SEÇÃO DE MEUS ANÚNCIOS (CRUD) */}
-        <div
-          className="meus-anuncios-section"
-          style={{ maxWidth: "800px", margin: "40px auto", padding: "0 20px" }}
-        >
-          {/* TÍTULO ATUALIZADO: Corrigido para o azul escuro da identidade */}
-          <h3
-            style={{
-              color: "#15213F",
-              marginBottom: "20px",
-              fontSize: "22px",
-              fontWeight: "bold",
-            }}
-          >
-            Meus Itens para Aluguel
-          </h3>
+            <div className="perfil-avatar-container">
+              <input 
+                type="file" 
+                id="upload-avatar" 
+                accept="image/*" 
+                onChange={handleAvatarChange} 
+                style={{ display: "none" }} 
+              />
+              
+              <div className="perfil-avatar-big">
+                {avatar ? (
+                  <img src={avatar} alt="Avatar" className="perfil-avatar-imagem" />
+                ) : (
+                  "JP"
+                )}
+                <label htmlFor="upload-avatar" className="btn-editar-foto btn-editar-avatar" title="Editar foto de perfil">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                </label>
+              </div>
+            </div>
+          </div>
 
-          <div className="itens-grid" style={{ display: "grid", gap: "15px" }}>
-            {meusItens.map((item) => (
-              <div
-                key={item.id}
-                className="item-card-mini"
-                style={{
-                  backgroundColor: "#FFF",
-                  padding: "15px",
-                  borderRadius: "15px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-                }}
-              >
-                <div
-                  style={{ display: "flex", gap: "15px", alignItems: "center" }}
-                >
-                  <img
-                    src={
-                      item.id === "teste-balao-123"
-                        ? item.imagem
-                        : `http://localhost:3001/uploads/${item.imagem}`
-                    }
-                    alt={item.nome}
-                    style={{
-                      width: "60px",
-                      height: "60px",
-                      borderRadius: "10px",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <div>
-                    <h4 style={{ margin: 0, color: "#333", fontSize: "16px" }}>
-                      {item.nome}
-                    </h4>
-                    <span style={{ color: "#FF9F45", fontWeight: "bold" }}>
-                      R$ {item.preco} /{" "}
-                      {item.tipoLocacao === "dia" ? "Dia" : "Mês"}
-                    </span>
-                  </div>
+          {/* GRID DE CONTEÚDO PRINCIPAL */}
+          <div className="perfil-content-grid">
+            
+            {/* COLUNA DA ESQUERDA: INFORMAÇÕES PESSOAIS */}
+            <div className="perfil-col-left">
+              <h2 className="perfil-nome-titulo">{usuario.nomeExibicao}</h2>
+              
+              <div className="perfil-info-group">
+                <p><strong>Nome:</strong> {usuario.nomeCompleto}</p>
+                <p><strong>Email:</strong> {usuario.email}</p>
+              </div>
+
+              <div className="perfil-meta-box">
+                <div className="meta-item-badge">
+                  <span>Cidade/Estado</span>
+                  <div className="meta-badge-text">{usuario.cidade}/{usuario.estado}</div>
                 </div>
-
-                <div style={{ display: "flex", gap: "10px" }}>
-                  {/* Botão Editar com Feedback Visual */}
-                  <button
-                    onClick={() => navigate(`/anunciar?edit=${item.id}`)}
-                    style={{
-                      backgroundColor: "#E9ECEF",
-                      color: "#495057",
-                      border: "none",
-                      padding: "8px 15px",
-                      borderRadius: "8px",
-                      fontWeight: "600",
-                      cursor: "pointer",
-                      transition: "background 0.2s"
-                    }}
-                    onMouseEnter={(e) => e.target.style.backgroundColor = "#DEE2E6"}
-                    onMouseLeave={(e) => e.target.style.backgroundColor = "#E9ECEF"}
-                  >
-                    ✏️ Editar
-                  </button>
-
-                  {/* Botão Excluir com Feedback Visual Invertido */}
-                  <button
-                    onClick={() => handleExcluir(item.id)}
-                    style={{
-                      backgroundColor: "#FFDCE0",
-                      color: "#D9534F",
-                      border: "none",
-                      padding: "8px 15px",
-                      borderRadius: "8px",
-                      fontWeight: "600",
-                      cursor: "pointer",
-                      transition: "all 0.2s"
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = "#D9534F";
-                      e.target.style.color = "#FFF";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = "#FFDCE0";
-                      e.target.style.color = "#D9534F";
-                    }}
-                  >
-                    🗑️ Excluir
-                  </button>
+                <div className="meta-item-badge">
+                  <span>Biografia</span>
+                  <div className="meta-badge-text bio-text">{usuario.biografia}</div>
                 </div>
               </div>
-            ))}
+
+              <div className="perfil-action-buttons">
+                <button className="btn-perfil-editar" onClick={handleAbrirModal}>Editar Perfil</button>
+                <button className="btn-perfil-sair" onClick={() => console.log("Sair...")}>Sair da Conta</button>
+              </div>
+            </div>
+
+            {/* COLUNA DA DIREITA: ESTATÍSTICAS E ABAS */}
+            <div className="perfil-col-right">
+              <div className="perfil-estatisticas-row">
+                <div className="estatistica-box">
+                  <p>Itens Anunciados</p>
+                  <h3>{meusAnuncios.length}</h3>
+                </div>
+                <div className="estatistica-box">
+                  <p>Aluguéis Concluídos</p>
+                  <h3>0</h3>
+                </div>
+                <div className="estatistica-box">
+                  <p>Membro desde</p>
+                  <h3>2026</h3>
+                </div>
+              </div>
+
+              <div className="perfil-tabs-nav">
+                <button 
+                  className={`tab-btn ${abaAtiva === "dados" ? "tab-ativa" : ""}`}
+                  onClick={() => setAbaAtiva("dados")}
+                >
+                  Meus Dados
+                </button>
+                <button 
+                  className={`tab-btn ${abaAtiva === "alugueis" ? "tab-ativa" : ""}`}
+                  onClick={() => setAbaAtiva("alugueis")}
+                >
+                  Meus Aluguéis
+                </button>
+                <button 
+                  className={`tab-btn ${abaAtiva === "favoritos" ? "tab-ativa" : ""}`}
+                  onClick={() => setAbaAtiva("favoritos")}
+                >
+                  Favoritos
+                </button>
+              </div>
+
+              <div className="perfil-tab-content">
+                
+                {/* ABA 1: MEUS ANÚNCIOS (Dados dinâmicos da API) */}
+                {abaAtiva === "dados" && (
+                  <div className="perfil-anuncios-section">
+                    <h3 className="section-interna-titulo">Meus Anúncios</h3>
+                    {meusAnuncios.length === 0 ? (
+                      <p className="tab-vazia-text">Nenhum item anunciado ainda.</p>
+                    ) : (
+                      <div className="perfil-anuncios-lista">
+                        {meusAnuncios.map((anuncio) => (
+                          <div key={anuncio.id} className="perfil-anuncio-card">
+                            <img src={anuncio.imagem} alt={anuncio.titulo} className="perfil-anuncio-thumb" />
+                            
+                            <div className="perfil-anuncio-info">
+                              <h4>{anuncio.titulo}</h4>
+                              <p>R$ {anuncio.preco} / {anuncio.periodo}</p>
+                            </div>
+
+                            <div className="perfil-anuncio-actions">
+                              <button className="btn-anuncio-editar" onClick={() => console.log(`Editar anúncio ${anuncio.id}`)}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                  <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                Editar
+                              </button>
+                              
+                              <button className="btn-anuncio-excluir" onClick={() => console.log(`Excluir anúncio ${anuncio.id}`)}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="3 6 5 6 21 6"></polyline>
+                                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                                Excluir
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* ABA 2: MEUS ALUGUÉIS */}
+                {abaAtiva === "alugueis" && <p className="tab-vazia-text">Nenhum aluguel em andamento.</p>}
+
+                {/* ABA 3: FAVORITOS DINÂMICOS (Com coração laranja) */}
+                {abaAtiva === "favoritos" && (
+  <div className="perfil-anuncios-section">
+    <h3 className="section-interna-titulo">Itens Salvos</h3>
+    {meusFavoritos.length === 0 ? (
+      <p className="tab-vazia-text">Nenhum item favoritado ainda.</p>
+    ) : (
+      <div className="perfil-anuncios-lista">
+        {meusFavoritos.map((fav) => {
+          // 🔎 Deteta automaticamente se o produto está direto no objeto ou dentro de 'item'
+          const produtoDestino = fav.item ? fav.item : fav;
+
+          // Se por algum motivo o item não tiver dados válidos, ignora para não quebrar a página
+          if (!produtoDestino || (!produtoDestino.titulo && !produtoDestino.nome)) return null;
+
+          return (
+            <div key={fav.id} className="perfil-anuncio-card">
+              <img 
+                src={produtoDestino.imagem || "https://via.placeholder.com/150"} 
+                alt={produtoDestino.titulo || produtoDestino.nome} 
+                className="perfil-anuncio-thumb" 
+              />
+              
+              <div className="perfil-anuncio-info">
+                <h4>{produtoDestino.titulo || produtoDestino.nome}</h4>
+                <p>R$ {produtoDestino.preco} / {produtoDestino.periodo || "dia"}</p>
+              </div>
+
+              <div className="perfil-anuncio-actions">
+                <button className="btn-favorito-ver" onClick={() => console.log(`Ver item ${produtoDestino.id}`)}>
+                  Ver Item
+                </button>
+                <button 
+                  className="btn-favorito-remover" 
+                  onClick={() => handleRemoverFavorito(fav.id)} 
+                  title="Remover dos favoritos"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+                    fill="#ffa44f" 
+                    stroke="#ffa44f" 
+                    strokeWidth="2"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </div>
+)}
+              </div>
+            </div>
+
           </div>
         </div>
-      </div>
-    </>
+      </main>
+
+      {/* MODAL MANTIDO IGUAL */}
+      {isModalAberto && (
+        <div className="modal-overlay">
+          <div className="modal-perfil-card">
+            <div className="modal-perfil-header">
+              <h3>Editar Informações</h3>
+              <button className="btn-modal-fechar" onClick={handleFecharModal}>&times;</button>
+            </div>
+            
+            <form onSubmit={handleSalvarPerfil} className="modal-perfil-form">
+              <div className="form-item">
+                <label>Nome Completo</label>
+                <input 
+                  type="text" 
+                  name="nomeCompleto" 
+                  value={formDados.nomeCompleto} 
+                  onChange={handleChangeInput} 
+                  required
+                />
+              </div>
+
+              <div className="form-row-duplo">
+                <div className="form-item">
+                  <label>Cidade</label>
+                  <input 
+                    type="text" 
+                    name="cidade" 
+                    value={formDados.cidade} 
+                    onChange={handleChangeInput} 
+                  />
+                </div>
+                <div className="form-item input-estado">
+                  <label>UF</label>
+                  <input 
+                    type="text" 
+                    name="estado" 
+                    maxLength="2"
+                    value={formDados.estado} 
+                    onChange={handleChangeInput} 
+                  />
+                </div>
+              </div>
+
+              <div className="form-item">
+                <label>Biografia</label>
+                <textarea 
+                  name="biografia" 
+                  rows="3" 
+                  value={formDados.biografia} 
+                  onChange={handleChangeInput}
+                />
+              </div>
+
+              <div className="modal-perfil-footer">
+                <button type="button" className="btn-cancelar-modal" onClick={handleFecharModal}>
+                  Cancelar
+                </button>
+                <button type="submit" className="btn-salvar-modal">
+                  Salvar Alterações
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
