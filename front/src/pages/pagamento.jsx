@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
 import "../styles/pagamento.css";
+import pixIcon from "../assets/pix.svg";
 
 const metodos = [
   {
@@ -19,18 +20,15 @@ const metodos = [
     ),
   },
   {
-    id: "pix",
-    label: "Pix",
-    icon: (
-      <div className="metodo-icon pix">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00bfa5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-          <path d="M2 17l10 5 10-5"></path>
-          <path d="M2 12l10 5 10-5"></path>
-        </svg>
-      </div>
-    ),
-  },
+      id: "pix",
+      label: "Pix",
+      icon: (
+        <div className="metodo-icon pix">
+          {/* Substituímos aquele monte de código pela tag img puxando o import */}
+          <img src={pixIcon} alt="Pix" width="22" height="22" />
+        </div>
+      ),
+    },
 ];
 
 export default function Pagamento() {

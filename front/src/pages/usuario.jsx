@@ -6,7 +6,7 @@ export default function Usuario() {
   const [abaAtiva, setAbaAtiva] = useState("dados");
   const [isModalAberto, setIsModalAberto] = useState(false);
 
-  // Estados para as imagens de Capa e Avatar (Mantidos!)
+  // Estados para as imagens de Capa e Avatar
   const [capa, setCapa] = useState(null);
   const [avatar, setAvatar] = useState(null);
 
@@ -59,7 +59,7 @@ export default function Usuario() {
     }
   }
 
-  // Funções de upload de arquivos locais (Mantidas!)
+  // Funções de upload de arquivos locais
   const handleCapaChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setCapa(URL.createObjectURL(e.target.files[0]));
@@ -207,7 +207,7 @@ export default function Usuario() {
 
               <div className="perfil-tab-content">
                 
-                {/* ABA 1: MEUS ANÚNCIOS (Dados dinâmicos da API) */}
+                {/* ABA 1: MEUS ANÚNCIOS */}
                 {abaAtiva === "dados" && (
                   <div className="perfil-anuncios-section">
                     <h3 className="section-interna-titulo">Meus Anúncios</h3>
@@ -253,7 +253,7 @@ export default function Usuario() {
                 {/* ABA 2: MEUS ALUGUÉIS */}
                 {abaAtiva === "alugueis" && <p className="tab-vazia-text">Nenhum aluguel em andamento.</p>}
 
-                {/* ABA 3: FAVORITOS DINÂMICOS (Com coração laranja) */}
+                {/* ABA 3: FAVORITOS DINÂMICOS */}
                 {abaAtiva === "favoritos" && (
   <div className="perfil-anuncios-section">
     <h3 className="section-interna-titulo">Itens Salvos</h3>
@@ -262,10 +262,8 @@ export default function Usuario() {
     ) : (
       <div className="perfil-anuncios-lista">
         {meusFavoritos.map((fav) => {
-          // 🔎 Deteta automaticamente se o produto está direto no objeto ou dentro de 'item'
           const produtoDestino = fav.item ? fav.item : fav;
 
-          // Se por algum motivo o item não tiver dados válidos, ignora para não quebrar a página
           if (!produtoDestino || (!produtoDestino.titulo && !produtoDestino.nome)) return null;
 
           return (

@@ -7,7 +7,6 @@ export default function Confirmacao() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Recupera os dados da navegação (ou usa mocks se vier direto)
   const { produto, locador } = location.state || {
     produto: { nome: "Câmera Canon T5i" },
     locador: "João Paulo Muniz",

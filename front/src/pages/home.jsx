@@ -8,8 +8,6 @@ import Feed from "../components/Feed";
 const API = "http://localhost:3001/itens";
 const FAVORITOS_API = "http://localhost:3001/favoritos";
 
-// TODO: Substituir pelo fetch do Supabase
-// Ex: const { data: products } = await supabase.from('item').select('*')
 const MOCK_PRODUCTS = [
   {
     id_item: "mock-1",

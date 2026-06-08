@@ -55,14 +55,14 @@ export default function LoginCard() {
             <div className="hero-features">
               <div className="hero-feature-item">
                 <div className="hero-icon-box orange">
-                   <img src={groupsIcon} alt="Comunidade" />
+                    <img src={groupsIcon} alt="Comunidade" />
                 </div>
                 <p>Alugue itens incríveis de outras pessoas.</p>
               </div>
 
               <div className="hero-feature-item">
                 <div className="hero-icon-box light-orange">
-                   <img src={avatarIcon} alt="Usuários" />
+                    <img src={avatarIcon} alt="Usuários" />
                 </div>
                 <p>Anuncie seus itens e tenha uma renda extra.</p>
               </div>
@@ -124,9 +124,11 @@ export default function LoginCard() {
                 <button type="submit" className="btn-primary">Entrar</button>
               </form>
 
-              <div className="divider">
-                <span>ou continue com</span>
-              </div>
+            <div className="divider">
+              <span className="divider-line" />
+              <span className="divider-text">ou continue com</span>
+              <span className="divider-line" />
+            </div>
 
               <div className="social-login">
                 <button className="social-btn"><img src={googleIcon} alt="Google" /></button>

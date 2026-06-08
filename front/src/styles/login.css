@@ -237,7 +237,7 @@
   width: 100%;
 }
 
-/* Redes Sociais - Domando os ícones gigantes */
+/* Redes Sociais */
 .divider {
   text-align: center;
   margin: 25px 0;
@@ -245,6 +245,8 @@
   font-size: 12px;
   position: relative;
 }
+
+.divider-line { flex: 1; height: 1px; background: #30363d; }
 
 .social-login {
   display: flex;

@@ -8,6 +8,9 @@ import axios from "axios";
 import avatarIcon from "../assets/avatar.svg";
 import groupsIcon from "../assets/groups.svg";
 import heroImage from "../assets/camera.png";
+import googleIcon from '../assets/google.svg';
+import appleIcon from '../assets/apple.svg';
+import facebookIcon from '../assets/facebook.svg';
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
@@ -54,14 +57,14 @@ export default function Cadastro() {
             <div className="hero-features">
               <div className="hero-feature-item">
                 <div className="hero-icon-box orange">
-                   <img src={groupsIcon} alt="Comunidade" />
+                  <img src={groupsIcon} alt="Comunidade" />
                 </div>
                 <p>Acesse milhares de itens exclusivos perto de você.</p>
               </div>
 
               <div className="hero-feature-item">
                 <div className="hero-icon-box light-orange">
-                   <img src={avatarIcon} alt="Perfil" />
+                  <img src={avatarIcon} alt="Perfil" />
                 </div>
                 <p>Ganhe dinheiro alugando seus equipamentos parados.</p>
               </div>
@@ -115,6 +118,18 @@ export default function Cadastro() {
 
                 <button type="submit" className="btn-primary">Criar minha conta</button>
               </form>
+
+              <div className="divider">
+                <span className="divider-line" />
+                <span className="divider-text">ou continue com</span>
+                <span className="divider-line" />
+              </div>
+  
+                <div className="social-login">
+                  <button className="social-btn"><img src={googleIcon} alt="Google" /></button>
+                  <button className="social-btn"><img src={appleIcon} alt="Apple" /></button>
+                  <button className="social-btn"><img src={facebookIcon} alt="Facebook" /></button>
+                </div>
 
               <p className="signup-link">
                 Já tem uma conta? <a href="/login">Fazer Login</a>

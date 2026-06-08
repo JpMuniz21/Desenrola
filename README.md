@@ -24,6 +24,7 @@ A aplicação foi desenvolvida utilizando React para front, JS para back e mySQL
 ```bash
 cd back
 npm install
+npm install amqplib
 # Crie seu .env baseado no .env.example
 node index.js
 ```
@@ -31,7 +32,7 @@ node index.js
 ```bash
 cd front
 npm install
-npm start
+npm run dev
 ```
 
 ## Progresso:

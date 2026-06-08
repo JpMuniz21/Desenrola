@@ -70,6 +70,11 @@ export default function Aluguel() {
     return `${String(dia).padStart(2, "0")}/${String(mes + 1).padStart(2, "0")}`;
   }
 
+  // NOVA FUNÇÃO: Garante que o valor fica sempre no formato correto (ex: 25,00)
+  function formatarMoeda(valor) {
+    return Number(valor).toFixed(2).replace('.', ',');
+  }
+
   return (
     <div className="aluguel-page">
       <Navbar />
@@ -83,7 +88,8 @@ export default function Aluguel() {
             <img src={produto.imagem} alt={produto.nome} className="aluguel-produto-img" />
             <div>
               <p className="aluguel-produto-nome">{produto.nome}</p>
-              <p className="aluguel-produto-preco">R$ {produto.preco}.00/{produto.tipoLocacao}</p>
+              {/* Preço formatado corretamente */}
+              <p className="aluguel-produto-preco">R$ {formatarMoeda(produto.preco)} {produto.tipoLocacao}</p>
             </div>
           </div>
 
@@ -140,7 +146,8 @@ export default function Aluguel() {
 
           <div className="resumo-linha">
             <span>Diária</span>
-            <span>R$ {diaria}.00</span>
+            {/* Diária formatada sem o .00 fixo */}
+            <span>R$ {formatarMoeda(diaria)}</span>
           </div>
           <div className="resumo-linha">
             <span>Dias</span>
@@ -153,12 +160,16 @@ export default function Aluguel() {
 
           <div className="resumo-total">
             <span>Total</span>
-            <span>R$ {total > 0 ? total.toFixed(2) : "--"}</span>
+            {/* Total formatado corretamente */}
+            <span>R$ {total > 0 ? formatarMoeda(total) : "--"}</span>
           </div>
 
           {total > 0 && (
             <div className="resumo-caucao">
-              <span>⚠️ Caução estimado: <strong>R$ {caucao}.00</strong></span>
+              {/* Ícone informativo e caução formatada */}
+              <span title="Valor devolvido após a entrega do produto">
+                <span style={{ cursor: "help" }}>ℹ️</span> Caução estimado: <strong>R$ {formatarMoeda(caucao)}</strong>
+              </span>
               <p>Valor retido como garantia e liberado automaticamente após a devolução do item.</p>
             </div>
           )}
