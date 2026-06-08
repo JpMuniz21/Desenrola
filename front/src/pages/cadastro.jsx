@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
-import "../styles/login.css"; 
+import "../styles/login.css";
+import axios from "axios";
 
 // Ícones
 import avatarIcon from "../assets/avatar.svg";
