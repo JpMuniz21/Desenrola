@@ -11,6 +11,8 @@ import ConfirmarAluguel from "./pages/confirmar_aluguel";
 import Pagamento from "./pages/pagamento";
 import Confirmacao from "./pages/Confirmacao";
 import Favoritos from "./pages/Favoritos";
+import Chat from "./components/chat";
+
 
 export default function App() {
   return (
@@ -27,6 +29,7 @@ export default function App() {
         <Route path="/pagamento" element={<Pagamento />} />
         <Route path="/confirmacao" element={<Confirmacao />} />
         <Route path="/favoritos" element={<Favoritos />} />
+        <Route path="/chat" element={<Chat />} />
       </Routes>
     </Router>
   );

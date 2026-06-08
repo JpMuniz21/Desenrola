@@ -121,26 +121,8 @@ export default function Home() {
       <Navbar />
       <div className="content">
         <Sidebar />
-        <main className="feed">
-          <h1>Itens em destaque</h1>
-          <br />
-          <div className="feed-grid">
-            {itens.map((item) => (
-              <ProductCard
-                key={item.id_item}
-                id={item.id_item}
-                titulo={item.nome}
-                preco={item.preco}
-                periodo={item.periodo}
-                imagem={item.imagem}
-                anunciante={item.anunciante}
-                avaliacao={item.avaliacao}
-                isFavoritado={favoritosIds.includes(item.id_item)}
-                onToggleFavorito={handleToggleFavorito}
-              />
-            ))}
-          </div>
-        </main>
+        <Feed /> 
+        
       </div>
     </div>
   );
