@@ -2,7 +2,17 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/card.css";
 
-export default function ProductCard({ id, titulo, preco, periodo, imagem, isFavoritado, onToggleFavorito, anunciante, avaliacao }) {
+export default function ProductCard({ 
+  id, 
+  titulo, 
+  preco, 
+  periodo, 
+  imagem, 
+  isFavoritado = false,         
+  onToggleFavorito = () => {},  
+  anunciante = "Anunciante",    
+  avaliacao = "5.0"             
+}) {
   const navigate = useNavigate();
 
   const handleVerDetalhes = () => {
@@ -18,7 +28,7 @@ export default function ProductCard({ id, titulo, preco, periodo, imagem, isFavo
         <button 
           className={`btn-favoritar-floating ${isFavoritado ? "ativo" : ""}`}
           onClick={(e) => {
-            e.stopPropagation(); 
+            e.stopPropagation(); // Evita entrar na tela de detalhes ao favoritar
             onToggleFavorito(id); 
           }}
           style={{
@@ -54,26 +64,27 @@ export default function ProductCard({ id, titulo, preco, periodo, imagem, isFavo
       </div>
       
       <div className="card-body">
-  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-    <h3 style={{ margin: 0 }}>{titulo}</h3>
-    <span style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "13px", fontWeight: "600", color: "#1a1a2e", flexShrink: 0 }}>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffa44f" width="13" height="13">
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-      </svg>
-      {avaliacao}
-    </span>
-  </div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h3 style={{ margin: 0 }}>{titulo}</h3>
+          <span style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "13px", fontWeight: "600", color: "#1a1a2e", flexShrink: 0 }}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffa44f" width="13" height="13">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            {avaliacao}
+          </span>
+        </div>
 
-  <p className="price">R$ {preco}/{periodo}</p>
-  <span style={{ fontSize: "13px", color: "#888" }}>{anunciante}</span>
-  
-  <button onClick={(e) => {
-    e.stopPropagation();
-    handleVerDetalhes();
-  }}>
-    Alugar agora
-  </button>
-</div>
+        {/* 🟢 Fallback para o período se o banco retornar nulo */}
+        <p className="price">R$ {preco}/{periodo || "dia"}</p>
+        <span style={{ fontSize: "13px", color: "#888" }}>{anunciante}</span>
+        
+        <button onClick={(e) => {
+          e.stopPropagation();
+          handleVerDetalhes();
+        }}>
+          Alugar agora
+        </button>
+      </div>
     </div>
   );
 }

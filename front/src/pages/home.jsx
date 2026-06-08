@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import ProductCard from "../components/ProductCard";
 import "../styles/home.css";
+import Feed from "../components/Feed"; 
 
 const API = "http://localhost:3001/itens";
 const FAVORITOS_API = "http://localhost:3001/favoritos";
