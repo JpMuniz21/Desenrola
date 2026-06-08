@@ -1,3 +1,5 @@
+const { Pool } = require('pg');
+
 const connection = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: {
@@ -11,3 +13,5 @@ connection.query('SELECT NOW()')
 
 // TODO: Migrar esta array para uma tabela 'item' no PostgreSQL para persistência real
 let anuncios = [];
+
+module.exports = connection;

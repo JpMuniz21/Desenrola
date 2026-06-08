@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom"; // 1. Importa o hook de navegação
 import "../styles/card.css"; // Seu CSS atual do card
 
-export default function ProductCard({ titulo, preco, periodo, imagem, id }) {
+export default function ProductCard({ id, titulo, preco, periodo, imagem }) {
   const navigate = useNavigate();
 
   const handleVerDetalhes = () => {

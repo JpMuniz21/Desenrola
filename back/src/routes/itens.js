@@ -16,6 +16,39 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params; 
+    // Executa a busca no PostgreSQL usando a coluna correta (id_item)
+    const resultado = await connection.query('SELECT * FROM item WHERE id_item = $1', [id]);
+
+    // Se o banco não achar nada com esse ID
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({ error: "Item não encontrado no banco de dados." });
+    }
+
+    res.json(resultado.rows[0]);
+
+  } catch (error) {
+    console.error("Erro crítico ao buscar item por ID:", error);
+    res.status(500).json({ error: "Erro interno no servidor ao buscar detalhes." });
+  }
+});
+
+router.get('/recomendados/:excluirId', async (req, res) => {
+  try {
+    const { excluirId } = req.params;
+
+    const queryText = 'SELECT * FROM item WHERE id_item != $1 ORDER BY RANDOM() LIMIT 3';
+    const resultado = await connection.query(queryText, [excluirId]);
+
+    res.json(resultado.rows);
+  } catch (error) {
+    console.error("Erro ao buscar recomendados no banco:", error);
+    res.status(500).json({ error: "Erro interno ao buscar recomendações." });
+  }
+});
+
 // [LOGIC] - Simular Caução (RN02 / UC06)
 router.get('/simular-caucao/:id', async (req, res) => {
     const { id } = req.params;

@@ -5,12 +5,14 @@ const { Server } = require('socket.io');
 const express = require('express');
 const cors = require('cors');
 
+
 const connection = require('./src/config/database'); 
 
 
 const rotasUsuarios = require('./src/routes/usuario');
 const rotasItens = require('./src/routes/itens');       
-const rotasMensagens = require('./src/routes/mensagens'); 
+const rotasMensagens = require('./src/routes/mensagens');
+const rotaAluguel = require('./src/routes/aluguel');
 
 const app = express();
 const server = http.createServer(app);
@@ -26,6 +28,7 @@ const PORT = process.env.PORT || 3001;
 // --- Middlewares Globais ---
 app.use(cors());
 app.use(express.json());
+
 
 // --- Vinculando as Rotas Modulares ao Express ---
 app.use('/usuarios', rotasUsuarios); 

@@ -1,42 +1,75 @@
+import { useState, useEffect } from "react"
 import ProductCard from "./ProductCard";
 
-const products = [
-  {
-    id: 1,
-    title: "Câmera Canon T5i",
-    price: 45,
-    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&h=300&fit=crop",
-  },
-  {
-    id: 2,
-    title: "PlayStation 5",
-    price: 70,
-    image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=400&h=300&fit=crop",
-  },
-  {
-    id: 3,
-    title: "GoPro Hero 11",
-    price: 60,
-    image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=300&fit=crop",
-  },
-];
-
 export default function Feed() {
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [erroBackend, setErroBackend] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/itens")
+      .then((response) => {
+        if (!response.ok) {
+          // Se der erro 500, cai direto aqui
+          throw new Error(`Erro no servidor: Status ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Só joga no estado se for uma lista real (Array)
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else {
+          setErroBackend("O servidor não retornou uma lista válida de produtos.");
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Erro capturado no Feed:", error);
+        setErroBackend("Não foi possível carregar os itens. Verifique o terminal do seu Backend!");
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <p style={{ textAlign: "center", marginTop: "20px" }}>Carregando itens do banco...</p>;
+  }
+
+  // Se o backend deu erro 500, exibe este aviso na tela de forma limpa
+  if (erroBackend) {
+    return (
+      <div style={{ textAlign: "center", color: "red", marginTop: "40px", padding: "20px" }}>
+        <h3>⚠️ Erro de Conexão (Status 500)</h3>
+        <p>{erroBackend}</p>
+        <p style={{ color: "#666", fontSize: "14px" }}>Dica: Olhe o terminal do Node.js para ver o erro do SQL.</p>
+      </div>
+    );
+  }
+
   return (
     <main className="feed">
       <h1>Itens em destaque</h1>
       <br />
       <div className="feed-grid">
-        {products.map((item) => (
-          <ProductCard
-            key={item.id}
-            id={item.id}
-            titulo={item.title}
-            preco={item.price}
-            periodo="dia"
-            imagem={item.image}
-          />
-        ))}
+        {products.length > 0 ? (
+          products.map((item) => {
+            console.log("Conteúdo do item vindo do banco:", item);
+
+            return (
+              <ProductCard
+                key={item.id_item || item.id} // Aceita id_item ou id
+                id={item.id_item || item.id}
+                titulo={item.nome || item.titulo || "Item sem título"} // Se 'nome' falhar, tenta 'titulo'
+                preco={item.preco}
+                periodo={item.periodo}
+                imagem={item.imagem || item.image || "https://via.placeholder.com/400x300"} // Se 'imagem' falhar, tenta 'image'
+              />
+            );
+          })
+        ) : (
+          <p style={{ textAlign: "center", width: "100%" }}>Nenhum item cadastrado no banco.</p>
+        )}
       </div>
     </main>
   );
