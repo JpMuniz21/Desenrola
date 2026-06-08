@@ -60,7 +60,7 @@ export default function Navbar({ isLogin = false }) {
                 <img src={iconChat} alt="Chat" />
               </button>
 
-              <button className="favorite-btn">
+              <button className="favorite-btn" onClick={() => navigate("/favoritos")}>
                 <img src={iconFavorite} alt="Favoritos" />
               </button>
 

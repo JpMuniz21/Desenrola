@@ -1,24 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/navbar";
 import "../styles/usuario.css";
-
-const meusAnunciosMock = [
-  {
-    id: 1,
-    nome: "Balão de Festa Laranja",
-    preco: "15.00",
-    tipoLocacao: "Dia",
-    imagem: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=150&auto=format&fit=crop&q=80"
-  }
-];
 
 export default function Usuario() {
   const [abaAtiva, setAbaAtiva] = useState("dados");
   const [isModalAberto, setIsModalAberto] = useState(false);
 
-  // Estados para as imagens de Capa e Avatar (com placeholders iniciais)
+  // Estados para as imagens de Capa e Avatar (Mantidos!)
   const [capa, setCapa] = useState(null);
   const [avatar, setAvatar] = useState(null);
+
+  // Estados para os dados dinâmicos da API
+  const [meusAnuncios, setMeusAnuncios] = useState([]);
+  const [meusFavoritos, setMeusFavoritos] = useState([]);
 
   const [usuario, setUsuario] = useState({
     nomeExibicao: "João Paulo Muniz",
@@ -31,10 +25,44 @@ export default function Usuario() {
 
   const [formDados, setFormDados] = useState({ ...usuario });
 
-  // Funções para capturar a imagem que o usuário escolhe no PC
+  // Carrega os dados do Back-end assim que a página abre
+  useEffect(() => {
+    carregarDadosDoUsuario();
+  }, []);
+
+  async function carregarDadosDoUsuario() {
+    try {
+      // Busca os favoritos (simulando filtro pelo seu usuário)
+      const resFavoritos = await fetch("http://localhost:3001/favoritos?usuarioId=joao_muniz");
+      const dataFav = await resFavoritos.json();
+      setMeusFavoritos(dataFav);
+
+      // Busca os anúncios reais cadastrados na sua API
+      const resAnuncios = await fetch("http://localhost:3001/itens?usuarioId=joao_muniz");
+      const dataAnuncios = await resAnuncios.json();
+      setMeusAnuncios(dataAnuncios);
+    } catch (error) {
+      console.error("Erro ao carregar dados do servidor:", error);
+    }
+  }
+
+  // Remove o favorito do banco de dados ao clicar no coração laranja
+  async function handleRemoverFavorito(idFavorito) {
+    try {
+      await fetch(`http://localhost:3001/favoritos/${idFavorito}`, {
+        method: "DELETE",
+      });
+      // Atualiza a lista chamando o banco novamente
+      carregarDadosDoUsuario();
+    } catch (error) {
+      console.error("Erro ao remover favorito:", error);
+    }
+  }
+
+  // Funções de upload de arquivos locais (Mantidas!)
   const handleCapaChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setCapa(URL.createObjectURL(e.target.files[0])); // Cria uma URL temporária da imagem local
+      setCapa(URL.createObjectURL(e.target.files[0]));
     }
   };
 
@@ -70,7 +98,6 @@ export default function Usuario() {
           
           {/* SEÇÃO CAPA E AVATAR COM EDITORES */}
           <div className="perfil-header-banner">
-            {/* Input de Capa Escondido */}
             <input 
               type="file" 
               id="upload-capa" 
@@ -85,13 +112,11 @@ export default function Usuario() {
               <div className="perfil-capa-placeholder"></div>
             )}
             
-            {/* Botão de Editar Capa */}
             <label htmlFor="upload-capa" className="btn-editar-foto btn-editar-capa" title="Editar foto de capa">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
             </label>
 
             <div className="perfil-avatar-container">
-              {/* Input de Avatar Escondido */}
               <input 
                 type="file" 
                 id="upload-avatar" 
@@ -106,7 +131,6 @@ export default function Usuario() {
                 ) : (
                   "JP"
                 )}
-                {/* Botão de Editar Avatar */}
                 <label htmlFor="upload-avatar" className="btn-editar-foto btn-editar-avatar" title="Editar foto de perfil">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                 </label>
@@ -148,7 +172,7 @@ export default function Usuario() {
               <div className="perfil-estatisticas-row">
                 <div className="estatistica-box">
                   <p>Itens Anunciados</p>
-                  <h3>{meusAnunciosMock.length}</h3>
+                  <h3>{meusAnuncios.length}</h3>
                 </div>
                 <div className="estatistica-box">
                   <p>Aluguéis Concluídos</p>
@@ -182,47 +206,106 @@ export default function Usuario() {
               </div>
 
               <div className="perfil-tab-content">
+                
+                {/* ABA 1: MEUS ANÚNCIOS (Dados dinâmicos da API) */}
                 {abaAtiva === "dados" && (
+                  <div className="perfil-anuncios-section">
+                    <h3 className="section-interna-titulo">Meus Anúncios</h3>
+                    {meusAnuncios.length === 0 ? (
+                      <p className="tab-vazia-text">Nenhum item anunciado ainda.</p>
+                    ) : (
+                      <div className="perfil-anuncios-lista">
+                        {meusAnuncios.map((anuncio) => (
+                          <div key={anuncio.id} className="perfil-anuncio-card">
+                            <img src={anuncio.imagem} alt={anuncio.titulo} className="perfil-anuncio-thumb" />
+                            
+                            <div className="perfil-anuncio-info">
+                              <h4>{anuncio.titulo}</h4>
+                              <p>R$ {anuncio.preco} / {anuncio.periodo}</p>
+                            </div>
+
+                            <div className="perfil-anuncio-actions">
+                              <button className="btn-anuncio-editar" onClick={() => console.log(`Editar anúncio ${anuncio.id}`)}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                  <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                Editar
+                              </button>
+                              
+                              <button className="btn-anuncio-excluir" onClick={() => console.log(`Excluir anúncio ${anuncio.id}`)}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="3 6 5 6 21 6"></polyline>
+                                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                  <line x1="10" y1="11" x2="10" y2="17"></line>
+                                  <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                                Excluir
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* ABA 2: MEUS ALUGUÉIS */}
+                {abaAtiva === "alugueis" && <p className="tab-vazia-text">Nenhum aluguel em andamento.</p>}
+
+                {/* ABA 3: FAVORITOS DINÂMICOS (Com coração laranja) */}
+                {abaAtiva === "favoritos" && (
   <div className="perfil-anuncios-section">
-    <h3 className="section-interna-titulo">Meus Anúncios</h3>
-    <div className="perfil-anuncios-lista">
-      {meusAnunciosMock.map((anuncio) => (
-        <div key={anuncio.id} className="perfil-anuncio-card">
-          <img src={anuncio.imagem} alt={anuncio.nome} className="perfil-anuncio-thumb" />
-          
-          <div className="perfil-anuncio-info">
-            <h4>{anuncio.nome}</h4>
-            <p>R$ {anuncio.preco} / {anuncio.tipoLocacao}</p>
-          </div>
+    <h3 className="section-interna-titulo">Itens Salvos</h3>
+    {meusFavoritos.length === 0 ? (
+      <p className="tab-vazia-text">Nenhum item favoritado ainda.</p>
+    ) : (
+      <div className="perfil-anuncios-lista">
+        {meusFavoritos.map((fav) => {
+          // 🔎 Deteta automaticamente se o produto está direto no objeto ou dentro de 'item'
+          const produtoDestino = fav.item ? fav.item : fav;
 
-          {/* RECOLOCANDO OS BOTÕES DE AÇÃO DO ITEM ANUNCIADO */}
-          <div className="perfil-anuncio-actions">
-            <button className="btn-anuncio-editar" onClick={() => console.log(`Editar anúncio ${anuncio.id}`)}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-              </svg>
-              Editar
-            </button>
-            
-            <button className="btn-anuncio-excluir" onClick={() => console.log(`Excluir anúncio ${anuncio.id}`)}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                <line x1="10" y1="11" x2="10" y2="17"></line>
-                <line x1="14" y1="11" x2="14" y2="17"></line>
-              </svg>
-              Excluir
-            </button>
-          </div>
+          // Se por algum motivo o item não tiver dados válidos, ignora para não quebrar a página
+          if (!produtoDestino || (!produtoDestino.titulo && !produtoDestino.nome)) return null;
 
-        </div>
-      ))}
-    </div>
+          return (
+            <div key={fav.id} className="perfil-anuncio-card">
+              <img 
+                src={produtoDestino.imagem || "https://via.placeholder.com/150"} 
+                alt={produtoDestino.titulo || produtoDestino.nome} 
+                className="perfil-anuncio-thumb" 
+              />
+              
+              <div className="perfil-anuncio-info">
+                <h4>{produtoDestino.titulo || produtoDestino.nome}</h4>
+                <p>R$ {produtoDestino.preco} / {produtoDestino.periodo || "dia"}</p>
+              </div>
+
+              <div className="perfil-anuncio-actions">
+                <button className="btn-favorito-ver" onClick={() => console.log(`Ver item ${produtoDestino.id}`)}>
+                  Ver Item
+                </button>
+                <button 
+                  className="btn-favorito-remover" 
+                  onClick={() => handleRemoverFavorito(fav.id)} 
+                  title="Remover dos favoritos"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" 
+                    fill="#ffa44f" 
+                    stroke="#ffa44f" 
+                    strokeWidth="2"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    )}
   </div>
 )}
-                {abaAtiva === "alugueis" && <p className="tab-vazia-text">Nenhum aluguel em andamento.</p>}
-                {abaAtiva === "favoritos" && <p className="tab-vazia-text">Nenhum item favoritado ainda.</p>}
               </div>
             </div>
 

@@ -10,6 +10,7 @@ import Aluguel from "./pages/Aluguel";
 import ConfirmarAluguel from "./pages/confirmar_aluguel";
 import Pagamento from "./pages/pagamento";
 import Confirmacao from "./pages/Confirmacao";
+import Favoritos from "./pages/Favoritos";
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="/confirmar-aluguel" element={<ConfirmarAluguel />} />
         <Route path="/pagamento" element={<Pagamento />} />
         <Route path="/confirmacao" element={<Confirmacao />} />
+        <Route path="/favoritos" element={<Favoritos />} />
       </Routes>
     </Router>
   );
