@@ -180,6 +180,18 @@
   background: #e8913d;
 }
 
+.icon-animado {
+  transition: transform 0.25s ease-in-out !important;
+}
+
+.btn-action-chat:hover .icon-animado {
+  transform: rotate(-12deg) scale(1.1);
+}
+
+.btn-action-alugue:hover .icon-animado {
+  transform: rotate(12deg) scale(1.1);
+}
+
 /* ===== CALENDÁRIO ===== */
 
 .calendar-card {
