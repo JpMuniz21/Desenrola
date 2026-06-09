@@ -44,7 +44,7 @@ export default function Navbar({ isLogin = false }) {
             height="16" 
             viewBox="0 0 24 24" 
             fill="none" 
-            stroke="#94a3b8" /* Cinza sutil combinando com o placeholder */
+            stroke="#94a3b8" 
             strokeWidth="2.5" 
             strokeLinecap="round" 
             strokeLinejoin="round" 
@@ -54,7 +54,6 @@ export default function Navbar({ isLogin = false }) {
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
 
-          {/* Seu input original com o recuo (padding-left) para o texto não sobrescrever a lupa */}
           <input
             type="text"
             placeholder="Buscar itens..."
@@ -79,7 +78,8 @@ export default function Navbar({ isLogin = false }) {
             </button>
 
             <div className="icons">
-              <button className="chat-btn">
+              {/* 💡 REDIRECIONAMENTO DO CHAT CONFIGURADO */}
+              <button className="chat-btn" onClick={() => navigate("/chat")}>
                 <img src={iconChat} alt="Chat" />
               </button>
 

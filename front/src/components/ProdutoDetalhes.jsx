@@ -76,6 +76,9 @@ export default function ProdutoDetalhe() {
 
   if (!produto) return null;
 
+  // 💡 Mapeia a ID do vendedor que veio do banco (usando fallbacks para o mock não quebrar)
+  const idVendedor = produto.usuarioId || produto.id_anunciante || "2";
+
   return (
     <div className="detalhe-page-bg">
       <Navbar />
@@ -138,9 +141,9 @@ export default function ProdutoDetalhe() {
                 <p className="produto-descricao">{produto.descricao || "Sem descrição informada para este item."}</p>
 
                 <div className="anunciante-box">
-                  <div className="anunciante-avatar">JM</div>
+                  <div className="anunciante-avatar">U{idVendedor}</div>
                   <div className="anunciante-info">
-                    <span className="anunciante-nome">Anunciante Central</span>
+                    <span className="anunciante-nome">Usuário {idVendedor}</span>
                     <span className="anunciante-sub">Anunciante · desde 2024</span>
                   </div>
                   <div className="anunciante-rating">★ 5.0</div>
@@ -148,8 +151,14 @@ export default function ProdutoDetalhe() {
 
                 {/* GRUPO DE BOTÕES DE AÇÃO COM MICRO-INTERAÇÕES NO HOVER */}
                 <div className="action-buttons-group">
+                  {/* 💡 BOTÃO DO CHAT CONECTADO À ID DINÂMICA DO VENDEDOR */}
                   <button 
                     className="btn-action-chat" 
+                    onClick={() => navigate("/chat", { 
+                      state: { 
+                        vendedor: { id: idVendedor, nome: `Usuário ${idVendedor}` } 
+                      } 
+                    })}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                   >
                     <svg 
