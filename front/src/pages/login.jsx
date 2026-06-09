@@ -15,12 +15,14 @@ import heroCameraImage from '../assets/camera.png';
 import heroDroneImage from '../assets/drone.png';
 import heroVitrolaImage from '../assets/vitrola.png';
 import heroFoneImage from '../assets/fone.png';
+import Toast from '../components/Toast';
 
 export default function LoginCard() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [toast, setToast] = useState(null);
   const [imagemAtivaIndex, setImagemAtivaIndex] = useState(0);
   const CARROSSEL_IMAGENS = [
     heroCameraImage,
@@ -38,24 +40,23 @@ export default function LoginCard() {
   }, [CARROSSEL_IMAGENS.length]);
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    console.log("🚀 O BOTÃO FOI CLICADO!");
+  e.preventDefault();
 
-    try {
-      const response = await axios.post("http://localhost:3001/usuarios/login", { email, senha });
+  try {
+    const response = await axios.post("http://localhost:3001/usuarios/login", { email, senha });
 
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("nome", response.data.nome);
-      localStorage.setItem("userId", response.data.id);
-      localStorage.setItem("logado", "true");
+    localStorage.setItem("token", response.data.token);
+    localStorage.setItem("nome", response.data.nome);
+    localStorage.setItem("userId", response.data.id);
+    localStorage.setItem("logado", "true");
 
-      alert(`Bem-vindo, ${response.data.nome}!`);
-      navigate("/"); 
-    } catch (error) {
-      const mensagemErro = error.response?.data?.mensagem || "Erro ao conectar com o servidor";
-      alert(mensagemErro);
-    }
-  };
+    setToast({ mensagem: `Bem-vindo, ${response.data.nome}!`, tipo: "sucesso" });
+    setTimeout(() => navigate("/"), 1500);
+  } catch (error) {
+    const mensagemErro = error.response?.data?.mensagem || "Erro ao conectar com o servidor";
+    setToast({ mensagem: mensagemErro, tipo: "erro" });
+  }
+};
 
   return (
     <>
@@ -168,6 +169,7 @@ export default function LoginCard() {
           </div>
 
         </div>
+        {toast && <Toast mensagem={toast.mensagem} tipo={toast.tipo} onClose={() => setToast(null)} />}
       </div>
     </> 
   );

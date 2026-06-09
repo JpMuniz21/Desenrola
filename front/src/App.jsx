@@ -13,6 +13,7 @@ import Pagamento from "./pages/pagamento";
 import Confirmacao from "./pages/Confirmacao";
 import Favoritos from "./pages/Favoritos";
 import Chat from "./components/chat";
+import EditarItem from "./pages/editar_itens";
 
 
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/confirmacao" element={<Confirmacao />} />
         <Route path="/favoritos" element={<Favoritos />} />
         <Route path="/chat" element={<Chat />} />
+        <Route path="/editar-item/:id" element={<EditarItem />} />
       </Routes>
     </Router>
   );

@@ -65,14 +65,16 @@ export default function ProductCard({
       
       <div className="card-body">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h3 style={{ margin: 0 }}>{titulo}</h3>
-          <span style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "13px", fontWeight: "600", color: "#1a1a2e", flexShrink: 0 }}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffa44f" width="13" height="13">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-            </svg>
-            {avaliacao}
-          </span>
-        </div>
+  <h3 style={{ margin: 0 }}>{titulo}</h3>
+  {avaliacao && (
+    <span style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "13px", fontWeight: "600", color: "#1a1a2e", flexShrink: 0 }}>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffa44f" width="13" height="13">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      </svg>
+      {avaliacao}
+    </span>
+  )}
+</div>
 
         {/* 🟢 Fallback para o período se o banco retornar nulo */}
         <p className="price">R$ {preco}/{periodo || "dia"}</p>

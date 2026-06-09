@@ -3,44 +3,40 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
 import "../styles/login.css";
 import axios from "axios";
-
-// Ícones
 import avatarIcon from "../assets/avatar.svg";
 import groupsIcon from "../assets/groups.svg";
 import heroImage from "../assets/camera.png";
 import googleIcon from '../assets/google.svg';
 import appleIcon from '../assets/apple.svg';
 import facebookIcon from '../assets/facebook.svg';
+import Toast from '../components/Toast';
 
 export default function Cadastro() {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [toast, setToast] = useState(null);
   const navigate = useNavigate();
 
   async function handleCadastro(e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!nome || !email || !senha) {
-      alert("Preencha todos os campos");
-      return;
-    }
-
-    try {
-      const res = await axios.post("http://localhost:3001/usuarios", {
-        nome,
-        email,
-        senha
-      });
-
-      if (res.status === 201) {
-        alert("Usuário cadastrado com sucesso!");
-        navigate("/login");
-      }
-    } catch (error) {
-      alert(error.response?.data?.erro || "Erro ao cadastrar");
-    }
+  if (!nome || !email || !senha) {
+    setToast({ mensagem: "Preencha todos os campos!", tipo: "erro" });
+    return;
   }
+
+  try {
+    const res = await axios.post("http://localhost:3001/usuarios", { nome, email, senha });
+
+    if (res.status === 201) {
+      setToast({ mensagem: "Conta criada com sucesso!", tipo: "sucesso" });
+      setTimeout(() => navigate("/login"), 1500);
+    }
+  } catch (error) {
+    setToast({ mensagem: error.response?.data?.erro || "Erro ao cadastrar", tipo: "erro" });
+  }
+}
 
   return (
     <>
@@ -139,6 +135,7 @@ export default function Cadastro() {
 
         </div>
       </div>
+      {toast && <Toast mensagem={toast.mensagem} tipo={toast.tipo} onClose={() => setToast(null)} />}
     </>
   );
 }

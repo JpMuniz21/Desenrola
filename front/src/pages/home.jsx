@@ -9,21 +9,42 @@ const FAVORITOS_API = "http://localhost:3001/favoritos";
 
 export default function Home() {
   const [itens, setItens] = useState([]);
+  const [meusItens, setMeusItens] = useState([]);
   const [favoritosIds, setFavoritosIds] = useState([]);
 
   useEffect(() => {
     carregarItens();
     carregarFavoritos();
+    carregarMeusItens();
   }, []);
 
-  async function carregarItens() {
+  async function carregarItens(filtros = {}) {
   try {
-    const res = await fetch(API);
+    let url = API;
+    const params = new URLSearchParams();
+    if (filtros.categoria) params.append("categoriaId", filtros.categoria);
+    if (filtros.localizacao) params.append("localizacao", filtros.localizacao);
+    if (params.toString()) url += `?${params.toString()}`;
+
+    const res = await fetch(url);
     const data = await res.json();
-    console.log("anunciante do primeiro item:", data[0]?.anunciante);
     setItens(Array.isArray(data) ? data : []);
   } catch {
     setItens([]);
+  }
+}
+
+  async function carregarMeusItens() {
+  const userId = localStorage.getItem("userId");
+  console.log("userId logado:", userId);
+  if (!userId) return;
+  try {
+    const res = await fetch(`${API}?usuarioId=${userId}`);
+    const data = await res.json();
+    console.log("meus itens:", data);
+    setMeusItens(Array.isArray(data) ? data : []);
+  } catch {
+    setMeusItens([]);
   }
 }
 
@@ -73,8 +94,10 @@ export default function Home() {
     <div className="home">
       <Navbar />
       <div className="content">
-        <Sidebar />
+        <Sidebar onFiltrar={(filtros) => carregarItens(filtros)} />
         <main className="feed">
+
+          {/* ITENS EM DESTAQUE */}
           <h1>Itens em destaque</h1>
           <br />
           <div className="feed-grid">
@@ -97,6 +120,32 @@ export default function Home() {
               ))
             )}
           </div>
+
+          {/* MEUS ITENS ANUNCIADOS */}
+          {localStorage.getItem("userId") && meusItens.length > 0 && (
+  <div style={{ marginTop: "40px" }}>
+    <h2 style={{ fontSize: "22px", fontWeight: "700", color: "#1a1a2e", marginBottom: "20px" }}>
+      Meus itens anunciados
+    </h2>
+    <div className="feed-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(250px, 300px))" }}>
+      {meusItens.map((item) => (
+        <ProductCard
+          key={item.id_item}
+          id={item.id_item}
+          titulo={item.nome}
+          preco={item.preco}
+          periodo={item.periodo}
+          imagem={item.imagem}
+          anunciante={item.anunciante}
+          avaliacao={item.avaliacao}
+          isFavoritado={favoritosIds.includes(item.id_item)}
+          onToggleFavorito={handleToggleFavorito}
+        />
+      ))}
+    </div>
+  </div>
+)}
+
         </main>
       </div>
     </div>

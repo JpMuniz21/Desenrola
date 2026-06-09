@@ -69,7 +69,7 @@ export default function ProdutoDetalhe() {
       <main className="detalhe-main-container">
 
         <button
-          onClick={() => window.history.state?.idx > 0 ? navigate(-1) : navigate("/")}
+          onClick={() => navigate("/")}
           className="btn-voltar-passo"
           style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'none', border: 'none', color: '#64748b', fontSize: '15px', fontWeight: '600', cursor: 'pointer', padding: '8px 0', marginBottom: '16px', transition: 'color 0.2s ease', alignSelf: 'flex-start' }}
           onMouseEnter={(e) => e.currentTarget.style.color = '#f97316'}
