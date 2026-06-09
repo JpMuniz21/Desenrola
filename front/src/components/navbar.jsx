@@ -67,7 +67,7 @@ export default function Navbar({ isLogin = false }) {
       <div className="navbar-right">
         {isLogin ? (
           <button onClick={() => navigate("/")} className="btn-text">
-            Voltar para o início
+            Voltar
           </button>
         ) : (
           <>

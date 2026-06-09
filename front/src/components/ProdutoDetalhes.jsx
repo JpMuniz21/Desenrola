@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Navbar from "./navbar";
+import Navbar from "../components/navbar"; // 💡 Ajustado o caminho para a pasta de componentes
 import "../styles/produto_detalhes.css";
 
 export default function ProdutoDetalhe() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [produto, setProduto] = useState(null);
-  
-  // 🟢 Novo estado para guardar os recomendados vindos do banco
   const [recomendados, setRecomendados] = useState([]); 
   
   const [loading, setLoading] = useState(true);
@@ -19,7 +17,6 @@ export default function ProdutoDetalhe() {
       setLoading(true);
       setErro(null);
       try {
-        // 1. Busca o produto principal por ID
         const resProduto = await fetch(`http://localhost:3001/itens/${id}`);
         if (!resProduto.ok) {
           throw new Error(`Produto não encontrado (Status: ${resProduto.status})`);
@@ -28,7 +25,6 @@ export default function ProdutoDetalhe() {
         const itemUnico = Array.isArray(dataProd) ? dataProd[0] : dataProd;
         setProduto(itemUnico);
 
-        // 2. 🟢 Busca os recomendados direto do Banco passando o ID atual para excluir da lista
         const resRec = await fetch(`http://localhost:3001/itens/recomendados/${id}`);
         if (resRec.ok) {
           const dataRec = await resRec.json();
@@ -43,9 +39,8 @@ export default function ProdutoDetalhe() {
       }
     }
     carregarDados();
-  }, [id]); // 🔄 O useEffect roda novamente se o ID mudar (quando o usuário clica num recomendado!)
+  }, [id]);
 
-  // Função do RabbitMQ que já configuramos
   const handleAlugarComNotificacao = async () => {
     try {
       fetch("http://localhost:3001/aluguel", {
@@ -86,6 +81,45 @@ export default function ProdutoDetalhe() {
       <Navbar />
       <main className="detalhe-main-container">
 
+        {/* BOTÃO DE VOLTAR */}
+        <button 
+          onClick={() => window.history.state && window.history.state.idx > 0 ? navigate(-1) : navigate("/")}
+          className="btn-voltar-passo"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'none',
+            border: 'none',
+            color: '#64748b',
+            fontSize: '15px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            padding: '8px 0',
+            marginBottom: '16px',
+            transition: 'color 0.2s ease',
+            alignSelf: 'flex-start'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.color = '#f97316'}
+          onMouseLeave={(e) => e.currentTarget.style.color = '#64748b'}
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="18" 
+            height="18" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Voltar
+        </button>
+
         <div className="detalhe-content-wrapper">
           {/* CARD PRINCIPAL */}
           <div className="detalhe-card-principal">
@@ -122,11 +156,11 @@ export default function ProdutoDetalhe() {
             </div>
           </div>
 
-          {/* CALENDÁRIO E AVALIAÇÕES */}
+          {/* CALENDÁRIO É AVALIAÇÕES */}
           <section className="detalhe-right-side">
             <div className="calendar-card">
               <div className="calendar-header">
-                <span>Junho 2026</span>
+                <span>Junho {new Date().getFullYear()}</span>
               </div>
               <div className="calendar-days-grid">
                 {Array.from({ length: 30 }, (_, i) => (
@@ -149,12 +183,11 @@ export default function ProdutoDetalhe() {
           </section>
         </div>
 
-        {/* 🟢 SEÇÃO DE RECOMENDADOS ATUALIZADA (Lendo as chaves do seu Banco de Dados) */}
+        {/* Lendo as chaves do seu Banco de Dados */}
         <section className="recomendados-section">
           <h2 className="recomendados-titulo">Produtos em: <em>Fortaleza, Ceará</em></h2>
           <div className="recomendados-lista">
             {recomendados.map((item) => (
-              /* Ajustado para mudar a página de detalhes para o item clicado, atualizando o ID na URL */
               <div key={item.id_item} className="rec-card" onClick={() => navigate(`/produto/${item.id_item}`)}>
                 <img src={item.imagem} alt={item.nome} className="rec-img" />
                 <div className="rec-info">
@@ -178,4 +211,4 @@ export default function ProdutoDetalhe() {
       </main>
     </div>
   );
-} 
+}

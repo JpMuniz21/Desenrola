@@ -50,7 +50,7 @@ export default function Confirmacao() {
             </button>
             
             <button className="btn-voltar-home" onClick={() => navigate("/")}>
-              Voltar para a Home
+              Voltar
             </button>
           </div>
 

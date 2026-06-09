@@ -268,3 +268,10 @@ body {
   padding: 10px 20px;
   cursor: pointer;
 }
+
+.btn-voltar-passo {
+  transition: all 0.2s ease-in-out;
+}
+.btn-voltar-passo:active {
+  transform: scale(0.98);
+}

@@ -122,6 +122,13 @@
   background: #e8913d;
 }
 
+.btn-continuar:disabled {
+  background-color: #cbd5e1;
+  color: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
 /* ===== COLUNA DIREITA ===== */
 .confirmar-right {
   flex: 1;

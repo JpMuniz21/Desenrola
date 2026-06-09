@@ -11,7 +11,7 @@ export default function ConfirmarAluguel() {
     produto: { nome: "Câmera Canon T5i", preco: 45, tipoLocacao: "dia" },
     inicio: "16/06",
     fim: "20/06",
-    dias: 4,
+    days: 4,
     total: 180,
     caucao: 54,
   };
@@ -33,7 +33,7 @@ export default function ConfirmarAluguel() {
     setNumeroTemp("");
     setComplementoTemp("");
     setBairroTemp("");
-    setCidadeTemp("");
+    setCidadeTemp("Fortaleza"); /* Padrão da região */
     setEstadoTemp("CE");
     setModalAberto(true);
   }
@@ -53,6 +53,45 @@ export default function ConfirmarAluguel() {
       <Navbar />
       <main className="confirmar-container">
 
+        {/* BOTÃO DE VOLTAR */}
+        <button 
+          onClick={() => window.history.state && window.history.state.idx > 0 ? navigate(-1) : navigate("/")}
+          className="btn-voltar-passo"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: 'none',
+            border: 'none',
+            color: '#64748b',
+            fontSize: '15px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            padding: '8px 0',
+            marginBottom: '16px',
+            transition: 'color 0.2s ease',
+            alignSelf: 'flex-start'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.color = '#f97316'}
+          onMouseLeave={(e) => e.currentTarget.style.color = '#64748b'}
+        >
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            width="18" 
+            height="18" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Voltar
+        </button>
+
         <h2 className="confirmar-titulo">Confira a forma de entrega:</h2>
 
         <div className="confirmar-content">
@@ -60,51 +99,48 @@ export default function ConfirmarAluguel() {
           <div className="confirmar-left">
 
             {/* ENDEREÇO CRISTALINO */}
-<div className="confirmar-card">
-  <div className="confirmar-card-header">
-    <span className="confirmar-card-titulo">
-      {endereco ? (
-        // ÍCONE DE CHECK (VERDE)
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      ) : (
-        // ÍCONE DE LOCALIZAÇÃO (LARANJA DE ALERTA)
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e65100" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-          <circle cx="12" cy="12" r="3"></circle>
-        </svg>
-      )}
-      {endereco ? "Enviar nesse endereço" : "Endereço de entrega obrigatório"}
-    </span>
-    <span className="confirmar-gratis">Grátis</span>
-  </div>
+            <div className="confirmar-card">
+              <div className="confirmar-card-header">
+                <span className="confirmar-card-titulo">
+                  {endereco ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2e7d32" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e65100" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  )}
+                  {endereco ? "Enviar nesse endereço" : "Endereço de entrega obrigatório"}
+                </span>
+                <span className="confirmar-gratis">Grátis</span>
+              </div>
 
-  {/* Corpo do endereço com validação visual */}
-  <div className="confirmar-endereco" style={{ whiteSpace: "pre-line" }}>
-    {endereco ? (
-      <p>
-        {endereco}{"\n"}<strong>CEP:</strong> {cep}
-      </p>
-    ) : (
-      // ALERTA VISUAL COMPLETO COM ÍCONE DE ATENÇÃO SVG
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "14px 0", color: "#e65100" }}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e65100" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="8" x2="12" y2="12"></line>
-          <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
-        <span style={{ fontWeight: "500", fontSize: "14px" }}>
-          Cadastre o local de recebimento para prosseguir com o aluguel.
-        </span>
-      </div>
-    )}
-  </div>
+              {/* Corpo do endereço com validação visual */}
+              <div className="confirmar-endereco" style={{ whiteSpace: "pre-line" }}>
+                {endereco ? (
+                  <p>
+                    {endereco}{"\n"}<strong>CEP:</strong> {cep}
+                  </p>
+                ) : (
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px", margin: "14px 0", color: "#e65100" }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e65100" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="8" x2="12" y2="12"></line>
+                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span style={{ fontWeight: "500", fontSize: "14px" }}>
+                      Cadastre o local de recebimento para prosseguir com o aluguel.
+                    </span>
+                  </div>
+                )}
+              </div>
 
-  <button className="btn-alterar-endereco" onClick={abrirModal}>
-    {endereco ? "Alterar ou Escolher outro endereço" : "Cadastrar Endereço"}
-  </button>
-</div>
+              <button className="btn-alterar-endereco" onClick={abrirModal}>
+                {endereco ? "Alterar ou Escolher outro endereço" : "Cadastrar Endereço"}
+              </button>
+            </div>
 
             {/* ESTIMATIVA */}
             <div className="confirmar-card">
@@ -126,9 +162,13 @@ export default function ConfirmarAluguel() {
               </p>
             </div>
 
-            {/* BOTÃO CONTINUAR */}
+            {/* BOTÃO CONTINUAR VALIDADO */}
             <div className="confirmar-footer">
-              <button className="btn-continuar" onClick={() => navigate("/pagamento", {state: { produto, dias, total, caucao }})}>
+              <button 
+                className="btn-continuar" 
+                disabled={!endereco} /* 💡 Bloqueado no HTML até que haja endereço */
+                onClick={() => navigate("/pagamento", {state: { produto, dias, total, caucao }})}
+              >
                 Continuar
               </button>
             </div>
