@@ -583,3 +583,20 @@
   padding: 16px;
   flex-shrink: 0;
 }
+
+.btn-action-editar {
+  width: 100%;
+  padding: 14px;
+  background: #f0f0f0;
+  color: #1a1a2e;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-action-editar:hover {
+  background: #e0e0e0;
+}
