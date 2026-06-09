@@ -8,7 +8,28 @@ const SecurityAspect = require('../aspects/securityAspect'); // POA Ativo aqui
 // [READ] - Buscar Itens (RF03 / UC01)
 router.get('/', async (req, res) => {
     try {
-        const result = await connection.query('SELECT * FROM item ORDER BY id_item DESC');
+        const { usuarioId } = req.query;
+
+        let query = `
+            SELECT item.*, usuario.nome AS anunciante 
+            FROM item 
+            LEFT JOIN usuario ON item.id_usuario = usuario.id_usuario
+            ORDER BY item.id_item DESC
+        `;
+        const params = [];
+
+        if (usuarioId) {
+            query = `
+                SELECT item.*, usuario.nome AS anunciante 
+                FROM item 
+                LEFT JOIN usuario ON item.id_usuario = usuario.id_usuario
+                WHERE item.id_usuario = $1
+                ORDER BY item.id_item DESC
+            `;
+            params.push(usuarioId);
+        }
+
+        const result = await connection.query(query, params);
         res.json(result.rows);
     } catch (error) {
         console.error('Erro ao buscar itens:', error);
@@ -16,23 +37,35 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
-  try {
-    const { id } = req.params; 
-    // Executa a busca no PostgreSQL usando a coluna correta (id_item)
-    const resultado = await connection.query('SELECT * FROM item WHERE id_item = $1', [id]);
+router.get('/', async (req, res) => {
+    try {
+        const { usuarioId } = req.query;
 
-    // Se o banco não achar nada com esse ID
-    if (resultado.rows.length === 0) {
-      return res.status(404).json({ error: "Item não encontrado no banco de dados." });
+        let query = `
+            SELECT item.*, usuario.nome AS anunciante 
+            FROM item 
+            LEFT JOIN usuario ON item.id_usuario = usuario.id_usuario
+            ORDER BY item.id_item DESC
+        `;
+        const params = [];
+
+        if (usuarioId) {
+            query = `
+                SELECT item.*, usuario.nome AS anunciante 
+                FROM item 
+                LEFT JOIN usuario ON item.id_usuario = usuario.id_usuario
+                WHERE item.id_usuario = $1
+                ORDER BY item.id_item DESC
+            `;
+            params.push(usuarioId);
+        }
+
+        const result = await connection.query(query, params);
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Erro ao buscar itens:', error);
+        res.status(500).json({ erro: 'Erro ao buscar itens no banco de dados' });
     }
-
-    res.json(resultado.rows[0]);
-
-  } catch (error) {
-    console.error("Erro crítico ao buscar item por ID:", error);
-    res.status(500).json({ error: "Erro interno no servidor ao buscar detalhes." });
-  }
 });
 
 router.get('/recomendados/:excluirId', async (req, res) => {
