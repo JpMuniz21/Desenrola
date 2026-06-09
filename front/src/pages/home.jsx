@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/Sidebar";
 import ProductCard from "../components/ProductCard";
-import Feed from "../components/Feed"; 
 import "../styles/home.css";
 
 const API = "http://localhost:3001/itens";
@@ -18,40 +17,39 @@ export default function Home() {
   }, []);
 
   async function carregarItens() {
-    try {
-      const res = await fetch(API);
-      const data = await res.json();
-      setItens(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Erro ao carregar itens da API:", err);
-      setItens([]);
-    }
+  try {
+    const res = await fetch(API);
+    const data = await res.json();
+    console.log("anunciante do primeiro item:", data[0]?.anunciante);
+    setItens(Array.isArray(data) ? data : []);
+  } catch {
+    setItens([]);
   }
+}
 
   async function carregarFavoritos() {
     try {
-      const res = await fetch(`${FAVORITOS_API}?usuarioId=2`);
+      const userId = localStorage.getItem("userId") || 2;
+      const res = await fetch(`${FAVORITOS_API}?usuarioId=${userId}`);
       const data = await res.json();
-      const idsDB = data.map((fav) => fav.id_item);
+      const idsDB = Array.isArray(data) ? data.map((fav) => fav.id_item) : [];
       setFavoritosIds(idsDB);
     } catch (err) {
-      console.error("Erro ao carregar favoritos do banco:", err);
+      console.error("Erro ao carregar favoritos:", err);
       setFavoritosIds([]);
     }
   }
 
   async function handleToggleFavorito(id) {
+    const userId = localStorage.getItem("userId") || 2;
     const jaFavoritado = favoritosIds.includes(id);
 
     if (jaFavoritado) {
       try {
-        const res = await fetch(`${FAVORITOS_API}?usuarioId=2&itemId=${id}`);
+        const res = await fetch(`${FAVORITOS_API}?usuarioId=${userId}&itemId=${id}`);
         const relacao = await res.json();
-        
         if (relacao.length > 0) {
-          await fetch(`${FAVORITOS_API}/${relacao[0].id_favorito}`, { 
-            method: "DELETE" 
-          });
+          await fetch(`${FAVORITOS_API}/${relacao[0].id_favorito}`, { method: "DELETE" });
           setFavoritosIds((prev) => prev.filter((f) => f !== id));
         }
       } catch (err) {
@@ -62,7 +60,7 @@ export default function Home() {
         await fetch(FAVORITOS_API, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ usuarioId: 2, itemId: id }),
+          body: JSON.stringify({ usuarioId: userId, itemId: id }),
         });
         setFavoritosIds((prev) => [...prev, id]);
       } catch (err) {
@@ -76,35 +74,30 @@ export default function Home() {
       <Navbar />
       <div className="content">
         <Sidebar />
-        
-        <div className="main-feed-container">
-          <Feed /> 
-          <div className="produtos">
+        <main className="feed">
+          <h1>Itens em destaque</h1>
+          <br />
+          <div className="feed-grid">
             {itens.length === 0 ? (
-              <p className="feed-vazio-text">Nenhum item disponível para aluguel no momento.</p>
+              <p>Nenhum item disponível no momento.</p>
             ) : (
-              itens.map((item) => {
-                const favoritado = favoritosIds.includes(item.id_item);
-
-                return (
-                  <ProductCard
-                    key={item.id_item}
-                    id={item.id_item}
-                    titulo={item.nome} 
-                    preco={item.preco}
-                    periodo={item.periodo}
-                    imagem={item.imagem}
-                    anunciante={item.anunciante}
-                    avaliacao={item.avaliacao}
-                    isFavoritado={favoritado}
-                    onToggleFavorito={handleToggleFavorito}
-                  />
-                );
-              })
+              itens.map((item) => (
+                <ProductCard
+                  key={item.id_item}
+                  id={item.id_item}
+                  titulo={item.nome}
+                  preco={item.preco}
+                  periodo={item.periodo}
+                  imagem={item.imagem}
+                  anunciante={item.anunciante}
+                  avaliacao={item.avaliacao}
+                  isFavoritado={favoritosIds.includes(item.id_item)}
+                  onToggleFavorito={handleToggleFavorito}
+                />
+              ))
             )}
           </div>
-        </div>
-
+        </main>
       </div>
     </div>
   );

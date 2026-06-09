@@ -42,7 +42,7 @@ export default function LoginCard() {
     console.log("🚀 O BOTÃO FOI CLICADO!");
 
     try {
-      const response = await axios.post("http://localhost:3001/login", { email, senha });
+      const response = await axios.post("http://localhost:3001/usuarios/login", { email, senha });
 
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("nome", response.data.nome);

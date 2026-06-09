@@ -35,52 +35,66 @@ export default function Anuncio() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
 
-    if (!userId) {
-      alert("Erro de autenticação. Faça login novamente.");
-      navigate("/login");
-      return;
+  if (!userId) {
+    alert("Erro de autenticação. Faça login novamente.");
+    navigate("/login");
+    return;
+  }
+
+  if (!nome || !preco || !descricao || !imagem) {
+    alert("Por favor, preencha todos os campos e adicione uma foto!");
+    return;
+  }
+
+  // Converte imagem para base64 para enviar como JSON
+  const toBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+  });
+
+  const imagemBase64 = await toBase64(imagem);
+
+  try {
+    const response = await fetch("http://localhost:3001/itens", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        nome,
+        preco: parseFloat(preco),
+        periodo: tipoLocacao,
+        descricao,
+        imagem: imagemBase64,
+        id_categoria: 1,
+      }),
+    });
+
+    if (response.ok) {
+      alert("Anúncio criado com sucesso!");
+      setNome("");
+      setPreco("");
+      setDescricao("");
+      setImagem(null);
+      setPreviewUrl(null);
+      navigate("/");
+    } else {
+      const erroData = await response.json();
+      alert(`Erro: ${erroData.erro || erroData.message || "Erro no servidor."}`);
     }
-
-    if (!nome || !preco || !descricao || !imagem) {
-      alert("Por favor, preencha todos os campos e adicione uma foto do seu produto!");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("nome", nome);
-    formData.append("preco", parseFloat(preco));
-    formData.append("tipoLocacao", tipoLocacao);
-    formData.append("descricao", descricao);
-    formData.append("imagem", imagem);
-    formData.append("usuarioId", userId);
-
-    try {
-      const response = await fetch("http://localhost:3001/api/produtos", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        alert("Anúncio criado com absoluto sucesso!");
-        setNome("");
-        setPreco("");
-        setDescricao("");
-        setImagem(null);
-        setPreviewUrl(null);
-        navigate("/");
-      } else {
-        const erroData = await response.json();
-        alert(`Erro ao criar anúncio: ${erroData.message || "Erro no servidor."}`);
-      }
-    } catch (error) {
-      console.error("Erro na requisição de upload:", error);
-      alert("Não foi possível conectar ao servidor do back-end.");
-    }
-  };
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível conectar ao servidor.");
+  }
+};
 
   return (
     <div className="anuncio-page-bg">

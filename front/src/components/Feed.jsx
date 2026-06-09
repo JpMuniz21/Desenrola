@@ -53,20 +53,20 @@ export default function Feed() {
       <br />
       <div className="feed-grid">
         {products.length > 0 ? (
-          products.map((item) => {
-            console.log("Conteúdo do item vindo do banco:", item);
-
-            return (
-              <ProductCard
-                key={item.id_item || item.id} // Aceita id_item ou id
-                id={item.id_item || item.id}
-                titulo={item.nome || item.titulo || "Item sem título"} // Se 'nome' falhar, tenta 'titulo'
-                preco={item.preco}
-                periodo={item.periodo}
-                imagem={item.imagem || item.image || "https://via.placeholder.com/400x300"} // Se 'imagem' falhar, tenta 'image'
-              />
-            );
-          })
+          products.map((item) => (
+  <ProductCard
+    key={item.id_item || item.id}
+    id={item.id_item || item.id}
+    titulo={item.nome || item.titulo || "Item sem título"}
+    preco={item.preco}
+    periodo={item.periodo}
+    imagem={item.imagem || item.image || "https://via.placeholder.com/400x300"}
+    anunciante={item.anunciante}
+    avaliacao={item.avaliacao}
+    isFavoritado={false}
+    onToggleFavorito={() => {}}
+  />
+))
         ) : (
           <p style={{ textAlign: "center", width: "100%" }}>Nenhum item cadastrado no banco.</p>
         )}
