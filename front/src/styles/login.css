@@ -239,14 +239,26 @@
 
 /* Redes Sociais */
 .divider {
-  text-align: center;
-  margin: 25px 0;
-  color: #999;
-  font-size: 12px;
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 24px 0;
+  width: 100%;
 }
 
-.divider-line { flex: 1; height: 1px; background: #30363d; }
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background-color: #e2e8f0;
+}
+
+.divider-text {
+  padding: 0 16px;
+  color: #718096;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
 
 .social-login {
   display: flex;
@@ -291,5 +303,51 @@
   }
   .login-hero-center {
     display: none; 
+  }
+}
+
+.carrossel-animacao {
+  animation: surgimentoSuave 0.6s ease-in-out forwards;
+  object-fit: contain;
+  max-height: 400px;
+}
+
+.carousel-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+.carousel-track {
+  display: flex;
+  width: 100%;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-slide .hero-img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+@keyframes surgimentoSuave {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 }

@@ -1,10 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; 
 import '../styles/login.css';
 import Navbar from '../components/navbar';
-
-// Imports de ícones
 import googleIcon from '../assets/google.svg';
 import appleIcon from '../assets/apple.svg';
 import facebookIcon from '../assets/facebook.svg';
@@ -14,12 +12,30 @@ import eyeIcon from '../assets/eye.svg';
 import eyeOffIcon from '../assets/eye-off.svg'; 
 import shieldIcon from '../assets/shield.svg';
 import heroCameraImage from '../assets/camera.png';
+import heroDroneImage from '../assets/drone.png';
+import heroVitrolaImage from '../assets/vitrola.png';
+import heroFoneImage from '../assets/fone.png';
 
 export default function LoginCard() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [imagemAtivaIndex, setImagemAtivaIndex] = useState(0);
+  const CARROSSEL_IMAGENS = [
+    heroCameraImage,
+    heroDroneImage,
+    heroVitrolaImage,
+    heroFoneImage
+  ];
+
+  useEffect(() => {
+    const intervalo = setInterval(() => {
+      setImagemAtivaIndex((prevIndex) => (prevIndex + 1) % CARROSSEL_IMAGENS.length);
+    }, 3000);
+
+    return () => clearInterval(intervalo); 
+  }, [CARROSSEL_IMAGENS.length]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -42,7 +58,7 @@ export default function LoginCard() {
   };
 
   return (
-    <> {/* <--- Abre o envelope aqui */}
+    <>
       <Navbar isLogin={true} />
 
       <div className="login-page-wrapper">
@@ -77,9 +93,18 @@ export default function LoginCard() {
             </div>
           </div>
 
-          <div className="hero-camera-wrapper">
-            <img src={heroCameraImage} alt="Hero Camera" className="hero-img" />
-          </div>
+          <div className="hero-camera-wrapper carousel-container">
+  <div 
+    className="carousel-track" 
+    style={{ transform: `translateX(-${imagemAtivaIndex * 100}%)` }}
+  >
+    {CARROSSEL_IMAGENS.map((img, index) => (
+      <div className="carousel-slide" key={index}>
+        <img src={img} alt={`Item ${index}`} className="hero-img" />
+      </div>
+    ))}
+  </div>
+</div>
 
           <div className="login-right">
             <div className="login-card">
@@ -124,11 +149,11 @@ export default function LoginCard() {
                 <button type="submit" className="btn-primary">Entrar</button>
               </form>
 
-            <div className="divider">
-              <span className="divider-line" />
-              <span className="divider-text">ou continue com</span>
-              <span className="divider-line" />
-            </div>
+              <div className="divider">
+                <span className="divider-line" />
+                <span className="divider-text">Ou continue com</span>
+                <span className="divider-line" />
+              </div>
 
               <div className="social-login">
                 <button className="social-btn"><img src={googleIcon} alt="Google" /></button>

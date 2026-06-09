@@ -141,6 +141,13 @@
   font-size: 16px;
 }
 
+.navbar-search-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 450px; 
+}
+
 .announce-btn {
   background: #ffa44f;
   color: white;

@@ -8,8 +8,27 @@ body {
   background: #f5f7fa;
 }
 
+.main-feed-container {
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
 .content {
   display: flex;
+  width: 100%;
+  min-height: calc(100vh - 70px);
+  background-color: #f7fafc; 
+}
+
+.produtos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  width: 100%;
 }
 
 .sidebar button, 

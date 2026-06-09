@@ -70,7 +70,6 @@ export default function Aluguel() {
     return `${String(dia).padStart(2, "0")}/${String(mes + 1).padStart(2, "0")}`;
   }
 
-  // NOVA FUNÇÃO: Garante que o valor fica sempre no formato correto (ex: 25,00)
   function formatarMoeda(valor) {
     return Number(valor).toFixed(2).replace('.', ',');
   }
@@ -88,7 +87,6 @@ export default function Aluguel() {
             <img src={produto.imagem} alt={produto.nome} className="aluguel-produto-img" />
             <div>
               <p className="aluguel-produto-nome">{produto.nome}</p>
-              {/* Preço formatado corretamente */}
               <p className="aluguel-produto-preco">R$ {formatarMoeda(produto.preco)} {produto.tipoLocacao}</p>
             </div>
           </div>
@@ -99,12 +97,24 @@ export default function Aluguel() {
               <button className="cal-nav" onClick={() => {
                 if (mes === 0) { setMes(11); setAno(ano - 1); }
                 else setMes(mes - 1);
-              }}>‹</button>
+              }}>
+                {/* SVG: Seta Esquerda */}
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </button>
+              
               <span>{nomeMesCapital} de {ano}</span>
+              
               <button className="cal-nav" onClick={() => {
                 if (mes === 11) { setMes(0); setAno(ano + 1); }
                 else setMes(mes + 1);
-              }}>›</button>
+              }}>
+                {/* SVG: Seta Direita */}
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
             </div>
 
             <div className="cal-grid">
@@ -122,75 +132,121 @@ export default function Aluguel() {
             </div>
 
             <div className="cal-legenda">
-              <div className="legenda-item"><span className="dot green" /> Disponível</div>
-              <div className="legenda-item"><span className="dot red" /> Indisponível</div>
+              <div className="legenda-item">
+                <svg width="12" height="12" viewBox="0 0 12 12" style={{marginRight: '6px'}}>
+                   <circle cx="6" cy="6" r="5" fill="#4caf50" />
+                </svg>
+                Disponível
+              </div>
+              <div className="legenda-item">
+                <svg width="12" height="12" viewBox="0 0 12 12" style={{marginRight: '6px'}}>
+                   <circle cx="6" cy="6" r="5" fill="#f44336" />
+                </svg>
+                Indisponível
+              </div>
             </div>
           </div>
         </div>
 
-        {/* COLUNA DIREITA: RESUMO */}
-        <div className="aluguel-resumo-card">
-          <h2 className="resumo-titulo">Resumo do aluguel</h2>
+        {/* COLUNA DIREITA: RESUMO (Substitua apenas este bloco final no seu JSX) */}
+<div className="aluguel-resumo-card">
+  <h2 className="resumo-titulo">Resumo do aluguel</h2>
 
-          <div className="resumo-datas">
-            <div className="resumo-data-box">
-              <span className="resumo-data-label">RETIRADA</span>
-              <span className="resumo-data-valor">{formatarData(inicio)}</span>
-            </div>
-            <span className="resumo-seta">→</span>
-            <div className="resumo-data-box">
-              <span className="resumo-data-label">DEVOLUÇÃO</span>
-              <span className="resumo-data-valor">{formatarData(fim)}</span>
-            </div>
-          </div>
+  <div className="resumo-datas">
+    <div className="resumo-data-box">
+      <span className="resumo-data-label">RETIRADA</span>
+      <span className="resumo-data-valor">{formatarData(inicio)}</span>
+    </div>
+    
+    <span className="resumo-seta">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <polyline points="12 5 19 12 12 19"></polyline>
+      </svg>
+    </span>
 
-          <div className="resumo-linha">
-            <span>Diária</span>
-            {/* Diária formatada sem o .00 fixo */}
-            <span>R$ {formatarMoeda(diaria)}</span>
-          </div>
-          <div className="resumo-linha">
-            <span>Dias</span>
-            <span>{dias > 0 ? dias : "--"}</span>
-          </div>
-          <div className="resumo-linha">
-            <span>Frete</span>
-            <span className="resumo-gratis">Grátis</span>
-          </div>
+    <div className="resumo-data-box">
+      <span className="resumo-data-label">DEVOLUÇÃO</span>
+      <span className="resumo-data-valor">{formatarData(fim)}</span>
+    </div>
+  </div>
 
-          <div className="resumo-total">
-            <span>Total</span>
-            {/* Total formatado corretamente */}
-            <span>R$ {total > 0 ? formatarMoeda(total) : "--"}</span>
-          </div>
+  <div className="resumo-linha">
+    <span>Diária</span>
+    <span>R$ {formatarMoeda(diaria)}</span>
+  </div>
+  <div className="resumo-linha">
+    <span>Dias</span>
+    <span>{dias > 0 ? dias : "--"}</span>
+  </div>
+  <div className="resumo-linha">
+    <span>Frete</span>
+    <span className="resumo-gratis">Grátis</span>
+  </div>
 
-          {total > 0 && (
-            <div className="resumo-caucao">
-              {/* Ícone informativo e caução formatada */}
-              <span title="Valor devolvido após a entrega do produto">
-                <span style={{ cursor: "help" }}>ℹ️</span> Caução estimado: <strong>R$ {formatarMoeda(caucao)}</strong>
-              </span>
-              <p>Valor retido como garantia e liberado automaticamente após a devolução do item.</p>
-            </div>
-          )}
+  <div className="resumo-total">
+    <span>Total</span>
+    <span>R$ {total > 0 ? formatarMoeda(total) : "--"}</span>
+  </div>
 
-          <button
-            className="resumo-btn"
-            disabled={!inicio || !fim}
-            onClick={() => navigate("/confirmar-aluguel", {
-              state: {
-                produto,
-                inicio: formatarData(inicio),
-                fim: formatarData(fim),
-                dias,
-                total,
-                caucao,
-              }
-            })}
-          >
-            Confirmar aluguel
-          </button>
-        </div>
+  {total > 0 && (
+  <div className="resumo-caucao" style={{ 
+    backgroundColor: '#fff7ed', 
+    border: '1px solid #ffedd5', 
+    borderRadius: '12px', 
+    padding: '16px',
+    marginTop: '16px'
+  }}>
+    {/* 💡 Linha do Título estruturada com Flexbox para centralização vertical exata */}
+    <div style={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      gap: '8px',
+      marginBottom: '6px'
+    }}>
+      {/* O ÍCONE: Isolado e travado para não herdar distorções de texto */}
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, display: 'block' }}>
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+      
+      {/* O TEXTO: Utilizando uma única tag de texto para alinhar perfeitamente */}
+      <span style={{ fontSize: '15px', color: '#334155', fontWeight: '700', lineHeight: '1' }}>
+        Caução estimado: <span style={{ color: '#f97316' }}>R$ {formatarMoeda(caucao)}</span>
+      </span>
+    </div>
+    
+    {/* Texto descritivo com recuo para alinhar abaixo do início da palavra "Caução" */}
+    <p style={{ 
+      margin: 0, 
+      padding: 0, 
+      fontSize: '13px', 
+      color: '#64748b', 
+      lineHeight: '1.4',
+      paddingLeft: '26px'
+    }}>
+      Valor retido como garantia e liberado automaticamente após a devolução do item.
+    </p>
+  </div>
+)}
+  <button
+    className="resumo-btn"
+    disabled={!inicio || !fim}
+    onClick={() => navigate("/confirmar-aluguel", {
+      state: {
+        produto,
+        inicio: formatarData(inicio),
+        fim: formatarData(fim),
+        dias,
+        total,
+        caucao,
+      }
+    })}
+  >
+    Confirmar aluguel
+  </button>
+</div>
 
       </main>
     </div>
