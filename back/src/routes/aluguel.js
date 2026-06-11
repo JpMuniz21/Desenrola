@@ -51,7 +51,7 @@ router.get('/datas/:itemId', async (req, res) => {
     try {
         const { itemId } = req.params;
         const result = await connection.query(
-            'SELECT data_inicio, data_fim FROM aluguel WHERE id_item = $1',
+            'SELECT data_inicio, data_fim, id_usuario FROM aluguel WHERE id_item = $1',
             [itemId]
         );
         res.json(result.rows);
