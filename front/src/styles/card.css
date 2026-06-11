@@ -73,7 +73,7 @@
 .btn-favoritar-floating {
   position: absolute;
   top: 14px; 
-  right: 14px; /
+  right: 14px;
   background: rgba(255, 255, 255, 0.9) !important; 
   backdrop-filter: blur(4px); 
   border: none;
