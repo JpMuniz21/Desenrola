@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const amqp = require('amqplib'); 
 const RABBITMQ_URL = 'amqp://localhost'; 
+const connection = require('../config/database');
+const autenticarToken = require('../middlewares/auth');
 
 router.post('/', async (req, res) => {
   try {
@@ -42,6 +44,39 @@ router.post('/', async (req, res) => {
     console.error("Erro ao integrar com RabbitMQ:", error);
     res.status(500).json({ error: "Erro interno ao processar aluguel." });
   }
+});
+
+// [READ] - Buscar datas ocupadas por item
+router.get('/datas/:itemId', async (req, res) => {
+    try {
+        const { itemId } = req.params;
+        const result = await connection.query(
+            'SELECT data_inicio, data_fim FROM aluguel WHERE id_item = $1',
+            [itemId]
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Erro ao buscar datas:', error);
+        res.status(500).json({ erro: 'Erro ao buscar datas ocupadas' });
+    }
+});
+
+// [CREATE] - Criar aluguel no banco
+router.post('/salvar', autenticarToken, async (req, res) => {
+    try {
+        const { itemId, dataInicio, dataFim } = req.body;
+        const userId = req.usuario.id;
+
+        await connection.query(
+            'INSERT INTO aluguel (id_item, id_usuario, data_inicio, data_fim) VALUES ($1, $2, $3, $4)',
+            [itemId, userId, dataInicio, dataFim]
+        );
+
+        res.status(201).json({ mensagem: "Aluguel salvo com sucesso!" });
+    } catch (error) {
+        console.error('Erro ao salvar aluguel:', error);
+        res.status(500).json({ erro: 'Erro ao salvar aluguel' });
+    }
 });
 
 module.exports = router;

@@ -36,11 +36,10 @@ app.use('/usuarios', rotasUsuarios);
 app.use('/itens', rotasItens);         
 app.use('/mensagens', rotasMensagens);
 app.use('/categorias', rotasCategorias);
+app.use('/aluguel', rotaAluguel);
 
 
-// ==========================================================
-// 🔌 SOCKET.IO (Eventos em tempo real)
-// ==========================================================
+// SOCKET //
 io.on('connection', (socket) => {
     console.log('🟢 Usuário conectado via Socket');
 
