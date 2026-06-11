@@ -47,7 +47,6 @@ router.post('/login', async (req, res) => {
         }
 
         const usuario = rows[0];
-        console.log('USUARIO DO BANCO:', usuario);
         const senhaValida = await bcrypt.compare(senha, usuario.senha);
         
         if (!senhaValida) {
