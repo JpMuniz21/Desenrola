@@ -248,6 +248,19 @@
   cursor: not-allowed;
 }
 
+.day-selected {
+  background: #f97316;
+  color: white;
+  font-weight: 700;
+}
+
+.day-range {
+  background: #ffe0c2;
+  color: #f97316;
+  font-weight: 600;
+}
+
+
 .calendar-legend {
   display: flex;
   gap: 16px;

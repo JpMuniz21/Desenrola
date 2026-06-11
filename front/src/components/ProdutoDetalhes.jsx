@@ -13,8 +13,9 @@ export default function ProdutoDetalhe() {
   const hoje = new Date();
   const [mesAtual, setMesAtual] = useState(hoje.getMonth());
   const [anoAtual, setAnoAtual] = useState(hoje.getFullYear());
-
   const nomesMeses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  const [dataInicio, setDataInicio] = useState(null);
+  const [dataFim, setDataFim] = useState(null);
 
   function getDiasNoMes(mes, ano) {
     return new Date(ano, mes + 1, 0).getDate();
@@ -73,6 +74,32 @@ export default function ProdutoDetalhe() {
       console.error("Erro no fluxo de aluguel:", err);
     }
   };
+
+  function handleSelecionarDia(dia) {
+  const dataSelecionada = new Date(anoAtual, mesAtual, dia);
+  if (isPassed(dia)) return;
+
+  if (!dataInicio || (dataInicio && dataFim)) {
+    setDataInicio(dataSelecionada);
+    setDataFim(null);
+  } else {
+    if (dataSelecionada < dataInicio) {
+      setDataFim(dataInicio);
+      setDataInicio(dataSelecionada);
+    } else {
+      setDataFim(dataSelecionada);
+    }
+  }
+}
+
+function getClasseDia(dia) {
+  if (isPassed(dia)) return 'day-past';
+  const data = new Date(anoAtual, mesAtual, dia);
+  if (dataInicio && data.getTime() === dataInicio.getTime()) return 'day-selected';
+  if (dataFim && data.getTime() === dataFim.getTime()) return 'day-selected';
+  if (dataInicio && dataFim && data > dataInicio && data < dataFim) return 'day-range';
+  return 'day-green';
+}
 
   if (loading) return <p style={{ color: "#555", textAlign: "center", marginTop: "50px" }}>Carregando...</p>;
 
@@ -191,13 +218,15 @@ export default function ProdutoDetalhe() {
               </div>
             <div className="calendar-days-grid">
               {Array.from({ length: getDiasNoMes(mesAtual, anoAtual) }, (_, i) => (
-            <div
-              key={i + 1}
-              className={`cal-day-item ${isPassed(i + 1) ? 'day-past' : 'day-green'}`}
-            >
-              {i + 1}
-            </div>
-    ))}
+  <div
+    key={i + 1}
+    className={`cal-day-item ${getClasseDia(i + 1)}`}
+    onClick={() => handleSelecionarDia(i + 1)}
+    style={{ cursor: isPassed(i + 1) ? 'not-allowed' : 'pointer' }}
+  >
+    {i + 1}
+  </div>
+))}
   </div>
 </div>
             <div className="reviews-section">

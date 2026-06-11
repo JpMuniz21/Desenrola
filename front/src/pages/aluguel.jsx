@@ -8,10 +8,12 @@ const DIAS_SEMANA = ["D", "S", "T", "Q", "Q", "S", "S"];
 function gerarDias(ano, mes) {
   const primeiroDia = new Date(ano, mes, 1).getDay();
   const totalDias = new Date(ano, mes + 1, 0).getDate();
+  const [inicio, setInicio] = useState(null);
+  const [fim, setFim] = useState(null);
   return { primeiroDia, totalDias };
 }
 
-const INDISPONIVEIS = [14, 15];
+const INDISPONIVEIS = [];
 
 export default function Aluguel() {
   const navigate = useNavigate();
@@ -35,40 +37,48 @@ export default function Aluguel() {
   const nomeMes = new Date(ano, mes).toLocaleString("pt-BR", { month: "long" });
   const nomeMesCapital = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
 
-  function handleDiaClick(dia) {
-    if (INDISPONIVEIS.includes(dia)) return;
+ function handleDiaClick(dia) {
+  const data = new Date(ano, mes, dia);
+  const hoje = new Date();
+  hoje.setHours(0,0,0,0);
+  if (data < hoje || INDISPONIVEIS.includes(dia)) return;
 
-    if (!inicio || (inicio && fim)) {
-      setInicio(dia);
-      setFim(null);
-    } else if (dia === inicio) {
-      setInicio(null);
-      setFim(null);
-    } else if (dia < inicio) {
-      setInicio(dia);
-      setFim(null);
-    } else {
-      setFim(dia);
-    }
+  if (!inicio || (inicio && fim)) {
+    setInicio(data);
+    setFim(null);
+  } else if (data.getTime() === inicio.getTime()) {
+    setInicio(null);
+    setFim(null);
+  } else if (data < inicio) {
+    setInicio(data);
+    setFim(null);
+  } else {
+    setFim(data);
   }
+}
 
   function getDiaClasse(dia) {
-    if (INDISPONIVEIS.includes(dia)) return "cal-dia indisponivel";
-    if (inicio && dia === inicio) return "cal-dia selecionado-inicio";
-    if (fim && dia === fim) return "cal-dia selecionado-fim";
-    if (inicio && fim && dia > inicio && dia < fim) return "cal-dia no-range";
-    return "cal-dia disponivel";
-  }
+  const data = new Date(ano, mes, dia);
+  const hoje = new Date();
+  hoje.setHours(0,0,0,0);
+  if (data < hoje || INDISPONIVEIS.includes(dia)) return "cal-dia indisponivel";
+  if (inicio && data.getTime() === inicio.getTime()) return "cal-dia selecionado-inicio";
+  if (fim && data.getTime() === fim.getTime()) return "cal-dia selecionado-fim";
+  if (inicio && fim && data > inicio && data < fim) return "cal-dia no-range";
+  return "cal-dia disponivel";
+}
 
-  const dias = inicio && fim ? fim - inicio + 1 : 0;
+  const dias = inicio && fim ? Math.round((fim - inicio) / (1000 * 60 * 60 * 24)) + 1 : 0;
   const diaria = produto.preco;
   const total = dias * diaria;
   const caucao = Math.round(total * 0.3);
 
-  function formatarData(dia) {
-    if (!dia) return "--/--";
-    return `${String(dia).padStart(2, "0")}/${String(mes + 1).padStart(2, "0")}`;
-  }
+  function formatarData(data) {
+  if (!data) return "--/--";
+  const dia = String(data.getDate()).padStart(2, "0");
+  const mesNum = String(data.getMonth() + 1).padStart(2, "0");
+  return `${dia}/${mesNum}`;
+}
 
   function formatarMoeda(valor) {
     return Number(valor).toFixed(2).replace('.', ',');
@@ -271,15 +281,15 @@ export default function Aluguel() {
             className="resumo-btn"
             disabled={!inicio || !fim}
             onClick={() => navigate("/confirmar-aluguel", {
-              state: {
-                produto,
-                inicio: formatarData(inicio),
-                fim: formatarData(fim),
-                dias,
-                total,
-                caucao,
-              }
-            })}
+  state: {
+    produto,
+    inicio: formatarData(inicio),
+    fim: formatarData(fim),
+    dias,
+    total,
+    caucao,
+  }
+})}
           >
             Confirmar aluguel
           </button>

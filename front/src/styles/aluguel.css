@@ -115,10 +115,9 @@
 }
 
 .cal-dia.indisponivel {
-  color: #c62828;
-  background: #fdecea;
+  background: #e0e0e0;
+  color: #aaa;
   cursor: not-allowed;
-  opacity: 1;
 }
 
 .cal-dia.selecionado-inicio,
