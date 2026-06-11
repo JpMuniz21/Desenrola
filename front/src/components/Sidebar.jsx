@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "../styles/sidebar.css";
 
-const CATEGORIAS_API = "http://localhost:3001/categorias";
+const CATEGORIAS_API = "https://desenrola-backend.onrender.com/categorias";
 
 export default function Sidebar({ onFiltrar }) {
   const [localizacao, setLocalizacao] = useState("");

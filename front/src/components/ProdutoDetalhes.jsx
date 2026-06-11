@@ -16,12 +16,12 @@ export default function ProdutoDetalhe() {
       setLoading(true);
       setErro(null);
       try {
-        const resProduto = await fetch(`http://localhost:3001/itens/${id}`);
+        const resProduto = await fetch(`https://desenrola-backend.onrender.com/itens/${id}`);
         if (!resProduto.ok) throw new Error(`Produto não encontrado (Status: ${resProduto.status})`);
         const dataProd = await resProduto.json();
         setProduto(Array.isArray(dataProd) ? dataProd[0] : dataProd);
 
-        const resRec = await fetch(`http://localhost:3001/itens/recomendados/${id}`);
+        const resRec = await fetch(`https://desenrola-backend.onrender.com/itens/recomendados/${id}`);
         if (resRec.ok) setRecomendados(await resRec.json());
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
@@ -35,7 +35,7 @@ export default function ProdutoDetalhe() {
 
   const handleAlugarComNotificacao = async () => {
     try {
-      fetch("http://localhost:3001/aluguel", {
+      fetch("https://desenrola-backend.onrender.com/aluguel", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ produtoId: produto.id_item || id, nomeProduto: produto.nome, preco: produto.preco, locatario: "Cliente Logado" })

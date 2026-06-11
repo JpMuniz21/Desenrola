@@ -4,8 +4,8 @@ import Navbar from "../components/navbar";
 import ProductCard from "../components/ProductCard";
 import "../styles/favoritos.css";
 
-const FAVORITOS_API = "http://localhost:3001/favoritos";
-const ITENS_API = "http://localhost:3001/itens";
+const FAVORITOS_API = "https://desenrola-backend.onrender.com/favoritos";
+const ITENS_API = "https://desenrola-backend.onrender.com/itens";
 
 export default function Favoritos() {
   const navigate = useNavigate();

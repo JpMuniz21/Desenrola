@@ -27,7 +27,7 @@ export default function Cadastro() {
   }
 
   try {
-    const res = await axios.post("http://localhost:3001/usuarios", { nome, email, senha });
+    const res = await axios.post("https://desenrola-backend.onrender.com/usuarios", { nome, email, senha });
 
     if (res.status === 201) {
       setToast({ mensagem: "Conta criada com sucesso!", tipo: "sucesso" });

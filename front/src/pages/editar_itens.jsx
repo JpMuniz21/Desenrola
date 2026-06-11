@@ -20,7 +20,7 @@ export default function EditarItem() {
   useEffect(() => {
     async function carregarItem() {
       try {
-        const res = await fetch(`http://localhost:3001/itens/${id}`);
+        const res = await fetch(`https://desenrola-backend.onrender.com/itens/${id}`);
         const data = await res.json();
         setNome(data.nome || "");
         setPreco(data.preco || "");
@@ -68,7 +68,7 @@ export default function EditarItem() {
     }
 
     try {
-      const response = await fetch(`http://localhost:3001/itens/${id}`, {
+      const response = await fetch(`https://desenrola-backend.onrender.com/itens/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify({ nome, preco: parseFloat(preco), periodo: tipoLocacao, descricao, imagem: imagemFinal }),
@@ -89,7 +89,7 @@ export default function EditarItem() {
   const handleExcluir = async () => {
     const token = localStorage.getItem("token");
     try {
-      await fetch(`http://localhost:3001/itens/${id}`, {
+      await fetch(`https://desenrola-backend.onrender.com/itens/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });

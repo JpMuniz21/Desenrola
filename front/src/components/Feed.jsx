@@ -8,7 +8,7 @@ export default function Feed() {
   const [erroBackend, setErroBackend] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/itens")
+    fetch("https://desenrola-backend.onrender.com/itens")
       .then((response) => {
         if (!response.ok) {
           // Se der erro 500, cai direto aqui

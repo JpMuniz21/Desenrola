@@ -24,7 +24,7 @@ export default function Anuncio() {
       return;
     }
 
-    fetch("http://localhost:3001/categorias")
+    fetch("https://desenrola-backend.onrender.com/categorias")
       .then(res => res.json())
       .then(data => { if (Array.isArray(data)) setCategorias(data); })
       .catch(() => setCategorias([
@@ -70,7 +70,7 @@ export default function Anuncio() {
     const imagemBase64 = await toBase64(imagem);
 
     try {
-      const response = await fetch("http://localhost:3001/itens", {
+      const response = await fetch("https://desenrola-backend.onrender.com/itens", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify({

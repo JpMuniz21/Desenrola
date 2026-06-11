@@ -4,8 +4,8 @@ import Sidebar from "../components/Sidebar";
 import ProductCard from "../components/ProductCard";
 import "../styles/home.css";
 
-const API = "http://localhost:3001/itens";
-const FAVORITOS_API = "http://localhost:3001/favoritos";
+const API = "https://desenrola-backend.onrender.com/itens";
+const FAVORITOS_API = "https://desenrola-backend.onrender.com/favoritos";
 
 export default function Home() {
   const [itens, setItens] = useState([]);

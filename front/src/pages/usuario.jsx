@@ -50,7 +50,7 @@ export default function Usuario() {
     const token = localStorage.getItem("token");
 
     try {
-      const resPerfil = await fetch(`http://localhost:3001/usuarios/${idParaBusca}`, {
+      const resPerfil = await fetch(`https://desenrola-backend.onrender.com/usuarios/${idParaBusca}`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
 
@@ -75,10 +75,10 @@ export default function Usuario() {
         carregarPerfilMockLocal();
       }
 
-      const resFavoritos = await fetch(`http://localhost:3001/favoritos?usuarioId=${idParaBusca}`);
+      const resFavoritos = await fetch(`https://desenrola-backend.onrender.com/favoritos?usuarioId=${idParaBusca}`);
       if (resFavoritos.ok) setMeusFavoritos(await resFavoritos.json());
 
-      const resAnuncios = await fetch(`http://localhost:3001/itens?usuarioId=${idParaBusca}`);
+      const resAnuncios = await fetch(`https://desenrola-backend.onrender.com/itens?usuarioId=${idParaBusca}`);
       if (resAnuncios.ok) setMeusAnuncios(await resAnuncios.json());
     } catch (error) {
       console.error("Erro ao conectar:", error);
@@ -88,7 +88,7 @@ export default function Usuario() {
 
   async function handleExcluirAnuncio(anuncio) {
     const token = localStorage.getItem("token");
-    await fetch(`http://localhost:3001/itens/${anuncio.id_item}`, {
+    await fetch(`https://desenrola-backend.onrender.com/itens/${anuncio.id_item}`, {
       method: "DELETE",
       headers: { "Authorization": `Bearer ${token}` }
     });
@@ -98,7 +98,7 @@ export default function Usuario() {
 
   async function handleRemoverFavorito(idFavorito) {
     try {
-      await fetch(`http://localhost:3001/favoritos/${idFavorito}`, { method: "DELETE" });
+      await fetch(`https://desenrola-backend.onrender.com/favoritos/${idFavorito}`, { method: "DELETE" });
       carregarDadosDoUsuario();
     } catch (error) {
       console.error("Erro ao remover favorito:", error);
@@ -116,7 +116,7 @@ export default function Usuario() {
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch(`http://localhost:3001/usuarios/${userId}`, {
+      const res = await fetch(`https://desenrola-backend.onrender.com/usuarios/${userId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
         body: JSON.stringify({ nome: formDados.nomeExibicao, nome_completo: formDados.nomeCompleto, cidade: formDados.cidade, estado: formDados.estado, biografia: formDados.biografia })

@@ -43,7 +43,7 @@ export default function LoginCard() {
   e.preventDefault();
 
   try {
-    const response = await axios.post("http://localhost:3001/usuarios/login", { email, senha });
+    const response = await axios.post("https://desenrola-backend.onrender.com/usuarios/login", { email, senha });
 
     localStorage.setItem("token", response.data.token);
     localStorage.setItem("nome", response.data.nome);
