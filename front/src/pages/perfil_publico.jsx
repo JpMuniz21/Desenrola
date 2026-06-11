@@ -68,7 +68,6 @@ export default function PerfilPublico() {
             <div className="perfil-col-left">
               <h2 className="perfil-nome-titulo">{usuario.nome}</h2>
               <div className="perfil-info-group">
-                <p><strong>Email:</strong> {usuario.email}</p>
               </div>
               <div className="perfil-meta-box">
                 <div className="meta-item-badge">

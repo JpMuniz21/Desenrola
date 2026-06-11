@@ -91,10 +91,19 @@ router.get('/:id', autenticarToken, async (req, res) => {
 // [UPDATE] - Atualizar Perfil
 router.put('/:id', autenticarToken, async (req, res) => {
     try {
-        const { nome, email } = req.body;
+        const { nome, email, nome_completo, cidade, estado, biografia, foto_perfil, foto_capa } = req.body;
         await connection.query(
-            'UPDATE usuario SET nome = $1, email = $2 WHERE id_usuario = $3',
-            [nome, email, req.params.id]
+            `UPDATE usuario SET 
+                nome = COALESCE($1, nome), 
+                email = COALESCE($2, email),
+                nome_completo = COALESCE($3, nome_completo),
+                cidade = COALESCE($4, cidade),
+                estado = COALESCE($5, estado),
+                biografia = COALESCE($6, biografia),
+                foto_perfil = COALESCE($7, foto_perfil),
+                foto_capa = COALESCE($8, foto_capa)
+             WHERE id_usuario = $9`,
+            [nome, email, nome_completo, cidade, estado, biografia, foto_perfil, foto_capa, req.params.id]
         );
         res.json({ mensagem: "Perfil atualizado!" });
     } catch (error) {

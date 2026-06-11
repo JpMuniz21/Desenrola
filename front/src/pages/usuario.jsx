@@ -24,14 +24,14 @@ export default function Usuario() {
   const [meusAlugueis, setMeusAlugueis] = useState([]);
 
   useEffect(() => {
-  const userIdLogado = localStorage.getItem("userId");
-  if (!userIdLogado) {
-    alert("Sessão expirada. Faça login novamente! 🛡️");
-    navigate("/login");
-    return;
-  }
-  carregarDadosDoUsuario(userIdLogado);
-}, [navigate]);
+    const userIdLogado = localStorage.getItem("userId");
+    if (!userIdLogado) {
+      alert("Sessão expirada. Faça login novamente! 🛡️");
+      navigate("/login");
+      return;
+    }
+    carregarDadosDoUsuario(userIdLogado);
+  }, [navigate]);
 
   function carregarPerfilMockLocal() {
     const mock = {
@@ -49,6 +49,7 @@ export default function Usuario() {
   async function carregarDadosDoUsuario(userId) {
     const idParaBusca = userId || localStorage.getItem("userId");
     const token = localStorage.getItem("token");
+
     const resAlugueis = await fetch(`https://desenrola-backend.onrender.com/aluguel/usuario`, {
       headers: { "Authorization": `Bearer ${token}` }
     });
@@ -73,6 +74,8 @@ export default function Usuario() {
           };
           setUsuario(perfilTratado);
           setFormDados(perfilTratado);
+          if (dataPerfil.foto_perfil) setAvatar(dataPerfil.foto_perfil);
+          if (dataPerfil.foto_capa) setCapa(dataPerfil.foto_capa);
         } else {
           carregarPerfilMockLocal();
         }
@@ -110,8 +113,44 @@ export default function Usuario() {
     }
   }
 
-  const handleCapaChange = (e) => { if (e.target.files?.[0]) setCapa(URL.createObjectURL(e.target.files[0])); };
-  const handleAvatarChange = (e) => { if (e.target.files?.[0]) setAvatar(URL.createObjectURL(e.target.files[0])); };
+  async function salvarFoto(dados) {
+    const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
+    try {
+      await fetch(`https://desenrola-backend.onrender.com/usuarios/${userId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        body: JSON.stringify(dados)
+      });
+    } catch (error) {
+      console.error("Erro ao salvar foto:", error);
+    }
+  }
+
+  const handleCapaChange = (e) => {
+    if (e.target.files?.[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCapa(reader.result);
+        salvarFoto({ foto_capa: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleAvatarChange = (e) => {
+    if (e.target.files?.[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result);
+        salvarFoto({ foto_perfil: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAbrirModal = () => { setFormDados({ ...usuario }); setIsModalAberto(true); };
   const handleFecharModal = () => setIsModalAberto(false);
   const handleChangeInput = (e) => { const { name, value } = e.target; setFormDados((prev) => ({ ...prev, [name]: value })); };
@@ -246,33 +285,33 @@ export default function Usuario() {
                 )}
 
                 {abaAtiva === "alugueis" && (
-  <div className="perfil-anuncios-section">
-    <h3 className="section-interna-titulo">Meus Aluguéis</h3>
-    {meusAlugueis.length === 0 ? (
-      <p className="tab-vazia-text">Nenhum aluguel realizado ainda.</p>
-    ) : (
-      <div className="perfil-anuncios-lista">
-        {meusAlugueis.map((aluguel) => (
-          <div key={aluguel.id_aluguel} className="perfil-anuncio-card">
-            <img src={aluguel.imagem} alt={aluguel.nome} className="perfil-anuncio-thumb" />
-            <div className="perfil-anuncio-info">
-              <h4>{aluguel.nome}</h4>
-              <p>R$ {aluguel.preco} / {aluguel.periodo || "dia"}</p>
-              <p style={{ fontSize: "12px", color: "#888" }}>
-                {new Date(aluguel.data_inicio).toLocaleDateString("pt-BR")} → {new Date(aluguel.data_fim).toLocaleDateString("pt-BR")}
-              </p>
-            </div>
-            <div className="perfil-anuncio-actions">
-              <button className="btn-favorito-ver" onClick={() => navigate(`/produto/${aluguel.id_item}`)}>
-                Ver Item
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-)}
+                  <div className="perfil-anuncios-section">
+                    <h3 className="section-interna-titulo">Meus Aluguéis</h3>
+                    {meusAlugueis.length === 0 ? (
+                      <p className="tab-vazia-text">Nenhum aluguel realizado ainda.</p>
+                    ) : (
+                      <div className="perfil-anuncios-lista">
+                        {meusAlugueis.map((aluguel) => (
+                          <div key={aluguel.id_aluguel} className="perfil-anuncio-card">
+                            <img src={aluguel.imagem} alt={aluguel.nome} className="perfil-anuncio-thumb" />
+                            <div className="perfil-anuncio-info">
+                              <h4>{aluguel.nome}</h4>
+                              <p>R$ {aluguel.preco} / {aluguel.periodo || "dia"}</p>
+                              <p style={{ fontSize: "12px", color: "#888" }}>
+                                {new Date(aluguel.data_inicio).toLocaleDateString("pt-BR")} → {new Date(aluguel.data_fim).toLocaleDateString("pt-BR")}
+                              </p>
+                            </div>
+                            <div className="perfil-anuncio-actions">
+                              <button className="btn-favorito-ver" onClick={() => navigate(`/produto/${aluguel.id_item}`)}>
+                                Ver Item
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {abaAtiva === "favoritos" && (
                   <div className="perfil-anuncios-section">
@@ -312,7 +351,6 @@ export default function Usuario() {
         </div>
       </main>
 
-      {/* MODAL EDITAR PERFIL */}
       {isModalAberto && (
         <div className="modal-overlay">
           <div className="modal-perfil-card">
@@ -352,7 +390,6 @@ export default function Usuario() {
         </div>
       )}
 
-      {/* MODAL CONFIRMAR EXCLUSÃO */}
       {confirmarExclusao && (
         <div className="modal-overlay">
           <div className="modal-perfil-card" style={{ maxWidth: "420px" }}>
@@ -376,7 +413,6 @@ export default function Usuario() {
           </div>
         </div>
       )}
-
     </div>
   );
 }
