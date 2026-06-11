@@ -1,20 +1,19 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Usuario from "./pages/Usuario";
+import Home from "./pages/home";
+import Login from "./pages/login";
+import Usuario from "./pages/usuario";
 import Cadastro from "./pages/cadastro";
 import Recuperar from "./components/Recuperar";
 import Anuncio from "./components/Anuncio";
-import ProdutoDetalhes from "./components/ProdutoDetalhes"; 
-import Aluguel from "./pages/Aluguel";
+import ProdutoDetalhes from "./components/ProdutoDetalhes";
+import Aluguel from "./pages/aluguel";
 import ConfirmarAluguel from "./pages/confirmar_aluguel";
 import Pagamento from "./pages/pagamento";
-import Confirmacao from "./pages/Confirmacao";
-import Favoritos from "./pages/Favoritos";
+import Confirmacao from "./pages/confirmacao";
+import Favoritos from "./pages/favoritos";
 import Chat from "./components/chat";
 import EditarItem from "./pages/editar_itens";
-
 
 export default function App() {
   return (
