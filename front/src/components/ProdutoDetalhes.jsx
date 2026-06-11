@@ -10,6 +10,34 @@ export default function ProdutoDetalhe() {
   const [recomendados, setRecomendados] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
+  const hoje = new Date();
+  const [mesAtual, setMesAtual] = useState(hoje.getMonth());
+  const [anoAtual, setAnoAtual] = useState(hoje.getFullYear());
+
+  const nomesMeses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+
+  function getDiasNoMes(mes, ano) {
+    return new Date(ano, mes + 1, 0).getDate();
+  }
+
+  function isPassed(dia) {
+    const data = new Date(anoAtual, mesAtual, dia);
+    const ontem = new Date();
+    ontem.setHours(0,0,0,0);
+    return data < ontem;
+  }
+
+  function avancarMes() {
+    if (mesAtual === 11) { setMesAtual(0); setAnoAtual(a => a + 1); }
+    else setMesAtual(m => m + 1);
+  }
+
+  function voltarMes() {
+    const agora = new Date();
+    if (anoAtual === agora.getFullYear() && mesAtual === agora.getMonth()) return;
+    if (mesAtual === 0) { setMesAtual(11); setAnoAtual(a => a - 1); }
+    else setMesAtual(m => m - 1);
+  }
 
   useEffect(() => {
     async function carregarDados() {
@@ -156,18 +184,22 @@ export default function ProdutoDetalhe() {
 
           <section className="detalhe-right-side">
             <div className="calendar-card">
-              <div className="calendar-header">
-                <span>Junho {new Date().getFullYear()}</span>
+              <div className="calendar-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <button onClick={voltarMes} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: '#f97316' }}>‹</button>
+                  <span>{nomesMeses[mesAtual]} {anoAtual}</span>
+                <button onClick={avancarMes} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', color: '#f97316' }}>›</button>
               </div>
-              <div className="calendar-days-grid">
-                {Array.from({ length: 30 }, (_, i) => (
-                  <div key={i + 1} className={`cal-day-item ${i + 1 === 14 || i + 1 === 15 ? 'day-red' : 'day-green'}`}>
-                    {i + 1}
-                  </div>
-                ))}
-              </div>
+            <div className="calendar-days-grid">
+              {Array.from({ length: getDiasNoMes(mesAtual, anoAtual) }, (_, i) => (
+            <div
+              key={i + 1}
+              className={`cal-day-item ${isPassed(i + 1) ? 'day-past' : 'day-green'}`}
+            >
+              {i + 1}
             </div>
-
+    ))}
+  </div>
+</div>
             <div className="reviews-section">
               <h3 className="reviews-titulo">Avaliações:</h3>
               <div className="reviews-scroll">
