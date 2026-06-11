@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Navbar from "../components/navbar";
 import Sidebar from "../components/Sidebar";
 import ProductCard from "../components/ProductCard";
@@ -11,28 +12,32 @@ export default function Home() {
   const [itens, setItens] = useState([]);
   const [meusItens, setMeusItens] = useState([]);
   const [favoritosIds, setFavoritosIds] = useState([]);
+  const location = useLocation();
 
   useEffect(() => {
-    carregarItens();
+    const params = new URLSearchParams(location.search);
+    const termoBusca = params.get("busca");
+    carregarItens({ busca: termoBusca });
     carregarFavoritos();
     carregarMeusItens();
-  }, []);
+  }, [location.search]);
 
   async function carregarItens(filtros = {}) {
-  try {
-    let url = API;
-    const params = new URLSearchParams();
-    if (filtros.categoria) params.append("categoriaId", filtros.categoria);
-    if (filtros.localizacao) params.append("localizacao", filtros.localizacao);
-    if (params.toString()) url += `?${params.toString()}`;
+    try {
+      let url = API;
+      const params = new URLSearchParams();
+      if (filtros.categoria) params.append("categoriaId", filtros.categoria);
+      if (filtros.localizacao) params.append("localizacao", filtros.localizacao);
+      if (filtros.busca) params.append("busca", filtros.busca);
+      if (params.toString()) url += `?${params.toString()}`;
 
-    const res = await fetch(url);
-    const data = await res.json();
-    setItens(Array.isArray(data) ? data : []);
-  } catch {
-    setItens([]);
+      const res = await fetch(url);
+      const data = await res.json();
+      setItens(Array.isArray(data) ? data : []);
+    } catch {
+      setItens([]);
+    }
   }
-}
 
   async function carregarMeusItens() {
   const userId = localStorage.getItem("userId");

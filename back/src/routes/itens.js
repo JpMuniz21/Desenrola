@@ -6,7 +6,7 @@ const SecurityAspect = require('../aspects/securityAspect');
 // [READ] - Buscar Itens
 router.get('/', async (req, res) => {
     try {
-        const { usuarioId, categoriaId } = req.query;
+        const { usuarioId, categoriaId, busca } = req.query;
 
         let query = `
             SELECT item.*, usuario.nome AS anunciante 
@@ -28,6 +28,12 @@ router.get('/', async (req, res) => {
             params.push(categoriaId);
             paramIndex++;
         }
+
+        if (busca) {
+    query += ` AND item.nome ILIKE $${paramIndex}`;
+    params.push(`%${busca}%`);
+    paramIndex++;
+}
 
         query += ' ORDER BY item.id_item DESC';
 
