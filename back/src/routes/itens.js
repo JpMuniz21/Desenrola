@@ -50,9 +50,12 @@ router.get('/recomendados/:excluirId', async (req, res) => {
     try {
         const { excluirId } = req.params;
         const resultado = await connection.query(
-            'SELECT * FROM item WHERE id_item != $1 ORDER BY RANDOM() LIMIT 3',
-            [excluirId]
-        );
+  `SELECT item.*, usuario.nome AS anunciante, usuario.foto_perfil AS foto_anunciante
+   FROM item 
+   LEFT JOIN usuario ON item.id_usuario = usuario.id_usuario
+   WHERE item.id_item = $1`,
+  [id]
+);
         res.json(resultado.rows);
     } catch (error) {
         console.error("Erro ao buscar recomendados:", error);
