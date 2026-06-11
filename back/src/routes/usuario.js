@@ -91,22 +91,38 @@ router.get('/:id', autenticarToken, async (req, res) => {
 // [UPDATE] - Atualizar Perfil
 router.put('/:id', autenticarToken, async (req, res) => {
     try {
-        console.log("Body recebido:", Object.keys(req.body));
-        console.log("foto_perfil presente:", !!req.body.foto_perfil);
-        const { nome, email, nome_completo, cidade, estado, biografia, foto_perfil, foto_capa } = req.body;
+        const campos = req.body;
+        const mapeamento = {
+            nome: 'nome',
+            email: 'email', 
+            nome_completo: 'nome_completo',
+            cidade: 'cidade',
+            estado: 'estado',
+            biografia: 'biografia',
+            foto_perfil: 'foto_perfil',
+            foto_capa: 'foto_capa'
+        };
+
+        const sets = [];
+        const params = [];
+        let idx = 1;
+
+        for (const [key, col] of Object.entries(mapeamento)) {
+            if (campos[key] !== undefined) {
+                sets.push(`${col} = $${idx}`);
+                params.push(campos[key]);
+                idx++;
+            }
+        }
+
+        if (sets.length === 0) return res.json({ mensagem: "Nada para atualizar" });
+
+        params.push(req.params.id);
         await connection.query(
-            `UPDATE usuario SET 
-                nome = COALESCE($1, nome), 
-                email = COALESCE($2, email),
-                nome_completo = COALESCE($3, nome_completo),
-                cidade = COALESCE($4, cidade),
-                estado = COALESCE($5, estado),
-                biografia = COALESCE($6, biografia),
-                foto_perfil = COALESCE($7, foto_perfil),
-                foto_capa = COALESCE($8, foto_capa)
-             WHERE id_usuario = $9`,
-            [nome, email, nome_completo, cidade, estado, biografia, foto_perfil, foto_capa, req.params.id]
+            `UPDATE usuario SET ${sets.join(', ')} WHERE id_usuario = $${idx}`,
+            params
         );
+
         res.json({ mensagem: "Perfil atualizado!" });
     } catch (error) {
         console.error(error);
