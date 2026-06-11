@@ -14,6 +14,7 @@ import Confirmacao from "./pages/confirmacao";
 import Favoritos from "./pages/favoritos";
 import Chat from "./components/chat";
 import EditarItem from "./pages/editar_itens";
+import Admin from "./pages/admin";
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="/favoritos" element={<Favoritos />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/editar-item/:id" element={<EditarItem />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </Router>
   );

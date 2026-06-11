@@ -39,15 +39,16 @@ export default function LoginCard() {
     return () => clearInterval(intervalo); 
   }, [CARROSSEL_IMAGENS.length]);
 
-  const handleLogin = async (e) => {
+const handleLogin = async (e) => {
   e.preventDefault();
-
   try {
     const response = await axios.post("https://desenrola-backend.onrender.com/usuarios/login", { email, senha });
+    console.log("response.data:", response.data);
 
     localStorage.setItem("token", response.data.token);
     localStorage.setItem("nome", response.data.nome);
     localStorage.setItem("userId", response.data.id);
+    localStorage.setItem("role", response.data.role);
     localStorage.setItem("logado", "true");
 
     setToast({ mensagem: `Bem-vindo, ${response.data.nome}!`, tipo: "sucesso" });
