@@ -44,7 +44,7 @@ export default function Aluguel() {
 }, [produto?.id_item]);
 
 
- function handleDiaClick(dia) {
+function handleDiaClick(dia) {
   const data = new Date(ano, mes, dia);
   const hoje = new Date();
   hoje.setHours(0,0,0,0);
@@ -202,13 +202,13 @@ export default function Aluguel() {
             <div className="cal-legenda">
               <div className="legenda-item">
                 <svg width="12" height="12" viewBox="0 0 12 12" style={{marginRight: '6px'}}>
-                   <circle cx="6" cy="6" r="5" fill="#4caf50" />
+                  <circle cx="6" cy="6" r="5" fill="#4caf50" />
                 </svg>
                 Disponível
               </div>
               <div className="legenda-item">
                 <svg width="12" height="12" viewBox="0 0 12 12" style={{marginRight: '6px'}}>
-                   <circle cx="6" cy="6" r="5" fill="#f44336" />
+                  <circle cx="6" cy="6" r="5" fill="#f44336" />
                 </svg>
                 Indisponível
               </div>

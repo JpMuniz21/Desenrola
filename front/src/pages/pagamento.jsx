@@ -24,7 +24,6 @@ const metodos = [
       label: "Pix",
       icon: (
         <div className="metodo-icon pix">
-          {/* Substituímos aquele monte de código pela tag img puxando o import */}
           <img src={pixIcon} alt="Pix" width="22" height="22" />
         </div>
       ),

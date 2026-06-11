@@ -20,7 +20,6 @@ function Chat() {
 
   const [conversaAtiva, setConversaAtiva] = useState(conversas[0]);
   
-  // 💡 Inicializado com os remetentes corrigidos para simular o diálogo real no primeiro load
   const [mensagens, setMensagens] = useState([
     { id_remetente: meuUsuarioId, id_destinatario: "2", conteudo: "Olá! O equipamento ainda está disponível?" },
     { id_remetente: "2", id_destinatario: meuUsuarioId, conteudo: "Equipamento disponível!" }
@@ -28,7 +27,6 @@ function Chat() {
   
   const [texto, setTexto] = useState("");
 
-  // Se veio da tela de produto, joga o vendedor como chat ativo
   useEffect(() => {
     const dadosVendedor = location.state?.vendedor;
     
@@ -46,7 +44,7 @@ function Chat() {
       });
 
       setConversaAtiva(novaConversa);
-      setMensagens([]); // Nova conversa vinda de produto começa limpa esperando interação
+      setMensagens([]);
     }
   }, [location.state, meuUsuarioId]);
 
@@ -90,7 +88,6 @@ function Chat() {
     setTexto("");
   };
 
-  // 💡 Função gerenciadora com os remetentes corrigidos para separar Locatário e Locador
   const handleTrocarChat = (chat) => {
     setConversaAtiva(chat);
     
@@ -108,7 +105,6 @@ function Chat() {
         { id_remetente: "4", id_destinatario: meuUsuarioId, conteudo: "Já revisei os termos. Mandei o contrato de aluguel." }
       ]);
     } else {
-      // O Usuário 5 (Empty State) ou novos chats vindos de produtos iniciam zerados
       setMensagens([]);
     }
   };

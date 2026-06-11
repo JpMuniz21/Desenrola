@@ -51,8 +51,8 @@ router.get('/:id', async (req, res) => {
         const { id } = req.params;
         const resultado = await connection.query(
             `SELECT item.*, usuario.nome AS anunciante, usuario.foto_perfil AS foto_anunciante
-             FROM item LEFT JOIN usuario ON item.id_usuario = usuario.id_usuario
-             WHERE item.id_item = $1`, [id]
+            FROM item LEFT JOIN usuario ON item.id_usuario = usuario.id_usuario
+            WHERE item.id_item = $1`, [id]
         );
         if (resultado.rows.length === 0) return res.status(404).json({ error: "Item não encontrado." });
         res.json(resultado.rows[0]);

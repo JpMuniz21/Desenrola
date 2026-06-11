@@ -11,13 +11,11 @@ export default function Feed() {
     fetch("https://desenrola-backend.onrender.com/itens")
       .then((response) => {
         if (!response.ok) {
-          // Se der erro 500, cai direto aqui
           throw new Error(`Erro no servidor: Status ${response.status}`);
         }
         return response.json();
       })
       .then((data) => {
-        // Só joga no estado se for uma lista real (Array)
         if (Array.isArray(data)) {
           setProducts(data);
         } else {
@@ -36,7 +34,6 @@ export default function Feed() {
     return <p style={{ textAlign: "center", marginTop: "20px" }}>Carregando itens do banco...</p>;
   }
 
-  // Se o backend deu erro 500, exibe este aviso na tela de forma limpa
   if (erroBackend) {
     return (
       <div style={{ textAlign: "center", color: "red", marginTop: "40px", padding: "20px" }}>

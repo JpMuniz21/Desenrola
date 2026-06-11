@@ -115,18 +115,6 @@ export default function Cadastro() {
                 <button type="submit" className="btn-primary">Criar minha conta</button>
               </form>
 
-              <div className="divider">
-                <span className="divider-line" />
-                <span className="divider-text">ou continue com</span>
-                <span className="divider-line" />
-              </div>
-  
-                <div className="social-login">
-                  <button className="social-btn"><img src={googleIcon} alt="Google" /></button>
-                  <button className="social-btn"><img src={appleIcon} alt="Apple" /></button>
-                  <button className="social-btn"><img src={facebookIcon} alt="Facebook" /></button>
-                </div>
-
               <p className="signup-link">
                 Já tem uma conta? <a href="/login">Fazer Login</a>
               </p>

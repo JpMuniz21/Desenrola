@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../config/database');
 
-// [READ] - Buscar favoritos por usuário
 router.get('/', async (req, res) => {
     try {
         const { usuarioId, itemId } = req.query;
@@ -17,9 +16,9 @@ router.get('/', async (req, res) => {
         
         const result = await connection.query(
             `SELECT favorito.*, item.nome, item.imagem, item.preco, item.periodo
-             FROM favorito
-             JOIN item ON favorito.id_item = item.id_item
-             WHERE favorito.id_usuario = $1`,
+            FROM favorito
+            JOIN item ON favorito.id_item = item.id_item
+            WHERE favorito.id_usuario = $1`,
             [usuarioId]
         );
         res.json(result.rows);
