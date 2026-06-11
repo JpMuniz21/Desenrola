@@ -17,6 +17,7 @@ export default function ProdutoDetalhe() {
   const [dataInicio, setDataInicio] = useState(null);
   const [dataFim, setDataFim] = useState(null);
   const [datasOcupadas, setDatasOcupadas] = useState([]);
+  const [jaAlugou, setJaAlugou] = useState(false);
 
 
   function getDiasNoMes(mes, ano) {
@@ -43,31 +44,38 @@ export default function ProdutoDetalhe() {
   }
 
   useEffect(() => {
-    async function carregarDados() {
-      setLoading(true);
-      setErro(null);
-      try {
-        const resProduto = await fetch(`https://desenrola-backend.onrender.com/itens/${id}`);
-        const resDatas = await fetch(`https://desenrola-backend.onrender.com/aluguel/datas/${id}`);
-          if (resDatas.ok) {
+  async function carregarDados() {
+    setLoading(true);
+    setErro(null);
+    try {
+      const resProduto = await fetch(`https://desenrola-backend.onrender.com/itens/${id}`);
+      const resDatas = await fetch(`https://desenrola-backend.onrender.com/aluguel/datas/${id}`);
+      
+      if (resDatas.ok) {
         const datas = await resDatas.json();
         setDatasOcupadas(datas);
+        const userId = localStorage.getItem("userId");
+        if (userId) {
+          const alugouEle = datas.some(d => String(d.id_usuario) === String(userId));
+          setJaAlugou(alugouEle);
         }
-        if (!resProduto.ok) throw new Error(`Produto não encontrado (Status: ${resProduto.status})`);
-        const dataProd = await resProduto.json();
-        setProduto(Array.isArray(dataProd) ? dataProd[0] : dataProd);
-
-        const resRec = await fetch(`https://desenrola-backend.onrender.com/itens/recomendados/${id}`);
-        if (resRec.ok) setRecomendados(await resRec.json());
-      } catch (error) {
-        console.error("Erro ao carregar dados:", error);
-        setErro("Não foi possível carregar os detalhes deste produto.");
-      } finally {
-        setLoading(false);
       }
+
+      if (!resProduto.ok) throw new Error(`Produto não encontrado (Status: ${resProduto.status})`);
+      const dataProd = await resProduto.json();
+      setProduto(Array.isArray(dataProd) ? dataProd[0] : dataProd);
+
+      const resRec = await fetch(`https://desenrola-backend.onrender.com/itens/recomendados/${id}`);
+      if (resRec.ok) setRecomendados(await resRec.json());
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
+      setErro("Não foi possível carregar os detalhes deste produto.");
+    } finally {
+      setLoading(false);
     }
-    carregarDados();
-  }, [id]);
+  }
+  carregarDados();
+}, [id]);
 
   const handleAlugarComNotificacao = async () => {
     try {
@@ -158,6 +166,20 @@ function isDiaOcupado(dia) {
 
               <div className="detalhe-info-box">
                 <span className="badge-disponivel">● Disponível</span>
+{jaAlugou && (
+  <span style={{ 
+    display: 'inline-block', 
+    background: '#f97316', 
+    color: 'white', 
+    padding: '4px 12px', 
+    borderRadius: '20px', 
+    fontSize: '12px', 
+    fontWeight: '600',
+    marginLeft: '8px'
+  }}>
+    ✓ Você já alugou este item
+  </span>
+)}
                 <h1 className="produto-titulo">{produto.nome}</h1>
                 <h2 className="produto-preco">R$ {produto.preco}/{produto.periodo || "dia"}</h2>
                 <p className="produto-descricao">{produto.descricao || "Sem descrição informada."}</p>
