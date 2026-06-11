@@ -6,16 +6,7 @@ import "../styles/confirmar_aluguel.css";
 export default function ConfirmarAluguel() {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const { produto, inicio, fim, dias, total, caucao } = location.state || {
-    produto: { nome: "Câmera Canon T5i", preco: 45, tipoLocacao: "dia" },
-    inicio: "16/06",
-    fim: "20/06",
-    days: 4,
-    total: 180,
-    caucao: 54,
-  };
-
+  const { produto, inicio, fim, inicioISO, fimISO, dias, total, caucao } = location.state || {};
   const [endereco, setEndereco] = useState("");
   const [cep, setCep] = useState("");
   const [modalAberto, setModalAberto] = useState(false);
@@ -165,12 +156,31 @@ export default function ConfirmarAluguel() {
             {/* BOTÃO CONTINUAR VALIDADO */}
             <div className="confirmar-footer">
               <button 
-                className="btn-continuar" 
-                disabled={!endereco} /* 💡 Bloqueado no HTML até que haja endereço */
-                onClick={() => navigate("/pagamento", {state: { produto, dias, total, caucao }})}
-              >
-                Continuar
-              </button>
+  className="btn-continuar" 
+  disabled={!endereco}
+  onClick={async () => {
+  const token = localStorage.getItem("token");
+  try {
+    await fetch("https://desenrola-backend.onrender.com/aluguel/salvar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        itemId: produto.id_item,
+        dataInicio: inicioISO,
+        dataFim: fimISO,
+      })
+    });
+  } catch (err) {
+    console.error("Erro ao salvar aluguel:", err);
+  }
+  navigate("/pagamento", { state: { produto, dias, total, caucao } });
+}}
+>
+  Continuar
+</button>
             </div>
           </div>
 

@@ -280,11 +280,19 @@ export default function Aluguel() {
           <button
             className="resumo-btn"
             disabled={!inicio || !fim}
-            onClick={() => navigate("/confirmar-aluguel", {
+            quero
+
+16:34
+No aluguel.jsx atualiza o onClick do botão confirmar para passar o ano também:
+
+jsx
+onClick={() => navigate("/confirmar-aluguel", {
   state: {
     produto,
     inicio: formatarData(inicio),
     fim: formatarData(fim),
+    inicioISO: inicio ? inicio.toISOString().split('T')[0] : null,
+    fimISO: fim ? fim.toISOString().split('T')[0] : null,
     dias,
     total,
     caucao,

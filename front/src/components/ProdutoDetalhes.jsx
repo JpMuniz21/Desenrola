@@ -16,6 +16,8 @@ export default function ProdutoDetalhe() {
   const nomesMeses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
   const [dataInicio, setDataInicio] = useState(null);
   const [dataFim, setDataFim] = useState(null);
+  const [datasOcupadas, setDatasOcupadas] = useState([]);
+
 
   function getDiasNoMes(mes, ano) {
     return new Date(ano, mes + 1, 0).getDate();
@@ -46,6 +48,11 @@ export default function ProdutoDetalhe() {
       setErro(null);
       try {
         const resProduto = await fetch(`https://desenrola-backend.onrender.com/itens/${id}`);
+        const resDatas = await fetch(`https://desenrola-backend.onrender.com/aluguel/datas/${id}`);
+          if (resDatas.ok) {
+        const datas = await resDatas.json();
+        setDatasOcupadas(datas);
+        }
         if (!resProduto.ok) throw new Error(`Produto não encontrado (Status: ${resProduto.status})`);
         const dataProd = await resProduto.json();
         setProduto(Array.isArray(dataProd) ? dataProd[0] : dataProd);
@@ -92,13 +99,15 @@ export default function ProdutoDetalhe() {
   }
 }
 
-function getClasseDia(dia) {
-  if (isPassed(dia)) return 'day-past';
+function isDiaOcupado(dia) {
   const data = new Date(anoAtual, mesAtual, dia);
-  if (dataInicio && data.getTime() === dataInicio.getTime()) return 'day-selected';
-  if (dataFim && data.getTime() === dataFim.getTime()) return 'day-selected';
-  if (dataInicio && dataFim && data > dataInicio && data < dataFim) return 'day-range';
-  return 'day-green';
+  return datasOcupadas.some(d => {
+    const inicio = new Date(d.data_inicio);
+    const fim = new Date(d.data_fim);
+    inicio.setHours(0,0,0,0);
+    fim.setHours(0,0,0,0);
+    return data >= inicio && data <= fim;
+  });
 }
 
   if (loading) return <p style={{ color: "#555", textAlign: "center", marginTop: "50px" }}>Carregando...</p>;
@@ -220,7 +229,7 @@ function getClasseDia(dia) {
               {Array.from({ length: getDiasNoMes(mesAtual, anoAtual) }, (_, i) => (
   <div
     key={i + 1}
-    className={`cal-day-item ${getClasseDia(i + 1)}`}
+    className={`cal-day-item ${isPassed(i + 1) ? 'day-past' : isDiaOcupado(i + 1) ? 'day-red' : 'day-green'}`}
     onClick={() => handleSelecionarDia(i + 1)}
     style={{ cursor: isPassed(i + 1) ? 'not-allowed' : 'pointer' }}
   >
