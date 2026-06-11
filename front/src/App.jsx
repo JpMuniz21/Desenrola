@@ -15,6 +15,7 @@ import Favoritos from "./pages/favoritos";
 import Chat from "./components/chat";
 import EditarItem from "./pages/editar_itens";
 import Admin from "./pages/admin";
+import PerfilPublico from "./pages/perfil_publico";
 
 export default function App() {
   return (
@@ -35,6 +36,7 @@ export default function App() {
         <Route path="/chat" element={<Chat />} />
         <Route path="/editar-item/:id" element={<EditarItem />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/perfil/:id" element={<PerfilPublico />} />
       </Routes>
     </Router>
   );
