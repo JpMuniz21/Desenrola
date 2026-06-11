@@ -20,7 +20,8 @@ export default function Favoritos() {
     try {
       setLoading(true);
 
-      const resFav = await fetch(`${FAVORITOS_API}?usuarioId=2`);
+      const userId = localStorage.getItem("userId");
+      const resFav = await fetch(`${FAVORITOS_API}?usuarioId=${userId}`);
       const favoritosDB = await resFav.json();
 
       if (!Array.isArray(favoritosDB) || favoritosDB.length === 0) {
