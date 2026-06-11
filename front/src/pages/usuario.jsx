@@ -156,21 +156,28 @@ export default function Usuario() {
   const handleChangeInput = (e) => { const { name, value } = e.target; setFormDados((prev) => ({ ...prev, [name]: value })); };
 
   const handleSalvarPerfil = async (e) => {
-    e.preventDefault();
-    const userId = localStorage.getItem("userId");
-    const token = localStorage.getItem("token");
-    try {
-      const res = await fetch(`https://desenrola-backend.onrender.com/usuarios/${userId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-        body: JSON.stringify({ nome: formDados.nomeExibicao, nome_completo: formDados.nomeCompleto, cidade: formDados.cidade, estado: formDados.estado, biografia: formDados.biografia })
-      });
-      if (res.ok) { setUsuario({ ...formDados }); setIsModalAberto(false); }
-      else alert("Erro ao salvar as alterações.");
-    } catch (error) {
-      alert("Não foi possível conectar ao servidor.");
-    }
-  };
+  e.preventDefault();
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
+  try {
+    const res = await fetch(`https://desenrola-backend.onrender.com/usuarios/${userId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      body: JSON.stringify({ 
+        nome: formDados.nomeExibicao, 
+        nome_completo: formDados.nomeCompleto, 
+        email: formDados.email,
+        cidade: formDados.cidade, 
+        estado: formDados.estado, 
+        biografia: formDados.biografia 
+      })
+    });
+    if (res.ok) { setUsuario({ ...formDados }); setIsModalAberto(false); }
+    else alert("Erro ao salvar as alterações.");
+  } catch (error) {
+    alert("Não foi possível conectar ao servidor.");
+  }
+};
 
   const handleLogout = () => {
     localStorage.removeItem("logado");
