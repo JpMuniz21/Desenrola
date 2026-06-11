@@ -47,19 +47,22 @@ router.post('/login', async (req, res) => {
         }
 
         const usuario = rows[0];
+        console.log('USUARIO DO BANCO:', usuario);
         const senhaValida = await bcrypt.compare(senha, usuario.senha);
         
         if (!senhaValida) {
             return res.status(401).json({ mensagem: "Senha inválida" });
         }
 
-        const token = jwt.sign({ id: usuario.id_usuario }, SECRET_KEY, { expiresIn: '2h' });
+        const token = jwt.sign({ id: usuario.id_usuario, role: usuario.role }, SECRET_KEY, { expiresIn: '2h' });
 
         res.json({ 
             token, 
             nome: usuario.nome,
-            id: usuario.id_usuario
+            id: usuario.id_usuario,
+            role: usuario.role
         });
+        
     } catch (error) {
         console.error(error);
         res.status(500).json({ erro: 'Erro no login' });
@@ -98,6 +101,19 @@ router.put('/:id', autenticarToken, async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ mensagem: "Erro ao atualizar perfil" });
+    }
+});
+
+// [READ] - Listar todos os usuários (admin)
+router.get('/', autenticarToken, async (req, res) => {
+    try {
+        const result = await connection.query(
+            'SELECT id_usuario, nome, email, role FROM usuario ORDER BY id_usuario'
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ erro: 'Erro ao buscar usuários' });
     }
 });
 
