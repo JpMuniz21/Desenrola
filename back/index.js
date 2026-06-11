@@ -13,6 +13,7 @@ const rotasUsuarios = require('./src/routes/usuario');
 const rotasItens = require('./src/routes/itens');       
 const rotasMensagens = require('./src/routes/mensagens');
 const rotaAluguel = require('./src/routes/aluguel');
+const rotasCategorias = require('./src/routes/categorias')
 
 const app = express();
 const server = http.createServer(app);
@@ -33,7 +34,9 @@ app.use(express.json());
 // --- Vinculando as Rotas Modulares ao Express ---
 app.use('/usuarios', rotasUsuarios); 
 app.use('/itens', rotasItens);         
-app.use('/mensagens', rotasMensagens); 
+app.use('/mensagens', rotasMensagens);
+app.use('/categorias', rotasCategorias);
+
 
 // ==========================================================
 // 🔌 SOCKET.IO (Eventos em tempo real)

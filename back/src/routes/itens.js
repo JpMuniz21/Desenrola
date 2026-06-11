@@ -6,26 +6,30 @@ const SecurityAspect = require('../aspects/securityAspect');
 // [READ] - Buscar Itens
 router.get('/', async (req, res) => {
     try {
-        const { usuarioId } = req.query;
+        const { usuarioId, categoriaId } = req.query;
 
         let query = `
             SELECT item.*, usuario.nome AS anunciante 
             FROM item 
             LEFT JOIN usuario ON item.id_usuario = usuario.id_usuario
-            ORDER BY item.id_item DESC
+            WHERE 1=1
         `;
         const params = [];
+        let paramIndex = 1;
 
         if (usuarioId) {
-            query = `
-                SELECT item.*, usuario.nome AS anunciante 
-                FROM item 
-                LEFT JOIN usuario ON item.id_usuario = usuario.id_usuario
-                WHERE item.id_usuario = $1
-                ORDER BY item.id_item DESC
-            `;
+            query += ` AND item.id_usuario = $${paramIndex}`;
             params.push(usuarioId);
+            paramIndex++;
         }
+
+        if (categoriaId) {
+            query += ` AND item.id_categoria = $${paramIndex}`;
+            params.push(categoriaId);
+            paramIndex++;
+        }
+
+        query += ' ORDER BY item.id_item DESC';
 
         const result = await connection.query(query, params);
         res.json(result.rows);
