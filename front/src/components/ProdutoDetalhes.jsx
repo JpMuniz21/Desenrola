@@ -186,8 +186,16 @@ function isDiaOcupado(dia) {
 
                 <div className="anunciante-box">
                   <div className="anunciante-avatar">
-                    {nomeAnunciante.substring(0, 2).toUpperCase()}
-                  </div>
+  {produto.foto_anunciante ? (
+    <img 
+      src={produto.foto_anunciante} 
+      alt={nomeAnunciante}
+      style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }}
+    />
+  ) : (
+    nomeAnunciante.substring(0, 2).toUpperCase()
+  )}
+</div>
                   <div className="anunciante-info">
                     <span className="anunciante-nome">{nomeAnunciante}</span>
                     <span className="anunciante-sub">Anunciante · desde 2024</span>
