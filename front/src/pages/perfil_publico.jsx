@@ -56,13 +56,21 @@ export default function PerfilPublico() {
 
         <div className="perfil-wrapper-card">
           <div className="perfil-header-banner">
-            <div className="perfil-capa-placeholder"></div>
-            <div className="perfil-avatar-container">
-              <div className="perfil-avatar-big">
-                {usuario.nome?.substring(0, 2).toUpperCase() || "US"}
-              </div>
-            </div>
-          </div>
+  {usuario.foto_capa ? (
+    <img src={usuario.foto_capa} alt="Capa" className="perfil-capa-imagem" />
+  ) : (
+    <div className="perfil-capa-placeholder"></div>
+  )}
+  <div className="perfil-avatar-container">
+    <div className="perfil-avatar-big">
+      {usuario.foto_perfil ? (
+        <img src={usuario.foto_perfil} alt={usuario.nome} className="perfil-avatar-imagem" />
+      ) : (
+        usuario.nome?.substring(0, 2).toUpperCase() || "US"
+      )}
+    </div>
+  </div>
+</div>
 
           <div className="perfil-content-grid">
             <div className="perfil-col-left">

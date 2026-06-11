@@ -184,7 +184,10 @@ function isDiaOcupado(dia) {
                 <h2 className="produto-preco">R$ {produto.preco}/{produto.periodo || "dia"}</h2>
                 <p className="produto-descricao">{produto.descricao || "Sem descrição informada."}</p>
 
-                <div className="anunciante-box">
+                <div className="anunciante-box" 
+  onClick={() => navigate(`/perfil/${produto.id_usuario}`)}
+  style={{ cursor: 'pointer' }}
+>
                   <div className="anunciante-avatar">
   {produto.foto_anunciante ? (
     <img 
