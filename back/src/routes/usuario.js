@@ -91,6 +91,8 @@ router.get('/:id', autenticarToken, async (req, res) => {
 // [UPDATE] - Atualizar Perfil
 router.put('/:id', autenticarToken, async (req, res) => {
     try {
+        console.log("Body recebido:", Object.keys(req.body));
+        console.log("foto_perfil presente:", !!req.body.foto_perfil);
         const { nome, email, nome_completo, cidade, estado, biografia, foto_perfil, foto_capa } = req.body;
         await connection.query(
             `UPDATE usuario SET 
