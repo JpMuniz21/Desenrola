@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
-import Toast from "../components/Toast";
+import Toast from "./Toast";
 import "../styles/anuncio.css";
 
 export default function Anuncio() {
