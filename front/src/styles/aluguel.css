@@ -114,9 +114,15 @@
   background: #e6f4ea;
 }
 
-.cal-dia.indisponivel {
+.cal-dia.passado {
   background: #e0e0e0;
   color: #aaa;
+  cursor: not-allowed;
+}
+
+.cal-dia.indisponivel {
+  background: #fdecea;
+  color: #c62828;
   cursor: not-allowed;
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/navbar";
 import "../styles/aluguel.css";
@@ -8,8 +8,6 @@ const DIAS_SEMANA = ["D", "S", "T", "Q", "Q", "S", "S"];
 function gerarDias(ano, mes) {
   const primeiroDia = new Date(ano, mes, 1).getDay();
   const totalDias = new Date(ano, mes + 1, 0).getDate();
-  const [inicio, setInicio] = useState(null);
-  const [fim, setFim] = useState(null);
   return { primeiroDia, totalDias };
 }
 
@@ -31,11 +29,20 @@ export default function Aluguel() {
   const [ano, setAno] = useState(hoje.getFullYear());
   const [inicio, setInicio] = useState(null);
   const [fim, setFim] = useState(null);
-
-  const { primeiroDia, totalDias } = gerarDias(ano, mes);
-
+  const [datasOcupadas, setDatasOcupadas] = useState([]);
   const nomeMes = new Date(ano, mes).toLocaleString("pt-BR", { month: "long" });
   const nomeMesCapital = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
+  const { primeiroDia, totalDias } = gerarDias(ano, mes);
+
+  useEffect(() => {
+  const itemId = produto?.id_item;
+  if (!itemId) return;
+  fetch(`https://desenrola-backend.onrender.com/aluguel/datas/${itemId}`)
+    .then(res => res.json())
+    .then(data => setDatasOcupadas(Array.isArray(data) ? data : []))
+    .catch(() => setDatasOcupadas([]));
+}, [produto?.id_item]);
+
 
  function handleDiaClick(dia) {
   const data = new Date(ano, mes, dia);
@@ -61,7 +68,18 @@ export default function Aluguel() {
   const data = new Date(ano, mes, dia);
   const hoje = new Date();
   hoje.setHours(0,0,0,0);
-  if (data < hoje || INDISPONIVEIS.includes(dia)) return "cal-dia indisponivel";
+  if (data < hoje) return "cal-dia passado";
+  if (INDISPONIVEIS.includes(dia)) return "cal-dia indisponivel";
+  
+  const ocupado = datasOcupadas.some(d => {
+    const inicio = new Date(d.data_inicio);
+    const fim = new Date(d.data_fim);
+    inicio.setHours(0,0,0,0);
+    fim.setHours(0,0,0,0);
+    return data >= inicio && data <= fim;
+  });
+  if (ocupado) return "cal-dia indisponivel";
+  
   if (inicio && data.getTime() === inicio.getTime()) return "cal-dia selecionado-inicio";
   if (fim && data.getTime() === fim.getTime()) return "cal-dia selecionado-fim";
   if (inicio && fim && data > inicio && data < fim) return "cal-dia no-range";
@@ -278,29 +296,23 @@ export default function Aluguel() {
           )}
           
           <button
-            className="resumo-btn"
-            disabled={!inicio || !fim}
-            quero
-
-16:34
-No aluguel.jsx atualiza o onClick do botão confirmar para passar o ano também:
-
-jsx
-onClick={() => navigate("/confirmar-aluguel", {
-  state: {
-    produto,
-    inicio: formatarData(inicio),
-    fim: formatarData(fim),
-    inicioISO: inicio ? inicio.toISOString().split('T')[0] : null,
-    fimISO: fim ? fim.toISOString().split('T')[0] : null,
-    dias,
-    total,
-    caucao,
-  }
-})}
-          >
-            Confirmar aluguel
-          </button>
+  className="resumo-btn"
+  disabled={!inicio || !fim}
+  onClick={() => navigate("/confirmar-aluguel", {
+    state: {
+      produto,
+      inicio: formatarData(inicio),
+      fim: formatarData(fim),
+      inicioISO: inicio ? inicio.toISOString().split('T')[0] : null,
+      fimISO: fim ? fim.toISOString().split('T')[0] : null,
+      dias,
+      total,
+      caucao,
+    }
+  })}
+>
+  Confirmar aluguel
+</button>
         </div>
 
       </main>

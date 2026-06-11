@@ -79,4 +79,23 @@ router.post('/salvar', autenticarToken, async (req, res) => {
     }
 });
 
+// [READ] - Buscar aluguéis do usuário
+router.get('/usuario', autenticarToken, async (req, res) => {
+    try {
+        const userId = req.usuario.id;
+        const result = await connection.query(
+            `SELECT aluguel.*, item.nome, item.imagem, item.preco, item.periodo
+             FROM aluguel 
+             JOIN item ON aluguel.id_item = item.id_item
+             WHERE aluguel.id_usuario = $1
+             ORDER BY aluguel.criado_em DESC`,
+            [userId]
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Erro ao buscar aluguéis:', error);
+        res.status(500).json({ erro: 'Erro ao buscar aluguéis' });
+    }
+});
+
 module.exports = router;
