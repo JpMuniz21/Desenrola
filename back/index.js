@@ -4,16 +4,13 @@ const http = require('http');
 const { Server } = require('socket.io');
 const express = require('express');
 const cors = require('cors');
-
-
 const connection = require('./src/config/database'); 
-
-
 const rotasUsuarios = require('./src/routes/usuario');
 const rotasItens = require('./src/routes/itens');       
 const rotasMensagens = require('./src/routes/mensagens');
 const rotaAluguel = require('./src/routes/aluguel');
 const rotasCategorias = require('./src/routes/categorias')
+const rotasFavoritos = require('./src/routes/favoritos');
 
 const app = express();
 const server = http.createServer(app);
@@ -37,6 +34,7 @@ app.use('/itens', rotasItens);
 app.use('/mensagens', rotasMensagens);
 app.use('/categorias', rotasCategorias);
 app.use('/aluguel', rotaAluguel);
+app.use('/favoritos', rotasFavoritos);
 
 
 // SOCKET //
