@@ -11,7 +11,8 @@ export default function ProductCard({
   isFavoritado = false,         
   onToggleFavorito = () => {},  
   anunciante = "Anunciante",    
-  avaliacao = "5.0"             
+  avaliacao = "5.0",
+  isDono = false
 }) {
   const navigate = useNavigate();
 
@@ -28,7 +29,7 @@ export default function ProductCard({
         <button 
           className={`btn-favoritar-floating ${isFavoritado ? "ativo" : ""}`}
           onClick={(e) => {
-            e.stopPropagation(); // Evita entrar na tela de detalhes ao favoritar
+            e.stopPropagation();
             onToggleFavorito(id); 
           }}
           style={{
@@ -76,16 +77,16 @@ export default function ProductCard({
   )}
 </div>
 
-        {/* 🟢 Fallback para o período se o banco retornar nulo */}
+        {/* Fallback para o período se o banco retornar nulo */}
         <p className="price">R$ {preco}/{periodo || "dia"}</p>
         <span style={{ fontSize: "13px", color: "#888" }}>{anunciante}</span>
         
         <button onClick={(e) => {
-          e.stopPropagation();
-          handleVerDetalhes();
-        }}>
-          Alugar agora
-        </button>
+  e.stopPropagation();
+  isDono ? navigate(`/editar-item/${id}`) : handleVerDetalhes();
+}}>
+  {isDono ? "Editar item" : "Alugar agora"}
+</button>
       </div>
     </div>
   );

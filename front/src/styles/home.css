@@ -8,6 +8,13 @@ body {
   background: #f5f7fa;
 }
 
+.feed-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 300px));
+  gap: 24px;
+  align-items: start;
+}
+
 .main-feed-container {
   flex: 1; 
   display: flex;

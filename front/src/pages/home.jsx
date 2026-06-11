@@ -106,24 +106,23 @@ export default function Home() {
           <h1>Itens em destaque</h1>
           <br />
           <div className="feed-grid">
-            {itens.length === 0 ? (
-              <p>Nenhum item disponível no momento.</p>
-            ) : (
-              itens.map((item) => (
-                <ProductCard
-                  key={item.id_item}
-                  id={item.id_item}
-                  titulo={item.nome}
-                  preco={item.preco}
-                  periodo={item.periodo}
-                  imagem={item.imagem}
-                  anunciante={item.anunciante}
-                  avaliacao={item.avaliacao}
-                  isFavoritado={favoritosIds.includes(item.id_item)}
-                  onToggleFavorito={handleToggleFavorito}
-                />
-              ))
-            )}
+            {itens
+  .filter(item => String(item.id_usuario) !== String(localStorage.getItem("userId")))
+  .map((item) => (
+    <ProductCard
+      key={item.id_item}
+      id={item.id_item}
+      titulo={item.nome}
+      preco={item.preco}
+      periodo={item.periodo}
+      imagem={item.imagem}
+      anunciante={item.anunciante}
+      avaliacao={item.avaliacao}
+      isFavoritado={favoritosIds.includes(item.id_item)}
+      onToggleFavorito={handleToggleFavorito}
+    />
+  ))
+}
           </div>
 
           {/* MEUS ITENS ANUNCIADOS */}
@@ -135,17 +134,18 @@ export default function Home() {
     <div className="feed-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(250px, 300px))" }}>
       {meusItens.map((item) => (
         <ProductCard
-          key={item.id_item}
-          id={item.id_item}
-          titulo={item.nome}
-          preco={item.preco}
-          periodo={item.periodo}
-          imagem={item.imagem}
-          anunciante={item.anunciante}
-          avaliacao={item.avaliacao}
-          isFavoritado={favoritosIds.includes(item.id_item)}
-          onToggleFavorito={handleToggleFavorito}
-        />
+  key={item.id_item}
+  id={item.id_item}
+  titulo={item.nome}
+  preco={item.preco}
+  periodo={item.periodo}
+  imagem={item.imagem}
+  anunciante={item.anunciante}
+  avaliacao={item.avaliacao}
+  isFavoritado={favoritosIds.includes(item.id_item)}
+  onToggleFavorito={handleToggleFavorito}
+  isDono={true}
+/>
       ))}
     </div>
   </div>

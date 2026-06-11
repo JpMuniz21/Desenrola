@@ -3,9 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; 
 import '../styles/login.css';
 import Navbar from '../components/navbar';
-import googleIcon from '../assets/google.svg';
-import appleIcon from '../assets/apple.svg';
-import facebookIcon from '../assets/facebook.svg';
 import avatarIcon from '../assets/avatar.svg';
 import groupsIcon from '../assets/groups.svg'; 
 import eyeIcon from '../assets/eye.svg'; 
@@ -150,18 +147,6 @@ const handleLogin = async (e) => {
 
                 <button type="submit" className="btn-primary">Entrar</button>
               </form>
-
-              <div className="divider">
-                <span className="divider-line" />
-                <span className="divider-text">Ou continue com</span>
-                <span className="divider-line" />
-              </div>
-
-              <div className="social-login">
-                <button className="social-btn"><img src={googleIcon} alt="Google" /></button>
-                <button className="social-btn"><img src={appleIcon} alt="Apple" /></button>
-                <button className="social-btn"><img src={facebookIcon} alt="Facebook" /></button>
-              </div>
 
               <p className="signup-link">
                 Não tem conta? <a href="/cadastro">Cadastre-se</a>
