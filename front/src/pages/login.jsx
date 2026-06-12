@@ -149,7 +149,8 @@ const handleLogin = async (e) => {
               </form>
 
               <p className="signup-link">
-                Não tem conta? <a href="/cadastro">Cadastre-se</a>
+                <br></br>
+                Não tem conta ?    <a href="/cadastro">Cadastre-se</a>
               </p>
             </div>
           </div>

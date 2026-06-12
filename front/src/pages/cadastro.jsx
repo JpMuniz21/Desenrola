@@ -116,7 +116,8 @@ export default function Cadastro() {
               </form>
 
               <p className="signup-link">
-                Já tem uma conta? <a href="/login">Fazer Login</a>
+                <br></br>
+                Já tem uma conta ?     <a href="/login">Fazer Login</a>
               </p>
             </div>
           </div>
