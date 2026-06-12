@@ -95,3 +95,52 @@ router.get('/', autenticarToken, async (req, res) => {
 });
 
 module.exports = router;
+
+// ==========================================
+// ROTAS DE PAGAMENTO / CARTÕES
+// ==========================================
+
+// GET:
+router.get('/cartoes/:userId', async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const result = await connection.query(
+            'SELECT id_metodo, label FROM cartao WHERE id_usuario = $1',
+            [userId]
+        );
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error("Erro ao fazer fetch dos cartões:", error);
+        res.status(500).json({ erro: 'Falha ao buscar os cartões na BD' });
+    }
+});
+
+// POST:
+router.post('/cartoes', async (req, res) => {
+    const { id_usuario, label, id_metodo } = req.body;
+    try {
+        const result = await connection.query(
+            'INSERT INTO cartao (id_usuario, label, id_metodo) VALUES ($1, $2, $3) RETURNING *',
+            [id_usuario, label, id_metodo]
+        );
+        // Retorna o registo
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error("Erro ao inserir cartão:", error);
+        res.status(500).json({ erro: 'Falha ao guardar o cartão na BD' });
+    }
+});
+// DELETE:
+router.delete('/cartoes/:idMetodo', async (req, res) => {
+    const { idMetodo } = req.params;
+    try {
+        await connection.query(
+            'DELETE FROM cartao WHERE id_metodo = $1',
+            [idMetodo]
+        );
+        res.status(200).json({ mensagem: 'Cartão removido com sucesso' });
+    } catch (error) {
+        console.error("Erro ao apagar cartão:", error);
+        res.status(500).json({ erro: 'Falha ao remover o cartão da BD' });
+    }
+});
