@@ -3,7 +3,10 @@
 
 *Economize pagando somente pelo oque usar ou ganhe alugando aquilo que não usa*
 
-A aplicação foi desenvolvida utilizando React para front, JS para back e mySQL para DB
+## 🔗 Links do Deploy
+**Front-end (Vercel):** [Link do seu projeto na Vercel](https://desenrola-frontend2.vercel.app/)
+
+Back-end (Render): Link da sua API no Render: [(https://dashboard.render.com/web/srv-d8l2ekjtqb8s73anjeig)](https://desenrola-backend.onrender.com)
 
 ## 👥 Equipe (ADS - UNIFOR)
 - **João Paulo Muniz** 
@@ -15,7 +18,7 @@ A aplicação foi desenvolvida utilizando React para front, JS para back e mySQL
 ## 🛠️ Tecnologias & Segurança (RF06)
 - **Front-end:** React.js
 - **Back-end:** Node.js + Express
-- **Database:** MySQL 
+- **Database:** Supabase
 - **Segurança:** BCrypt 
 - **Ambiente:** Variáveis protegidas via `.env`
 
