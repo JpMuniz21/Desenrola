@@ -40,15 +40,15 @@ npm run dev
 - CRUD dos Itens ✓
 - CRUD de Usuario ✓
 - Projeto de segurança (.env) ✓
-- Connexão ao Front
-- Connexão ao Bd
+- Connexão ao Front ✓
+- Connexão ao Bd ✓
 
 ### Front-end:
 - Cadastro ligado ao Back ✓
 - Login ligado ao Back ✓
-- Pagina de login/Cadastro
-- Pagina Principal
-- Pagina Produto
-- Pagina de Criação de produto
-- Pagina de Usuario
-- Pagina de Chat
+- Pagina de login/Cadastro ✓
+- Pagina Principal ✓
+- Pagina Produto ✓
+- Pagina de Criação de produto ✓
+- Pagina de Usuario ✓
+- Pagina de Chat ✓
